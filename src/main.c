@@ -1,19 +1,16 @@
-
 #include "../include/definitions.h"
 #include "../include/game.h"
 #include "../include/display.h"
-#ifdef _WIN32
-#include <windows.h>
-#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
 int main()
 {
-    #ifdef _WIN32
-    SetConsoleOutputCP(CP_UTF8);  // tell Windows console to use UTF-8
-    #endif
+    // 1. Start the music in the background (using mpg123)
+    system("mpg123 'Erik Satie - Gnossienne No.1.mp3' &");
+
     Game *game = initGame();
     displayWelcome();
     pause();
@@ -26,5 +23,10 @@ int main()
     clearScreen();
     printBoard(game);
     pause();
-    
+
+    // 2. Stop the music process by killing all running mpg123 processes
+    printf("Stopping music...\n");
+    system("pkill mpg123"); 
+
+    return 0;
 }
