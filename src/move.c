@@ -7,11 +7,8 @@
 
 bool isPathClear(Game *game,Move move)
 {
-<<<<<<< HEAD
-=======
     if (move.initial.x == move.final.x && move.initial.y == move.final.y)
         return true; // no path to clear
->>>>>>> 86c33e3 (Add some changes to move logic)
     short int rowDirection = move.final.x - move.initial.x;
     rowDirection = (rowDirection>0) ? +1 : (rowDirection<0) ? -1 : 0;
     short int colDirection = move.final.y - move.initial.y;
@@ -98,11 +95,7 @@ if (piece.color != game->currentPlayer)        return false;
     if(rowDirection ==  0&& colDirection == 0) 
         return false; // piece don't move    
 
-<<<<<<< HEAD
-    return (abs(rowDirection) == abs(colDirection) && isPathClear(game,move));
-=======
     if (abs(rowDirection) == abs(colDirection) && isPathClear(game,move));
->>>>>>> 86c33e3 (Add some changes to move logic)
         return true;
 
     return false;
@@ -183,26 +176,6 @@ if (piece.color != game->currentPlayer)        return false;
     return true;
     
 }
-<<<<<<< HEAD
-bool isValidKing(Game *game,Piece piece,Move move)
-{
-if (piece.color != game->currentPlayer)        return false;
-    short int rowDirection = move.final.x - move.initial.x;
-    short int colDirection = move.final.y - move.initial.y;
-    Piece dest = game->board[move.final.x][move.final.y];
-    if(dest.color== game->currentPlayer)
-        return false;
-    if(rowDirection ==  0&& colDirection == 0) 
-        return false; // piece don't move 
-    
-    //Normal King Move
-    if(abs(rowDirection) <= 1 && abs(colDirection)<=1)
-        return true;
-    if(isValidCastling(game,piece,move))
-        return true;
-
-    //Castling
-=======
 bool isValidKing(Game *game, Piece piece, Move move)
 {
     if (piece.color != game->currentPlayer) return false;
@@ -221,5 +194,4 @@ bool isValidKing(Game *game, Piece piece, Move move)
         return true;
 
     return false;  
->>>>>>> 86c33e3 (Add some changes to move logic)
 }
