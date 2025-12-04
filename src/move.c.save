@@ -1,5 +1,4 @@
-#include "../include/definitions.h"
-#include "../include/game.h"
+#include "../include/de#include "../include/game.h"
 #include "../include/display.h"
 #include <stdbool.h>
 #include <math.h>
