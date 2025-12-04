@@ -3,14 +3,27 @@
 #include <stdlib.h>
 #include <locale.h>
 
+#define RESET       "\033[0m"
+#define LIGHT_SQ    "\033[47m"  // Light beige square 230
+#define DARK_SQ     "\033[48;5;65m"   // Dark green square
+#define BLACK_PC    "\033[38;5;16m"   // Black pieces (dark gray/black)
+#define WHITE_PC    "\033[38;5;255m"  // White pieces
+#define BOLD        "\033[1m"
+#define YELLOW "\033[93m"
+#define WHITE_BG "\033[47m"
+#define MAGNETA "\033[35m"
+
 void printGameState(Game *game) {
+    printf(MAGNETA BOLD);
     printf("\n");
     printf("═══════════════════════════════════════════════════════════\n");
     printf("                    CHESS GAME STATUS\n");
     printf("═══════════════════════════════════════════════════════════\n");
     
     // Current player
-    printf("Current Turn: %s\n", game->currentPlayer== WHITE ? "WHITE" : "BLACK");
+    printf("%s",game->currentPlayer == WHITE ? WHITE_PC : BLACK_PC);
+    printf(BOLD);
+    printf("Current Turn: %s%s\n", game->currentPlayer== WHITE ? "WHITE" : "BLACK",RESET);
     
     // Check status
     if(game->status == CHECK) {
@@ -38,6 +51,7 @@ void printGameState(Game *game) {
     // }
     
     printf("═══════════════════════════════════════════════════════════\n");
+    printf(RESET);
 }
 void displayHelp(void) {
     printf("\n");
@@ -60,10 +74,12 @@ void displayHelp(void) {
     printf("║    • Castling: Move king 2 squares (e1g1 or e1c1)         ║\n");
     printf("║    • En Passant: Capture pawn that just moved 2 squares   ║\n");
     printf("║    • Pawn Promotion: Move pawn to last rank               ║\n");
-    printf("╚═══════════════════════════════════════════════════════════╝\n");
+    printf("╚═══════════════════════════════════════════════════════════╝\n" RESET);
+
 }
 void displayWelcome(void) {
     clearScreen();
+    printf(YELLOW BOLD);
     printf("\n");
     printf("╔═══════════════════════════════════════════════════════════╗\n");
     printf("║                                                           ║\n");
@@ -77,21 +93,17 @@ void displayWelcome(void) {
     printf("\n");
     printf("Welcome to the Chess Game!\n");
     printf("Type 'help' for instructions or make your first move.\n");
+    printf(RESET);
     printf("\n");
 }
 void printBoard(Game* game)
 {
-    setlocale(LC_CTYPE,"");
+    setlocale(LC_ALL,"");
     
    
     const char *indent = "                              ";
     
-    const char *bg_light = "\x1b[48;5;230m";
-    const char *bg_dark  = "\x1b[48;5;64m";
-    
-    const char *fg_black = "\x1b[38;5;16m";
-    const char *fg_white = "\x1b[38;5;231m";
-    const char *reset    = "\x1b[0m";
+   
     
     printf("\n\n\n");
     printf("%s    A  B  C  D  E  F  G  H\n", indent);
@@ -103,12 +115,13 @@ void printBoard(Game* game)
         for(int j = 0; j < 8; j++)
         {
             bool isWhiteSquare = ((i+j) % 2 == 0);
-            const char *backGround = isWhiteSquare ? bg_light : bg_dark;
-            const char *fg = fg_white;
-            const char *piece;
+            char *backGround = isWhiteSquare ? LIGHT_SQ : DARK_SQ;
+            char *fg = WHITE_PC;
+            char *piece;
             
             if(game->board[i][j].color == WHITE)
             {
+                fg = WHITE_PC;
                 switch (game->board[i][j].type)
                 {
                 case PAWN:
@@ -136,6 +149,7 @@ void printBoard(Game* game)
             }
             else if (game->board[i][j].color == BLACK)
             {
+                fg= BLACK_PC;
                 switch (game->board[i][j].type)
                 {
                 case PAWN:
@@ -166,20 +180,14 @@ void printBoard(Game* game)
                 piece = " ";
             }
             
-            if (piece[0] == (unsigned char)0xE2 &&
-                piece[1] == (unsigned char)0x99 &&
-                (unsigned char)piece[2] >= 0x9A) {
-                fg = fg_black;
-            }
-            
-            printf("%s%s %s %s", backGround, fg, piece, reset);
+            printf("%s%s %s %s", backGround, fg, piece, RESET);
         }
         
         printf(" %d\n", 8-i);
     }
     
     printf("%s    A  B  C  D  E  F  G  H\n", indent);
-    printf("%s", reset);
+    printf("%s", RESET);
     printf("\n\n\n\n");
 }
 void clearScreen() {
