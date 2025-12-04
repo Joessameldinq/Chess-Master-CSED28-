@@ -7,7 +7,7 @@
 #include <stdio.h>
 int findFirstEmptyCapturedSlot(Piece arr[8]) {
     for (int i = 0; i < 8; ++i) if (arr[i].type == EMPTY) return i;
-    return -1;
+    return -1; // Full
 }
 bool simulateMoveAndShowIfInCheck(Game *game, Move *move)
 {
@@ -162,41 +162,41 @@ bool isValidQueen(Game *game, Piece piece, Move move)
 
 bool isValidCastling(Game *game, Piece piece, Move move)
 {
-    short int rowDirection = move.final.x - move.initial.x;
-    short int colDirection = move.final.y - move.initial.y;
+    if (inCheck(game))
+        return false; // king currently in check
 
-    if (rowDirection == 0 && colDirection == 0)
-        return false; // piece doesn't move
+    short int row = move.initial.x;
+    short int colDiff = move.final.y - move.initial.y;
 
-    if (abs(colDirection) != 2 || abs(rowDirection) != 0)
-        return false; // must be king moving exactly 2 squares horizontally
+    if (abs(colDiff) != 2 || move.final.x != move.initial.x)
+        return false; // king must move 2 squares horizontally
 
-    // King mustn't have moved
     if (piece.hasMoved)
         return false;
 
-    bool kingSide = (colDirection > 0);
-    Piece rook = kingSide ? game->board[move.initial.x][7] : game->board[move.initial.x][0];
+    bool kingSide = (colDiff > 0);
+    Piece rook = kingSide ? game->board[row][7] : game->board[row][0];
 
-    // Check rook exists and hasn't moved and is same color
-    if (rook.type != ROOK || rook.hasMoved == true || rook.color != piece.color)
+    if (rook.type != ROOK || rook.hasMoved || rook.color != piece.color)
         return false;
 
     // Check squares between king and rook are empty
-    if (kingSide)
-    {
-        if ((game->board[move.initial.x][5].type != EMPTY) || (game->board[move.initial.x][6].type != EMPTY))
+    if (kingSide) {
+        if (game->board[row][5].type != EMPTY || game->board[row][6].type != EMPTY)
             return false;
-    }
-    else
-    {
-        if ((game->board[move.initial.x][1].type != EMPTY) || (game->board[move.initial.x][2].type != EMPTY) || (game->board[move.initial.x][3].type != EMPTY))
+    } else {
+        if (game->board[row][1].type != EMPTY || game->board[row][2].type != EMPTY || game->board[row][3].type != EMPTY)
             return false;
     }
 
-    // TODO: check king is not currently in check and that king does not pass through a square under attack
-    // e.g. if (isSquareAttacked(game, move.initial)) return false;
-    // and check intermediate squares (move.initial.y +/- 1) depending on side
+    // Check squares king passes through are not attacked
+    int kingSteps = 2; // king always moves 2 squares
+    int dir = kingSide ? 1 : -1;
+    for (int i = 1; i <= kingSteps; i++) {
+        Position pos = { .x = row, .y = move.initial.y + dir * i };
+        if (isSquareAttacked(game, pos))
+            return false;
+    }
 
     return true;
 }
@@ -233,46 +233,24 @@ bool isSquareAttacked(Game *game, Position pos)
         for (int j = 0; j < BOARD_SIZE; j++)
         {
             Piece enemyP = game->board[i][j];
-            if (enemyP.type == EMPTY || enemyP.color != enemy) continue;
+            if (enemyP.type == EMPTY || enemyP.color != enemy) 
+                continue;
 
-            // Create a move from that enemy piece to pos
             Move fake = { .initial = {i, j}, .final = pos };
 
-            switch (enemyP.type)
+            // Check if piece can legally move there (ignores king safety for now)
+            if (!isLegalMove(game, enemyP, fake)) 
+                continue;
+
+            // Simulate the move to check if enemy king would be safe
+            if (!simulateMoveAndShowIfInCheck(game, &fake))
             {
-                case PAWN:
-                {
-                    // Pawns attack diagonally only
-                    short int dir = (enemyP.color == WHITE) ? -1 : +1;
-                    if ((pos.x == i + dir) && (abs(pos.y - j) == 1))
-                        return true;
-                    break;
-                }
-                case KNIGHT:
-                    if (isValidKnight(game, enemyP, fake)) return true;
-                    break;
-                case BISHOP:
-                    if (isValidBishop(game, enemyP, fake)) return true;
-                    break;
-                case QUEEN:
-                    if (isValidQueen(game, enemyP, fake)) return true;
-                    break;
-                case ROOK:
-                    if (isValidRook(game, enemyP, fake)) return true;
-                    break;
-                case KING:
-                {
-                    // king attacks adjacent squares only
-                    int dx = abs(pos.x - i);
-                    int dy = abs(pos.y - j);
-                    if (dx <= 1 && dy <= 1) return true;
-                    break;
-                }
-                default:
-                    break;
+                // The enemy can move here without putting their own king in check
+                return true;
             }
         }
     }
+
     return false;
 }
 bool isLegalMove(Game *game, Piece piece, Move move)
@@ -316,8 +294,6 @@ bool isValidMove(Game *game, Move move)
     if (!isLegalMove(game, from, move)) return false;
 
     // Now: simulate the move and ensure our king is not left in check
-    
-
     bool kingInCheckAfterMove =simulateMoveAndShowIfInCheck(game,&move);
     // If the king is in check after making the move → move is illegal
     if (kingInCheckAfterMove) return false;
@@ -328,55 +304,48 @@ void applyMove(Game *game, Move *move)
 {
     Position from = move->initial;
     Position to   = move->final;
-
     Piece mover = game->board[from.x][from.y];
     Piece dest  = game->board[to.x][to.y];
 
-    // Default: set moveType to NORMAL_MOVE, will adjust below.
+    // Save move info
     move->moveType = NORMAL_MOVE;
     move->capturedPiece = (Piece){ .type = EMPTY, .color = NONE, .hasMoved = false };
 
-    // Reset en-passant availability by default; may be set if pawn double-step occurs
+    // Save previous en-passant state to use in en-passant detection
+    bool enPassantAvailableBefore = game->enPassentAvailable;
+    Position enPassantTargetBefore = game->enPassentTarget;
+
+    // Reset en-passant for next turn
     game->enPassentAvailable = false;
     game->enPassentTarget = (Position){-1,-1};
 
-    // 1) En-passant capture detection:
-    // If pawn moved diagonally into empty square and enPassentTarget matches
+    // 1) En-passant capture detection
     if (mover.type == PAWN && from.y != to.y && dest.type == EMPTY) {
-        // en-passant capture
-        if (game->enPassentAvailable &&
-            game->enPassentTarget.x == to.x &&
-            game->enPassentTarget.y == to.y) 
+        if (enPassantAvailableBefore &&
+            enPassantTargetBefore.x == to.x &&
+            enPassantTargetBefore.y == to.y) 
         {
-            // captured pawn sits on the row that the pawn jumped from
-            int dir = (mover.color == WHITE) ? +1 : -1; // captured pawn row is opposite direction
-            int capRow = to.x + dir; // the pawn that was captured
+            // Remove the captured pawn
+            int dir = (mover.color == WHITE) ? +1 : -1;
+            int capRow = to.x + dir;
             int capCol = to.y;
 
-            // Save captured piece in move record
             move->capturedPiece = game->board[capRow][capCol];
-
-            // Remove captured pawn
-            game->board[capRow][capCol].type = EMPTY;
-            game->board[capRow][capCol].color = NONE;
-            game->board[capRow][capCol].hasMoved = false;
+            game->board[capRow][capCol] = (Piece){ .type = EMPTY, .color = NONE, .hasMoved = false };
 
             move->moveType = EN_PASSENT;
         }
     }
 
-    //  
-    // 2) Normal capture (if destination occupied)
-    //  
+    // 2) Normal capture
     if (dest.type != EMPTY) {
-        // Save captured piece in move record
         move->capturedPiece = dest;
 
-        // Add to captured arrays
+        // Add captured piece to array
         if (dest.color == WHITE) {
             int idx = findFirstEmptyCapturedSlot(game->capturedWhitePieces);
             if (idx >= 0) game->capturedWhitePieces[idx] = dest;
-        } else if (dest.color == BLACK) {
+        } else {
             int idx = findFirstEmptyCapturedSlot(game->capturedBlackPieces);
             if (idx >= 0) game->capturedBlackPieces[idx] = dest;
         }
@@ -384,95 +353,60 @@ void applyMove(Game *game, Move *move)
         move->moveType = CAPTURE;
     }
 
-    //  
-    // 3) Move the piece on board (basic)
-    //  
+    // 3) Move the piece
     game->board[to.x][to.y] = mover;
     game->board[to.x][to.y].hasMoved = true;
+    game->board[from.x][from.y] = (Piece){ .type = EMPTY, .color = NONE, .hasMoved = false };
 
-    // clear source
-    game->board[from.x][from.y].type = EMPTY;
-    game->board[from.x][from.y].color = NONE;
-    game->board[from.x][from.y].hasMoved = false;
-
-    //  
-    // 4) Pawn double-step -> enable en-passant target
-    //  
+    // 4) Pawn double-step -> set en-passant for next turn
     if (mover.type == PAWN && abs(to.x - from.x) == 2) {
         game->enPassentAvailable = true;
-        int midRow = (to.x + from.x) / 2;
-        game->enPassentTarget = (Position){ midRow, from.y };
+        game->enPassentTarget = (Position){ .x = (to.x + from.x) / 2,.y= from.y };
     }
 
-    //  
-    // 5) Castling: if king moved 2 squares horizontally, move the rook
-    //  
+    // 5) Castling
     if (mover.type == KING && from.x == to.x && abs(to.y - from.y) == 2) {
         if (to.y - from.y == 2) {
-            // king-side castle: rook from col 7 to col from.y+1
+            // King-side
             Piece rook = game->board[from.x][7];
             game->board[from.x][from.y + 1] = rook;
-            game->board[from.x][7].type = EMPTY;
-            game->board[from.x][7].color = NONE;
-            game->board[from.x][7].hasMoved = false;
+            game->board[from.x][7] = (Piece){ .type = EMPTY, .color = NONE, .hasMoved = false };
             move->moveType = CASTLE_KINGSIDE;
         } else {
-            // queen-side castle: rook from col 0 to col from.y-1
+            // Queen-side
             Piece rook = game->board[from.x][0];
             game->board[from.x][from.y - 1] = rook;
-            game->board[from.x][0].type = EMPTY;
-            game->board[from.x][0].color = NONE;
-            game->board[from.x][0].hasMoved = false;
+            game->board[from.x][0] = (Piece){ .type = EMPTY, .color = NONE, .hasMoved = false };
             move->moveType = CASTLE_QUEENSIDE;
         }
     }
 
-    //  
-    // 6) Promotion
-    //  
+    // 6) Pawn promotion
     if (mover.type == PAWN) {
-        bool whitePromotionRow = (mover.color == WHITE && to.x == 0);
-        bool blackPromotionRow = (mover.color == BLACK && to.x == BOARD_SIZE - 1);
-        if (whitePromotionRow || blackPromotionRow) {
-            // Use move->promotionPiece if set; else default to QUEEN
+        bool promotionRow = (mover.color == WHITE && to.x == 0) || (mover.color == BLACK && to.x == BOARD_SIZE - 1);
+        if (promotionRow) {
+            //By default is Queen
             PieceType promo = (move->promotionPiece != EMPTY) ? move->promotionPiece : QUEEN;
             game->board[to.x][to.y].type = promo;
             move->moveType = PAWN_PROMOTION;
         }
     }
 
-    //  
-    // 7) half-move clock: reset on pawn move or capture, else increment
-    //  
+    // 7) Half-move clock
     if (mover.type == PAWN || move->moveType == CAPTURE || move->moveType == EN_PASSENT) {
         game->halfMoveClock = 0;
     } else {
         game->halfMoveClock++;
     }
 
-    //  
-    // 8) record move in history
-    //  
+    // 8) Record move
     if (game->moveCounter < 500) {
-        game->moveHistory[game->moveCounter] = *move;
-        game->moveCounter++;
+        game->moveHistory[game->moveCounter++] = *move;
     }
 
-    //  
-    // 9) update position hash / hashCount if i use it
-    //    (Not implemented here — i will place hashing call if exist)
-    //  
-    // example: game->positionHashes[game->hashCount++] = computeZobristHash(game);
-
-    //  
-    // 10) toggle player (change player turn)
-    //  
+    // 9) Toggle current player
     game->currentPlayer = (game->currentPlayer == WHITE) ? BLACK : WHITE;
 
-    //  
-    // 11) update status (basic): update to CHECK if opponent is in check
-    //     For full correctness, compute CHECK, CHECKMATE, STALEMATE, etc.
-    //  
-    // Note: in many engines computation of status is done separately.
+    // 10) Update status
     game->status = computeGameStatus(game);
 }
