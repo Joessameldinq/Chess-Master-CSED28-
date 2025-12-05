@@ -16,17 +16,19 @@ bool chooseFirstPlayerToBegin(Game *game)
     if(!strcmp(temp,"w") || !strcmp(temp,"white"))
     {
         game->currentPlayer = WHITE;
+        free(temp);
         return true;
     }
     else if(!strcmp(temp,"b") || !strcmp(temp,"black"))
     {
         game->currentPlayer = BLACK;
+        free(temp);
         return true;
 
     }
 
-
     free(temp);
+    
     printf("Invalid format please try again\n");
     return false;
     

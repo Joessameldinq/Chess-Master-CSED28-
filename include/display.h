@@ -4,6 +4,7 @@
 #include <stdlib.h>
  #include <string.h>
 #include <stdio.h> 
+void initDisplay();
 void displayMainMenu(void);
 void printQuotes(FILE *configuration);
 void printCapturedPieces(Game *game);

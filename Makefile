@@ -96,10 +96,16 @@ windows: directories $(OBJS)
 	x86_64-w64-mingw32-windres icon.rc -O coff -o $(OBJ_DIR)/icon.o
 	# Compile all C files to Windows object files
 	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/display.c -o $(OBJ_DIR)/display_win.o
+	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/end.c -o $(OBJ_DIR)/end_win.o
+	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/input.c -o $(OBJ_DIR)/input_win.o
+	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/move.c -o $(OBJ_DIR)/move_win.o
+	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/saving_loading.c -o $(OBJ_DIR)/saving_loading_win.o
+	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/stack.c -o $(OBJ_DIR)/stack_win.o
 	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/game.c    -o $(OBJ_DIR)/game_win.o
 	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/main.c    -o $(OBJ_DIR)/main_win.o
+	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/utilities.c    -o $(OBJ_DIR)/utilities_win.o
 	# Link everything into a Windows executable
-	x86_64-w64-mingw32-gcc $(OBJ_DIR)/display_win.o $(OBJ_DIR)/game_win.o $(OBJ_DIR)/main_win.o $(OBJ_DIR)/icon.o -o $(BIN_DIR)/Chess.exe
+	x86_64-w64-mingw32-gcc $(OBJ_DIR)/end_win.o $(OBJ_DIR)/input_win.o $(OBJ_DIR)/utilities_win.o  $(OBJ_DIR)/saving_loading_win.o $(OBJ_DIR)/stack_win.o $(OBJ_DIR)/move_win.o $(OBJ_DIR)/display_win.o $(OBJ_DIR)/game_win.o $(OBJ_DIR)/main_win.o $(OBJ_DIR)/icon.o -o $(BIN_DIR)/Chess.exe
 	@echo "Windows .exe build complete: $(BIN_DIR)/Chess.exe"
 
 .PHONY: all clean run directories windows

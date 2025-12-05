@@ -1,12 +1,14 @@
 #include "../include/game.h"
 #include "../include/input.h"
 #include <stdlib.h>
+#include <string.h>
 Game* initGame(void)
 {
     Game* game = (Game*)malloc(sizeof(Game)); //don't forget to free it
     do
     {
-    } while (!chooseFirstPlayerToBegin(game));   
+    } while (!chooseFirstPlayerToBegin(game));
+    memset(game,0,sizeof(game)); //As all bytes must be initialized to save the game correctly   
     game->status = PLAYING;
     game->enPassentAvailable = false;
     game->enPassentTarget.x = -1;

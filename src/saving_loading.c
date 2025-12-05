@@ -31,11 +31,27 @@ bool redoMove(Node **gameStack, Node **redoStack)
     
     return true;
 }
-bool saveGame(FILE *configuration)
+bool saveGame(FILE *configuration,Game *game)
 {
+    // void *ptr - Pointer to memory where data will be stored
+    // size_t size - Size of each element in bytes
+    // size_t nmemb - Number of elements to read
+    // FILE *stream - File pointer to write on
+    size_t writtenInConfig = fwrite(game,sizeof(Game),1,configuration);
+    if(writtenInConfig == 1)
+        return true;
+    return false;
+
 
 }
-bool loadGame(FILE *configuration)
+bool loadGame(FILE *configuration,Game *game)
 {
-
+    // void *ptr - Pointer to memory where data will be stored
+    // size_t size - Size of each element in bytes
+    // size_t nmemb - Number of elements to read
+    // FILE *stream - File pointer to write on
+    size_t readConfig = fread(game,sizeof(Game),1,configuration);
+    if(readConfig  == 1)
+        return true;
+    return false;
 }
