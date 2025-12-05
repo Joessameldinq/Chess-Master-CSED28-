@@ -5,7 +5,7 @@
 
 
 // Find the king belonging to a given color
-Position findKingPosition(Game *game, Color color)
+Position findKingPosition(Game *game, Color color) //Find the position of king of specific color
 {
     for (int i = 0; i < BOARD_SIZE; i++)
     {
@@ -20,7 +20,7 @@ Position findKingPosition(Game *game, Color color)
 }
 
 // Checks if the current player's king is in check
-bool inCheck(Game *game)
+bool inCheck(Game *game) //detect if the king of current game turn is attacked by enemy
 {
     Color kingColor = game->currentPlayer;
     Position kingPos = findKingPosition(game, kingColor);

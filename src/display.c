@@ -65,7 +65,7 @@ void printCapturedPieces(Game *game)
     short int capturedWhite = findFirstEmptyCapturedSlot(game->capturedWhitePieces);
     short int capturedBlack = findFirstEmptyCapturedSlot(game->capturedBlackPieces);
     char *piece;
-    printf("Captured Black Pieces: ");
+    printf(LIGHT_SQ BOLD"Captured Black Pieces: "RESET);
     for(int i = 0 ; i < capturedBlack ; i++)
     {
         switch (game->capturedBlackPieces[i].type)
@@ -93,7 +93,7 @@ void printCapturedPieces(Game *game)
         printf(BLACK_PC "%s "RESET,piece);
     }
     printf("\n");
-    printf("Captured White Pieces: ");
+    printf(WHITE_BG BOLD"Captured White Pieces: "RESET);
     for(int i = 0 ; i < capturedWhite ; i++)
     {
         switch (game->capturedWhitePieces[i].type)
@@ -137,9 +137,8 @@ void printGameState(Game *game) {
     printf("⏳ Half move clock %d \n",game->halfMoveClock);
     // Check status
     if(game->status == CHECK) {
-        printf("⚠️  CHECK! %s King is under attack!\n", game->currentPlayer== WHITE ? "White" : "Black");
+        printf(BOLD"⚠️  CHECK! %s King is under attack!\n"RESET, game->currentPlayer== WHITE ? DARK_SQ "White" : LIGHT_SQ"Black");
     }
-    
     // Special moves indicator
     if(game->enPassentAvailable) {
         printf("ℹ️  En Passant available\n");
@@ -310,4 +309,8 @@ void pause(void)
     printf(LIGHT_SQ BOLD);
     printf("Press Enter to Continue.."RESET);
     getchar();
+}
+void displayMainMenu(void)
+{
+
 }

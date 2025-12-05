@@ -11,12 +11,13 @@
 
 
 
-
+//Check if piece can move to pos only geometrically
 bool canPieceMoveTo(Game *game, Piece piece, Move move)
 {
     short int rowDirection = move.final.x - move.initial.x;
     short int colDirection = move.final.y - move.initial.y;
 
+    //If final == initial
     if (rowDirection == 0 && colDirection == 0)
         return false;
 
@@ -26,9 +27,11 @@ bool canPieceMoveTo(Game *game, Piece piece, Move move)
     if (dest.type != EMPTY && dest.color == piece.color)
         return false;
 
+    //Test all pieces 
     switch (piece.type)
     {
         case PAWN: {
+            //White pices move up and black pieces moves down
             short int dir = piece.color == WHITE ? -1 : +1;
             
             // Single step forward
@@ -36,6 +39,7 @@ bool canPieceMoveTo(Game *game, Piece piece, Move move)
                 return true;
             
             // Double step from starting rank
+            //The pawn shouldn't have moved before
             if (rowDirection == 2 * dir && colDirection == 0 && dest.type == EMPTY && !piece.hasMoved)
             {
                 Piece passed = game->board[move.initial.x + dir][move.initial.y];
@@ -60,26 +64,32 @@ bool canPieceMoveTo(Game *game, Piece piece, Move move)
         }
         
         case KNIGHT:
+            //L shape move 2 h 1 v or 2 v 1 h
             return (abs(rowDirection) == 2 && abs(colDirection) == 1) ||
                    (abs(rowDirection) == 1 && abs(colDirection) == 2);
         
         case BISHOP:
+            //Diagonal move 
             return abs(rowDirection) == abs(colDirection) && isPathClear(game, move);
         
         case ROOK:
+            //Straight move only change in row or col
             return (rowDirection == 0 || colDirection == 0) && isPathClear(game, move);
         
         case QUEEN:
+            //Mix the rules of bishop and rook
             return ((rowDirection == 0 || colDirection == 0) || 
                     (abs(rowDirection) == abs(colDirection))) && isPathClear(game, move);
         
         case KING:
+            //Move to adjacent squares
             return abs(rowDirection) <= 1 && abs(colDirection) <= 1;
         
         default:
             return false;
     }
 }
+//Find the count of captured pieces to push to capturedPieces Arrays
 int findFirstEmptyCapturedSlot(Piece arr[8]) {
     for (int i = 0; i < 8; ++i) if (arr[i].type == EMPTY) return i;
     return -1; // Full
@@ -87,29 +97,38 @@ int findFirstEmptyCapturedSlot(Piece arr[8]) {
 bool simulateMoveAndShowIfInCheck(Game *game, Move *move)
 {
     // Allocate backup on HEAP
+    //If in stack it might make stack overflow
+    //Backup must be freed
+    //Backup is used to undo the move
     Game *backup = (Game *)malloc(sizeof(Game));
     if (!backup) {
-        fprintf(stderr, "ERROR: Memory allocation failed\n");
+        fprintf(stderr, "ERROR: Memory allocation for game backub failed\n");
         return true;
     }
+    //as the move is changed after applyMove function we should keep it's backup
     Move backupMove = *move;
     // Copy entire game state
+    //Memcpy copy n bytes from src ---> destination
     memcpy(backup, game, sizeof(Game));
     applyMove(game,move);
+    //Return the original move 
     *move = backupMove;
     // //  Manually make the move 
     // Position from = move->initial;
     // Position to = move->final;
     
     // // Simple move (good enough for check detection)
+    //I Replaced it with applyMove now
     // game->board[to.x][to.y] = game->board[from.x][from.y];
     // game->board[from.x][from.y] = (Piece){.type = EMPTY, .color = NONE, .hasMoved = false};
     
     // Check if the current king is in check
+    //for example we moved white so the next turn will be black and  i want to check after moving white is white king in check so we should change the turn
+    //kingInCheck (Recommended fix) later i will think of giving inCheck color parameter 
     game->currentPlayer = (game->currentPlayer == WHITE) ? BLACK:WHITE;
     bool kingInCheck = inCheck(game);
     
-    // Restore original game state
+    // Restore original game state and free backup
     memcpy(game, backup, sizeof(Game));
     free(backup);
     
@@ -120,19 +139,21 @@ bool simulateMoveAndShowIfInCheck(Game *game, Move *move)
 bool isPathClear(Game *game, Move move)
 {
     if (move.initial.x == move.final.x && move.initial.y == move.final.y)
-        return true; // no path to clear
+        return true; // no path to clear initial == final
 
     short int rowDirection = move.final.x - move.initial.x;
-    rowDirection = (rowDirection > 0) ? +1 : (rowDirection < 0) ? -1 : 0;
+    rowDirection = (rowDirection > 0) ? +1 : (rowDirection < 0) ? -1 : 0; //Find the unit rowDirection (Greater than absoulte function as it might cause zerodivision error)
     short int colDirection = move.final.y - move.initial.y;
-    colDirection = (colDirection > 0) ? +1 : (colDirection < 0) ? -1 : 0;
+    colDirection = (colDirection > 0) ? +1 : (colDirection < 0) ? -1 : 0;//Find the unit colDirection (Greater than absoulte function as it might cause zerodivision error)
 
     short int currentRow = move.initial.x + rowDirection;
     short int currentCol = move.initial.y + colDirection;
-
+    //Iterate untill we reach the final position
+    //It doesn't check boundaries as it's guaranteed that there is a valid path 
     while (currentRow != move.final.x || currentCol != move.final.y)
     {
         Piece temp = game->board[currentRow][currentCol];
+        //If piece found at the path direction
         if (temp.type != EMPTY)
             return false;
         currentRow += rowDirection;
@@ -142,6 +163,9 @@ bool isPathClear(Game *game, Move move)
     return true; // Path is clear
 }
 
+//Check if it's valid pawn movement
+//It check single step , double step and enpassant capture and diagonal capture
+//Pawn promotion is just the same as single step
 bool isValidPawn(Game *game, Piece piece, Move move)
 {
     short int dir = piece.color == WHITE ? -1 : +1;
@@ -312,18 +336,22 @@ bool isValidKing(Game *game, Piece piece, Move move)
 }
 
 /* Returns true if 'pos' is attacked by the opponent of currentPlayer. */
+/*  It ignores king safety for the moved piece*/
 bool isSquareAttacked(Game *game, Position pos)
 {
+    //Enemy color is the opposite of current turn player
     Color enemy = (game->currentPlayer == WHITE) ? BLACK : WHITE;
-
+    //Iterate on all board pieces
     for (int i = 0; i < BOARD_SIZE; i++)
     {
         for (int j = 0; j < BOARD_SIZE; j++)
         {
+            //check if there is enemy piece at position i,j
             Piece enemyP = game->board[i][j];
             if (enemyP.type == EMPTY || enemyP.color != enemy) 
                 continue;
 
+            //Make facke move from i,j to the passed position to the function
             Move fake = { .initial = {i, j}, .final = pos };
 
             // Check if piece can legally move there (ignores king safety for now)
@@ -336,6 +364,8 @@ bool isSquareAttacked(Game *game, Position pos)
 
     return false;
 }
+// piece-specific movement rules from square to another (does NOT check king safety)
+// Large switch replacement
 bool isLegalMove(Game *game, Piece piece, Move move)
 {
     switch (piece.type)
@@ -349,6 +379,10 @@ bool isLegalMove(Game *game, Piece piece, Move move)
         default:     return false;
     }
 }
+//The last step before make move
+//So it can be used in simulate moves or applying moves
+//But we shouldn't use it in simulate move as it will lead to infinite recursion
+//So in simulate moves we manually apply move --> check if king isInCheck ---> redo the move and game state
 bool isValidMove(Game *game, Move move)
 {
     // Boundaries
@@ -374,17 +408,24 @@ bool isValidMove(Game *game, Move move)
     if (move.initial.x == move.final.x && move.initial.y == move.final.y) return false;
 
     // piece-specific movement rules (does NOT check king safety)
+    // Only geometric check
     if (!isLegalMove(game, from, move)) return false;
 
     // Now: simulate the move and ensure our king is not left in check
-    bool kingInCheckAfterMove =simulateMoveAndShowIfInCheck(game,&move);
-    // If the king is in check after making the move → move is illegal
+    // Apply the move --> check the king state --> redo the move
+    bool kingInCheckAfterMove = simulateMoveAndShowIfInCheck(game,&move);
+    // If the king is in check after making the move ----> move is illegal
     if (kingInCheckAfterMove) return false;
 
     return true;
 }
+// This function doesn't check if the movid valid or no
+// It just apply the move
+// So isValidMove should call and if returns true we apply the move
 void applyMove(Game *game, Move *move)
 {
+    // As only one of the special moves can happen
+    // Vary rare condition is pawnpromotion + capture
     setFlagsFalse(game);
     Position from = move->initial;
     Position to   = move->final;
@@ -392,6 +433,9 @@ void applyMove(Game *game, Move *move)
     Piece dest  = game->board[to.x][to.y];
 
     // Save move info
+    // We change it later 
+    // The passed move to the function has only two data
+    // The initial and final position
     move->moveType = NORMAL_MOVE;
     move->capturedPiece = (Piece){ .type = EMPTY, .color = NONE, .hasMoved = false };
 
@@ -403,7 +447,10 @@ void applyMove(Game *game, Move *move)
     game->enPassentAvailable = false;
     game->enPassentTarget = (Position){-1,-1};
     Piece capturedInEnpassent;
+
+
     // 1) En-passant capture detection
+    // Pawn move diagonally to a position that was just passed from the enemy pawn who moved 2 steps
     if (mover.type == PAWN && from.y != to.y && dest.type == EMPTY) {
         if (enPassantAvailableBefore &&
             enPassantTargetBefore.x == to.x &&
@@ -468,7 +515,7 @@ void applyMove(Game *game, Move *move)
         if (to.y - from.y == 2) {
             // King-side
             Piece rook = game->board[from.x][7];
-            rook.hasMoved = true;
+            rook.hasMoved = true; //We changed the moved piece out this block so only remaining is the rook to be changed
             game->board[from.x][from.y + 1] = rook;
             game->board[from.x][7] = (Piece){ .type = EMPTY, .color = NONE, .hasMoved = false };
             move->moveType = CASTLE_KINGSIDE;
@@ -490,7 +537,10 @@ void applyMove(Game *game, Move *move)
             //By default is Queen
             PieceType promo = (move->promotionPiece != EMPTY) ? move->promotionPiece : QUEEN;
             game->board[to.x][to.y].type = promo;
-            move->moveType = PAWN_PROMOTION;
+            if(dest.type != EMPTY && dest.color != mover.color)
+                move->moveType = CAPTURE_AND_PAWN_PROMOTION;
+            else
+                move->moveType = PAWN_PROMOTION;
             game->currentFlag.pawnPromotionMade = true;
         }
     }
@@ -507,17 +557,16 @@ void applyMove(Game *game, Move *move)
     //     game->moveHistory[game->moveCounter++] = *move;
     // }
 
-    // 9) Toggle current player
+    // 8) Toggle current player
     game->currentPlayer = (game->currentPlayer == WHITE) ? BLACK : WHITE;
 
     // // 10) Update status
     // game->status = computeGameStatus(game);
+    // Will be called in main as compute gameStatus will make stack overflow
 }
 void setFlagsFalse(Game *game)
 {
     game->currentFlag.pawnPromotionMade = false;
     game->currentFlag.castlingMade = false;
     game->currentFlag.enpassentMade =false;
-
-
 }
