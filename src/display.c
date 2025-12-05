@@ -2,6 +2,7 @@
 #include "../include/move.h"
 #include "../include/end.h"
 #include "../include/game.h"
+#include "../include/utilities.h"
 #include <stdio.h>
 #include <stdlib.h> 
 #include <locale.h>
@@ -11,7 +12,7 @@
 
 #define RESET       "\033[0m"
 #define LIGHT_SQ    "\033[47m"  // Light beige square 230
-#define DARK_SQ     "\033[48;5;65m"   // Dark green square
+#define DARK_SQ      "\033[48;5;65m" //"\033[48;5;65m"   // Dark green square
 #define BLACK_PC    "\033[38;5;16m"   // Black pieces (dark gray/black)
 #define WHITE_PC    "\033[38;5;255m"  // White pieces
 #define BOLD        "\033[1m"
@@ -144,19 +145,19 @@ void printGameState(Game *game) {
         printf("ℹ️  En Passant available\n");
     }
     
-    if(pawnPromotionMade) {
+    if(game->currentFlag.pawnPromotionMade) {
         printf("👑 Pawn promoted \n");
-        pawnPromotionMade = false;
+        setFlagsFalse(game);
     }
     
-    if(castlingMade) {
+    if(game->currentFlag.castlingMade) {
         printf("🏰 Castling performed!\n");
-        castlingMade = false;
+        setFlagsFalse(game);
     }
     
-    if(enpassentMade) {
+    if(game->currentFlag.enpassentMade) {
         printf("⚔️  En Passant capture!\n");
-        enpassentMade = false;
+        setFlagsFalse(game);
     }
     
     printf("═══════════════════════════════════════════════════════════\n");

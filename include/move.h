@@ -4,11 +4,8 @@
 #include "definitions.h"
 #include <stdbool.h>
 
-//Flags
-extern bool pawnPromotionMade;
-extern bool castlingMade;
-extern bool enpassentMade;
-void setFlagsFalse(void);
+
+void setFlagsFalse(Game *game);
 bool isPathClear(Game *game,Move move);
 bool isValidPawn(Game *game,Piece piece,Move move);
 bool isValidRook(Game *game,Piece piece,Move move);

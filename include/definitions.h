@@ -16,6 +16,13 @@ typedef enum
     KING =6
 }PieceType;
 
+typedef struct
+{
+    bool pawnPromotionMade;
+    bool castlingMade;
+    bool enpassentMade;
+
+}GameFlags;
 //Piece colors
 typedef enum
 {
@@ -87,13 +94,12 @@ typedef struct
     Piece capturedBlackPieces[8];
     Color currentPlayer;
     GameStatus status;
-    Move moveHistory[500];
+    Move moveHistory[500]; //Will need some changes
     int moveCounter;
     Position enPassentTarget;
     bool enPassentAvailable;
     int halfMoveClock; // for 50 move rule will be discussed later
-    unsigned long long positionHashes[500]; // For three fold reptition and will be discussed later
-    int hashCount;
+    GameFlags currentFlag;
 }Game;
 
 

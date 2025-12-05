@@ -12,13 +12,8 @@
 int main()
 {
     // 1. Start the music in the background (using mpg123)
-    system("mpg123 'Erik Satie - Gnossienne No.1.mp3' &");
-    FILE *fptr = fopen("attach/quotes.txt", "r");
-
-    if (!fptr) {
-        printf("Error: could not open quotes file!\n");
-        return 1;
-    }
+    // system("mpg123 'Erik Satie - Gnossienne No.1.mp3' &");
+   
     
     Game *game = initGame();
     displayWelcome();
@@ -27,6 +22,8 @@ int main()
     displayHelp();
     pause();
     clearScreen();
+    
+    
 
     
     char *buffer = NULL;
@@ -35,7 +32,17 @@ int main()
     bool restart = false;
     while (game->status == PLAYING || game->status == CHECK)
     {
+        //Displaying Quotes
+         FILE *fptr = fopen("attach/quotes.txt", "r");
+
+        if (!fptr) {
+            printf("Error: could not open quotes file!\n");
+            return 1;
+        }
         printQuotes(fptr);
+        fclose(fptr);
+
+
         printBoard(game);
         printGameState(game);
         
@@ -54,13 +61,18 @@ int main()
             if(strcmp(buffer,"quit")==0 || strcmp(buffer,"Quit") == 0)
                 {quit = true;
                 break;}
-            if(strcmp(buffer,"restart")==0 || strcmp(buffer,"Restart") == 0)
+            else if(strcmp(buffer,"restart")==0 || strcmp(buffer,"Restart") == 0)
                 {restart = true;
                 break;}
-            if(strcmp(buffer,"Help")==0 || strcmp(buffer,"help") == 0)
+            else if(strcmp(buffer,"Help")==0 || strcmp(buffer,"help") == 0)
                 {displayHelp();
                 pause();
                 }
+            else
+            {
+                quit = false;
+                restart = false;
+            }
        
             
             if (buffer == NULL)
@@ -71,9 +83,10 @@ int main()
             
         } while (!validateInputFormat(buffer));
         if(quit)break;
-        if(restart)
+        else if(restart)
         {
             printf("Game Restarted\n");
+            free(game);
             game = initGame();
             continue;
         }
@@ -106,7 +119,6 @@ int main()
         
         if (isValidMove(game, move))
         {
-            printf("Valid Move\n");
             
             // Check if pawn promotion is needed
             Piece movingPiece = game->board[move.initial.x][move.initial.y];
@@ -122,11 +134,8 @@ int main()
             }
             
             applyMove(game, &move);
-            // printf("DEBUG: After applyMove, piece at (0,0): %d\n", game->board[0][0].type);
-            // printf("DEBUG: After applyMove, piece at (7,7): %d\n", game->board[7][7].type);
             game->status= computeGameStatus(game);
-            // Check for draw conditions
-            if (fiftyMovesRule(game) || isDeadPosition(game))
+            if (fiftyMovesRule(game) || isDeadPosition(game) || inCheckMate(game))
             {
                 break;
             }
@@ -167,8 +176,8 @@ int main()
     }
     
     // Stop the music process
-    printf("Stopping music...\n");
-    system("pkill mpg123");
+    // printf("Stopping music...\n");
+    // system("pkill mpg123");
     
     free(game);
     return 0;

@@ -8,6 +8,7 @@ Position* parseMove(char *input); // Return two positions
 Piece getPromotion(Color colro);
 char* readInput(void);
 bool isAlpahNumeric(char c);
+bool chooseFirstPlayerToBegin(Game *game);
 
 
 

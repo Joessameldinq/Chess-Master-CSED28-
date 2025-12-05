@@ -1,11 +1,37 @@
 #include "../include/input.h"
+#include "../include/utilities.h"
+#include "../include/definitions.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
 
-#define MAX_INPUT_SIZE 50
 
+#define MAX_INPUT_SIZE 50
+bool chooseFirstPlayerToBegin(Game *game)
+{
+    printf("Enter the color of first player (W\\WHITE) (B\\BLACK)\n");
+    char *temp = readInput();
+    toLowerString(temp);
+    if(!strcmp(temp,"w") || !strcmp(temp,"white"))
+    {
+        game->currentPlayer = WHITE;
+        return true;
+    }
+    else if(!strcmp(temp,"b") || !strcmp(temp,"black"))
+    {
+        game->currentPlayer = BLACK;
+        return true;
+
+    }
+
+
+    free(temp);
+    printf("Invalid format please try again\n");
+    return false;
+    
+    
+}
 bool isAlpahNumeric(char c)
 {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');

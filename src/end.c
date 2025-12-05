@@ -25,7 +25,8 @@ bool inCheck(Game *game)
     Color kingColor = game->currentPlayer;
     Position kingPos = findKingPosition(game, kingColor);
 
-    return isSquareAttacked(game, kingPos);
+    return isSquareAttacked(game, kingPos); //must answer ONE question only: Is the king's square currently attacked by any enemy piece? Only geometrically
+    //It doesn't matter wheter the attack leave the other king in check or not
 }
 bool inCheckMate(Game *game)
 {
@@ -52,13 +53,16 @@ bool inCheckMate(Game *game)
                     Position to = { .x = x, .y = y };
                     Move mv = { .initial = from, .final = to };
 
-                    // Only consider legal moves
+                    // Only consider legal moves and king safety
                     if (!isValidMove(game, mv))
                         continue;
+                    else
+                        return false;
 
                     // If king is safe after move  -> not checkmate
-                    if (!simulateMoveAndShowIfInCheck(game, &mv))
-                        return false;
+                    // else if (!simulateMoveAndShowIfInCheck(game, &mv))
+                    //     {pirntf("King is safer after moving the piece from %c%d to %c%d\n\n",from.y+'a',8-from.x,to.y+'a',8-to.x);
+                    //     return false;}
                 }
             }
         }
@@ -106,9 +110,11 @@ bool isStalemate(Game *game)
                     if (!canPieceMoveTo(game, piece,mv))
                         continue;
 
-                    // If any legal move exists -> not stalemate
+                    // If any legal move exists --> not stalemate
                     if (!simulateMoveAndShowIfInCheck(game, &mv))
                         return false;
+                    else
+                        return true;
                 }
             }
         }

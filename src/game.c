@@ -1,9 +1,12 @@
 #include "../include/game.h"
+#include "../include/input.h"
 #include <stdlib.h>
 Game* initGame(void)
 {
     Game* game = (Game*)malloc(sizeof(Game)); //don't forget to free it
-    game->currentPlayer = WHITE;
+    do
+    {
+    } while (!chooseFirstPlayerToBegin(game));   
     game->status = PLAYING;
     game->enPassentAvailable = false;
     game->enPassentTarget.x = -1;
@@ -19,7 +22,6 @@ Game* initGame(void)
 
     game->moveCounter = 0;
     game->halfMoveClock = 0;
-    game->hashCount = 0;
 
     for(int i = 0 ; i < BOARD_SIZE ;i++)
     {

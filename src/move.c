@@ -9,10 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-//Flags
-bool pawnPromotionMade;
-bool castlingMade;
-bool enpassentMade;
+
 
 
 bool canPieceMoveTo(Game *game, Piece piece, Move move)
@@ -95,19 +92,21 @@ bool simulateMoveAndShowIfInCheck(Game *game, Move *move)
         fprintf(stderr, "ERROR: Memory allocation failed\n");
         return true;
     }
-    
+    Move backupMove = *move;
     // Copy entire game state
     memcpy(backup, game, sizeof(Game));
+    applyMove(game,move);
+    *move = backupMove;
+    // //  Manually make the move 
+    // Position from = move->initial;
+    // Position to = move->final;
     
-    //  Manually make the move 
-    Position from = move->initial;
-    Position to = move->final;
+    // // Simple move (good enough for check detection)
+    // game->board[to.x][to.y] = game->board[from.x][from.y];
+    // game->board[from.x][from.y] = (Piece){.type = EMPTY, .color = NONE, .hasMoved = false};
     
-    // Simple move (good enough for check detection)
-    game->board[to.x][to.y] = game->board[from.x][from.y];
-    game->board[from.x][from.y] = (Piece){.type = EMPTY, .color = NONE, .hasMoved = false};
-    
-    // Check if king is in check
+    // Check if the current king is in check
+    game->currentPlayer = (game->currentPlayer == WHITE) ? BLACK:WHITE;
     bool kingInCheck = inCheck(game);
     
     // Restore original game state
@@ -331,12 +330,7 @@ bool isSquareAttacked(Game *game, Position pos)
             if (!canPieceMoveTo(game, enemyP, fake)) 
                 continue;
 
-            // Simulate the move to check if enemy king would be safe
-            if (!simulateMoveAndShowIfInCheck(game, &fake))
-            {
-                // The enemy can move here without putting their own king in check
-                return true;
-            }
+            return true;
         }
     }
 
@@ -391,7 +385,7 @@ bool isValidMove(Game *game, Move move)
 }
 void applyMove(Game *game, Move *move)
 {
-    setFlagsFalse();
+    setFlagsFalse(game);
     Position from = move->initial;
     Position to   = move->final;
     Piece mover = game->board[from.x][from.y];
@@ -408,7 +402,7 @@ void applyMove(Game *game, Move *move)
     // Reset en-passant for next turn
     game->enPassentAvailable = false;
     game->enPassentTarget = (Position){-1,-1};
-
+    Piece capturedInEnpassent;
     // 1) En-passant capture detection
     if (mover.type == PAWN && from.y != to.y && dest.type == EMPTY) {
         if (enPassantAvailableBefore &&
@@ -419,12 +413,13 @@ void applyMove(Game *game, Move *move)
             int dir = (mover.color == WHITE) ? +1 : -1;
             int capRow = to.x + dir;
             int capCol = to.y;
-
+            
             move->capturedPiece = game->board[capRow][capCol];
+            capturedInEnpassent = game->board[capRow][capCol];
             game->board[capRow][capCol] = (Piece){ .type = EMPTY, .color = NONE, .hasMoved = false };
 
             move->moveType = EN_PASSENT;
-            enpassentMade = true;
+            game->currentFlag.enpassentMade = true;
         }
     }
 
@@ -443,6 +438,19 @@ void applyMove(Game *game, Move *move)
 
         move->moveType = CAPTURE;
     }
+    else if(move->moveType == EN_PASSENT)
+    {
+        // Add captured piece to array
+        if (capturedInEnpassent.color == WHITE) {
+            int idx = findFirstEmptyCapturedSlot(game->capturedWhitePieces);
+            if (idx >= 0) game->capturedWhitePieces[idx] = capturedInEnpassent;
+        } else {
+            int idx = findFirstEmptyCapturedSlot(game->capturedBlackPieces);
+            if (idx >= 0) game->capturedBlackPieces[idx] = capturedInEnpassent;
+        }
+
+    }
+    
 
     // 3) Move the piece
     game->board[to.x][to.y] = mover;
@@ -472,7 +480,7 @@ void applyMove(Game *game, Move *move)
             game->board[from.x][0] = (Piece){ .type = EMPTY, .color = NONE, .hasMoved = false };
             move->moveType = CASTLE_QUEENSIDE;
         }
-        castlingMade =true;
+        game->currentFlag.castlingMade =true;
     }
 
     // 6) Pawn promotion
@@ -483,7 +491,7 @@ void applyMove(Game *game, Move *move)
             PieceType promo = (move->promotionPiece != EMPTY) ? move->promotionPiece : QUEEN;
             game->board[to.x][to.y].type = promo;
             move->moveType = PAWN_PROMOTION;
-            pawnPromotionMade = true;
+            game->currentFlag.pawnPromotionMade = true;
         }
     }
 
@@ -495,9 +503,9 @@ void applyMove(Game *game, Move *move)
     }
 
     // 8) Record move
-    if (game->moveCounter < 500) {
-        game->moveHistory[game->moveCounter++] = *move;
-    }
+    // if (game->moveCounter < 500) {
+    //     game->moveHistory[game->moveCounter++] = *move;
+    // }
 
     // 9) Toggle current player
     game->currentPlayer = (game->currentPlayer == WHITE) ? BLACK : WHITE;
@@ -505,11 +513,11 @@ void applyMove(Game *game, Move *move)
     // // 10) Update status
     // game->status = computeGameStatus(game);
 }
-void setFlagsFalse(void)
+void setFlagsFalse(Game *game)
 {
-    pawnPromotionMade = false;
-    castlingMade = false;
-    enpassentMade =false;
+    game->currentFlag.pawnPromotionMade = false;
+    game->currentFlag.castlingMade = false;
+    game->currentFlag.enpassentMade =false;
 
 
 }
