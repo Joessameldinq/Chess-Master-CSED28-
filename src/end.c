@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include "../include/definitions.h"
 #include "../include/move.h"
+#include "../include/end.h"
 
 
 // Find the king belonging to a given color
@@ -68,7 +69,7 @@ bool inCheckMate(Game *game)
 GameStatus computeGameStatus(Game *game)
 {
     if (inCheckMate(game)) return CHECKMATE;
-    if (inStaleMate(game)) return STALEMATE;
+    if (isStalemate(game)) return STALEMATE;
     return inCheck(game) ? CHECK : PLAYING;
 }
 
@@ -112,4 +113,125 @@ bool isStalemate(Game *game)
     }
 
     return true; // No legal moves and king is not in check  -> stalemate
+}
+bool fiftyMovesRule(Game *game)
+{
+    if(game->halfMoveClock >= 100)
+    {
+        game->status = DRAW_FIFTY_MOVE;
+        return true;
+    }
+    return false;
+
+}
+//check for suffecient pieces for the player to win if both doesnt have that suffecient pieces we declare a draw.
+Color getSquareColor(int row,int col)
+{
+    return ((row+col) %2 == 0 )? WHITE:BLACK;
+}
+bool isDeadPosition(Game *game)
+{
+    short int knightW = 0, knightB = 0, bishopW = 0, bishopB = 0;
+    short int whiteBishopOnWhiteSquares = 0, whiteBishopOnBlackSquares = 0;
+    short int blackBishopOnWhiteSquares = 0, blackBishopOnBlackSquares = 0;  // ✓ Fixed
+    
+    for(int i = 0; i < BOARD_SIZE; i++)
+    {
+        for(int j = 0; j < BOARD_SIZE; j++)
+        {
+            Piece p = game->board[i][j];
+            if(p.type == PAWN || p.type == QUEEN || p.type == ROOK)
+                return false; // Sufficient material
+            else if(p.type == KNIGHT)
+            {
+                if(p.color == WHITE)
+                    knightW++;
+                else
+                    knightB++;
+            }
+            else if(p.type == BISHOP)
+            {
+                if(getSquareColor(i,j) == WHITE && p.color == WHITE)
+                {
+                    bishopW++;
+                    whiteBishopOnWhiteSquares++;
+                }
+                else if(getSquareColor(i,j) == WHITE && p.color == BLACK)
+                {
+                    bishopB++;
+                    blackBishopOnWhiteSquares++;
+                }
+                else if(getSquareColor(i,j) == BLACK && p.color == WHITE)
+                {
+                    bishopW++;
+                    whiteBishopOnBlackSquares++;
+                }
+                else
+                {
+                    bishopB++;
+                    blackBishopOnBlackSquares++;
+                }
+            }
+        }
+    }
+    
+    short int totalKnights = knightW + knightB;
+    short int totalBishops = bishopW + bishopB;
+    short int totalMinorPieces = totalBishops + totalKnights;
+    
+    // 1. King vs King
+    if(totalMinorPieces == 0)
+        return true;
+    
+    // 2. (King + Bishop) vs King
+    if(totalBishops == 1 && totalKnights == 0)
+        return true;
+    
+    // 3. (King + Knight) vs King
+    if(totalKnights == 1 && totalBishops == 0)
+        return true;
+    
+    // 4. (King + Bishop) vs (King + Bishop) (same colored squares)
+    //  both bishops on same color squares
+    if(totalBishops == 2 && totalKnights == 0 && bishopW == 1 && bishopB == 1)
+    {
+        if((whiteBishopOnWhiteSquares == 1 && blackBishopOnWhiteSquares == 1) || 
+        (whiteBishopOnBlackSquares == 1 && blackBishopOnBlackSquares == 1))
+            return true;
+    }
+    
+    // 5. (King + Knight) vs (King + Knight)
+    if(knightW == 1 && knightB == 1 && totalBishops == 0)
+        return true;
+    
+    // 6. (King + Knight + Knight) vs King
+    if(totalKnights == 2 && totalBishops == 0)
+    {
+        if((knightB == 2 && knightW == 0) || (knightW == 2 && knightB == 0))
+            return true;
+    }
+    
+    // 7. (King + Bishop(s)) vs (King + Bishop(s)) (all same color)
+    if(totalBishops >= 2 && totalKnights == 0)
+    {
+        if((totalBishops == whiteBishopOnWhiteSquares + blackBishopOnWhiteSquares) || 
+           (totalBishops == whiteBishopOnBlackSquares + blackBishopOnBlackSquares))
+            return true;
+    }
+    
+    // 8. (King + Knight(s)) vs (King + Knight(s))
+    if(totalBishops == 0 && totalKnights >= 2 && knightW != 0 && knightB != 0)
+        return true;
+    
+    // 9. (King + Bishop(s)) (same color) vs (King + Knight(s))
+    if((bishopW > 0 && bishopB == 0 && knightB > 0 && knightW == 0) || 
+       (bishopB > 0 && bishopW == 0 && knightW > 0 && knightB == 0))
+    {
+        // All bishops must be on same color
+        if((totalBishops == whiteBishopOnWhiteSquares + blackBishopOnWhiteSquares) ||
+           (totalBishops == whiteBishopOnBlackSquares + blackBishopOnBlackSquares))
+            return true;
+    }
+    
+    return false;
 }

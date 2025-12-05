@@ -2,9 +2,11 @@
 #include "../include/game.h"
 #include "../include/display.h"
 #include "../include/end.h"
+#include "../include/move.h"
 #include <stdbool.h>
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 int findFirstEmptyCapturedSlot(Piece arr[8]) {
     for (int i = 0; i < 8; ++i) if (arr[i].type == EMPTY) return i;
     return -1; // Full
@@ -392,7 +394,7 @@ void applyMove(Game *game, Move *move)
         }
     }
 
-    // 7) Half-move clock
+    // 7) Half-move clock for 50 move rule
     if (mover.type == PAWN || move->moveType == CAPTURE || move->moveType == EN_PASSENT) {
         game->halfMoveClock = 0;
     } else {
