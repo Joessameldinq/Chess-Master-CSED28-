@@ -13,6 +13,12 @@ int main()
 {
     // 1. Start the music in the background (using mpg123)
     system("mpg123 'Erik Satie - Gnossienne No.1.mp3' &");
+    FILE *fptr = fopen("attach/quotes.txt", "r");
+
+    if (!fptr) {
+        printf("Error: could not open quotes file!\n");
+        return 1;
+    }
     
     Game *game = initGame();
     displayWelcome();
@@ -21,6 +27,7 @@ int main()
     displayHelp();
     pause();
     clearScreen();
+
     
     char *buffer = NULL;
     Position *pos = NULL;
@@ -28,6 +35,7 @@ int main()
     bool restart = false;
     while (game->status == PLAYING || game->status == CHECK)
     {
+        printQuotes(fptr);
         printBoard(game);
         printGameState(game);
         

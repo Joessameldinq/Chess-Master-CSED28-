@@ -1,8 +1,10 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 #include "definitions.h"
-
-//void printQuotes(); will be given a pointer to configuration file
+#include <stdlib.h>
+ #include <string.h>
+#include <stdio.h> 
+void printQuotes(FILE *configuration);
 void printCapturedPieces(Game *game);
 void printGameState(Game *game);
 void printBoard(Game *game);

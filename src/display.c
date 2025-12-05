@@ -3,8 +3,11 @@
 #include "../include/end.h"
 #include "../include/game.h"
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> 
 #include <locale.h>
+ #include <time.h> // For random seeding
+ #include <ctype.h>
+ #include <string.h>
 
 #define RESET       "\033[0m"
 #define LIGHT_SQ    "\033[47m"  // Light beige square 230
@@ -15,7 +18,47 @@
 #define YELLOW "\033[93m"
 #define WHITE_BG "\033[47m"
 #define MAGNETA "\033[35m"
+void printQuotes(FILE *configuration)
+{
+    if (!configuration)
+    {
+        printf("Error: Could not open quotes file!\n");
+        return;
+    }
 
+    char buffer[256];
+    srand(time(NULL));
+    int randomQuote = (rand() % 15) + 1;   // 1 ---> 15
+    char target[10];
+
+    snprintf(target, sizeof(target), "%d.", randomQuote);
+    printf("%s","\e[0;92m");
+    printf("===========================================================================\n");
+    printf("🧩Life Lessons from the Chessboard: Quotes That Resonate Beyond the Game♟️\n");
+    printf("===========================================================================\n"RESET);
+
+    while (fgets(buffer, sizeof(buffer), configuration))
+    {
+        if (strncmp(buffer, target, strlen(target)) == 0)
+            break;
+    }
+
+    if (feof(configuration))
+    {
+        printf("Error: Quote number %d not found in file.\n", randomQuote);
+        return;
+    }
+
+    printf("%s", buffer);
+
+    for (int i = 0; i < 2; i++)
+    {
+        if (fgets(buffer, sizeof(buffer), configuration))
+            printf("%s", buffer);
+    }
+
+    printf("\n");
+}
 void printCapturedPieces(Game *game)
 {
     short int capturedWhite = findFirstEmptyCapturedSlot(game->capturedWhitePieces);
@@ -90,7 +133,7 @@ void printGameState(Game *game) {
     printf("%s",game->currentPlayer == WHITE ? WHITE_PC : BLACK_PC);
     printf(BOLD);
     printf("Current Turn: %s%s\n", game->currentPlayer== WHITE ? "WHITE" : "BLACK",RESET);
-    
+    printf("⏳ Half move clock %d \n",game->halfMoveClock);
     // Check status
     if(game->status == CHECK) {
         printf("⚠️  CHECK! %s King is under attack!\n", game->currentPlayer== WHITE ? "White" : "Black");
@@ -123,6 +166,7 @@ void printGameState(Game *game) {
 }
 void displayHelp(void) {
     printf("\n");
+    printf(BOLD);
     printf("╔═══════════════════════════════════════════════════════════╗\n");
     printf("║                      CHESS HELP                           ║\n");
     printf("╠═══════════════════════════════════════════════════════════╣\n");
@@ -131,12 +175,6 @@ void displayHelp(void) {
     printf("║    • Help:     help  or  h                                ║\n");
     printf("║    • Restart:  restart  or  r                             ║\n");
     printf("║    • Quit:     quit  or  q                                ║\n");
-    printf("║                                                           ║\n");
-    printf("║  Pieces:                                                  ║\n");
-    printf("║    White (lowercase): p=pawn, n=knight, b=bishop          ║\n");
-    printf("║                       r=rook, q=queen, k=king             ║\n");
-    printf("║    Black (UPPERCASE): P=pawn, N=knight, B=bishop          ║\n");
-    printf("║                       R=rook, Q=queen, K=king             ║\n");
     printf("║                                                           ║\n");
     printf("║  Special Moves:                                           ║\n");
     printf("║    • Castling: Move king 2 squares (e1g1 or e1c1)         ║\n");
@@ -152,6 +190,7 @@ void displayWelcome(void) {
     printf("╔═══════════════════════════════════════════════════════════╗\n");
     printf("║                                                           ║\n");
     printf("║              ♔  CHESS ENGINE INTERACTIVE GAME  ♚          ║\n");
+    printf("║              ♔  Supervised by Eng.Karim Alaa  ♚           ║\n");
     printf("║           ♔  CSED28++ Batch CSE212 Final Project  ♚       ║\n");
     printf("║              ♔            Presented BY         ♚          ║\n");
     printf("║              ♔            Yousef Essam         ♚          ║\n");
@@ -267,6 +306,7 @@ void clearScreen() {
 }
 void pause(void)
 {
-    printf("Press Enter to Continue..");
+    printf(LIGHT_SQ BOLD);
+    printf("Press Enter to Continue.."RESET);
     getchar();
 }
