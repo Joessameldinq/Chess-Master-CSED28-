@@ -1,0 +1,342 @@
+==117466== Memcheck, a memory error detector
+==117466== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==117466== Using Valgrind-3.22.0-bd4db67b1d-20231031 and LibVEX; rerun with -h for copyright info
+==117466== Command: bin/Chess
+==117466== Parent PID: 108799
+==117466== 
+--117466-- 
+--117466-- Valgrind options:
+--117466--    --leak-check=full
+--117466--    --show-leak-kinds=all
+--117466--    --track-origins=yes
+--117466--    --verbose
+--117466--    --log-file=valgrind-out.txt
+--117466-- Contents of /proc/version:
+--117466--   Linux version 6.6.87.2-microsoft-standard-WSL2 (root@439a258ad544) (gcc (GCC) 11.2.0, GNU ld (GNU Binutils) 2.37) #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025
+--117466-- 
+--117466-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-lzcnt-rdtscp-sse3-ssse3-avx-avx2-bmi-f16c-rdrand-rdseed
+--117466-- Page sizes: currently 4096, max supported 4096
+--117466-- Valgrind library directory: /usr/libexec/valgrind
+--117466-- Reading syms from /home/yousefessam/Chess-Master-CSED28-/bin/Chess
+--117466-- Reading syms from /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+--117466--   Considering /usr/lib/debug/.build-id/52/0e05878220fb2fc6d28ff46b63b3fd5d48e763.debug ..
+--117466--   .. build-id is valid
+--117466-- Reading syms from /usr/libexec/valgrind/memcheck-amd64-linux
+--117466--    object doesn't have a dynamic symbol table
+--117466-- Scheduler: using generic scheduler lock implementation.
+--117466-- Reading suppressions file: /usr/libexec/valgrind/default.supp
+==117466== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-117466-by-yousefessam-on-???
+==117466== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-117466-by-yousefessam-on-???
+==117466== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-117466-by-yousefessam-on-???
+==117466== 
+==117466== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==117466== don't want to do, unless you know exactly what you're doing,
+==117466== or are doing some strange experiment):
+==117466==   /usr/bin/vgdb --pid=117466 ...command...
+==117466== 
+==117466== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==117466==   /path/to/gdb bin/Chess
+==117466== and then give GDB the following command
+==117466==   target remote | /usr/bin/vgdb --pid=117466
+==117466== --pid is optional if only one valgrind process is running
+==117466== 
+--117466-- REDIR: 0x4028b00 (ld-linux-x86-64.so.2:strlen) redirected to 0x580c2e1a (???)
+--117466-- REDIR: 0x40272b0 (ld-linux-x86-64.so.2:index) redirected to 0x580c2e34 (???)
+--117466-- Reading syms from /usr/libexec/valgrind/vgpreload_core-amd64-linux.so
+--117466-- Reading syms from /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so
+==117466== WARNING: new redirection conflicts with existing -- ignoring it
+--117466--     old: 0x04028b00 (strlen              ) R-> (0000.0) 0x580c2e1a ???
+--117466--     new: 0x04028b00 (strlen              ) R-> (2007.0) 0x0484f340 strlen
+--117466-- REDIR: 0x40274e0 (ld-linux-x86-64.so.2:strcmp) redirected to 0x4850460 (strcmp)
+--117466-- REDIR: 0x4026910 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4853cd0 (mempcpy)
+--117466-- Reading syms from /usr/lib/x86_64-linux-gnu/libc.so.6
+--117466--   Considering /usr/lib/debug/.build-id/27/4eec488d230825a136fa9c4d85370fed7a0a5e.debug ..
+--117466--   .. build-id is valid
+--117466-- REDIR: 0x4028ca0 (ld-linux-x86-64.so.2:strncmp) redirected to 0x484fc90 (strncmp)
+--117466-- REDIR: 0x4917050 (libc.so.6:strnlen) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x49170e0 (libc.so.6:strpbrk) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x49151a0 (libc.so.6:strcmp) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x492e3b0 (libc.so.6:wcsnlen) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4914290 (libc.so.6:memset) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x492db20 (libc.so.6:wcslen) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x49993f0 (libc.so.6:__memcpy_chk) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4914200 (libc.so.6:memrchr) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x492e350 (libc.so.6:wcsncpy) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4913720 (libc.so.6:memcpy@@GLIBC_2.14) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x492c8e0 (libc.so.6:wcschr) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4915090 (libc.so.6:index) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4917110 (libc.so.6:rindex) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x492c990 (libc.so.6:wcscmp) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x49144b0 (libc.so.6:stpncpy) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x493aeb0 (libc.so.6:wmemchr) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4916ef0 (libc.so.6:strncmp) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4914510 (libc.so.6:strcasecmp) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4916310 (libc.so.6:strcspn) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x492d8f0 (libc.so.6:wcscpy) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4915020 (libc.so.6:strcat) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4916df0 (libc.so.6:strncasecmp_l) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4915110 (libc.so.6:strchrnul) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4913630 (libc.so.6:bcmp) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x49162a0 (libc.so.6:strcpy) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x49145b0 (libc.so.6:strcasecmp_l) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4916cc0 (libc.so.6:strlen) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4916f90 (libc.so.6:strncpy) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x493af30 (libc.so.6:wmemcmp) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4999510 (libc.so.6:__memmove_chk) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+==117466== WARNING: new redirection conflicts with existing -- ignoring it
+--117466--     old: 0x049eaa10 (__memcpy_chk_avx_una) R-> (2030.0) 0x04853dd0 __memcpy_chk
+--117466--     new: 0x049eaa10 (__memcpy_chk_avx_una) R-> (2024.0) 0x04853740 __memmove_chk
+--117466-- REDIR: 0x4914440 (libc.so.6:stpcpy) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4913fc0 (libc.so.6:memmove) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+==117466== Preferring higher priority redirection:
+--117466--     old: 0x049eaa40 (__memcpy_avx_unalign) R-> (2018.0) 0x04851580 __memcpy_avx_unaligned_erms
+--117466--     new: 0x049eaa40 (__memcpy_avx_unalign) R-> (2018.1) 0x04852d60 memmove
+--117466-- REDIR: 0x49135b0 (libc.so.6:memchr) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x49172e0 (libc.so.6:strspn) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x49140e0 (libc.so.6:mempcpy) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x4916d50 (libc.so.6:strncasecmp) redirected to 0x483d1c0 (_vgnU_ifunc_wrapper)
+--117466-- REDIR: 0x49ef630 (libc.so.6:__strrchr_avx2) redirected to 0x484ed20 (rindex)
+--117466-- REDIR: 0x490f650 (libc.so.6:malloc) redirected to 0x48467b0 (malloc)
+--117466-- REDIR: 0x49ecde0 (libc.so.6:__strchrnul_avx2) redirected to 0x48537b0 (strchrnul)
+--117466-- REDIR: 0x49eaa40 (libc.so.6:__memcpy_avx_unaligned_erms) redirected to 0x4852d60 (memmove)
+--117466-- REDIR: 0x49eaa00 (libc.so.6:__mempcpy_avx_unaligned_erms) redirected to 0x48538d0 (mempcpy)
+--117466-- REDIR: 0x49ecfd0 (libc.so.6:__strcmp_avx2) redirected to 0x4850360 (strcmp)
+--117466-- REDIR: 0x49ed780 (libc.so.6:__strlen_avx2) redirected to 0x484f220 (strlen)
+--117466-- REDIR: 0x49ee860 (libc.so.6:__strncmp_avx2) redirected to 0x484fab0 (strncmp)
+--117466-- REDIR: 0x49ecba0 (libc.so.6:__strchr_avx2) redirected to 0x484ef00 (index)
+--117466-- REDIR: 0x49ea040 (libc.so.6:__memchr_avx2) redirected to 0x48504e0 (memchr)
+--117466-- REDIR: 0x490fd30 (libc.so.6:free) redirected to 0x4849820 (free)
+--117466-- REDIR: 0x49100a0 (libc.so.6:realloc) redirected to 0x484db00 (realloc)
+--117466-- REDIR: 0x49ebe90 (libc.so.6:__strcasecmp_l_avx2) redirected to 0x484ff70 (strcasecmp_l)
+--117466-- REDIR: 0x49eaa10 (libc.so.6:__memcpy_chk_avx_unaligned_erms) redirected to 0x4853dd0 (__memcpy_chk)
+--117466-- REDIR: 0x49eb6f0 (libc.so.6:__stpcpy_avx2) redirected to 0x48525a0 (stpcpy)
+--117466-- REDIR: 0x49eb440 (libc.so.6:__memset_avx2_unaligned_erms) redirected to 0x4852c50 (memset)
+--117466-- REDIR: 0x49ef360 (libc.so.6:__strnlen_avx2) redirected to 0x484f1c0 (strnlen)
+==117466== 
+==117466== Process terminating with default action of signal 1 (SIGHUP)
+==117466==    at 0x497DA91: read (read.c:26)
+==117466==    by 0x48F47A4: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:517)
+==117466==    by 0x48F75D1: _IO_default_uflow (genops.c:362)
+==117466==    by 0x10A73B: readInput (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109270: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== HEAP SUMMARY:
+==117466==     in use at exit: 38,359 bytes in 147 blocks
+==117466==   total heap usage: 232 allocs, 85 frees, 46,111 bytes allocated
+==117466== 
+==117466== Searching for pointers to 147 not-freed blocks
+==117466== Checked 118,824 bytes
+==117466== 
+==117466== 5 bytes in 1 blocks are still reachable in loss record 1 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x10A723: readInput (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109270: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 8 bytes in 1 blocks are still reachable in loss record 2 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x489C673: new_composite_name (setlocale.c:165)
+==117466==    by 0x489C987: setlocale (setlocale.c:375)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 41 bytes in 1 blocks are still reachable in loss record 3 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A288D: _nl_make_l10nflist (l10nflist.c:166)
+==117466==    by 0x48A2BC3: _nl_make_l10nflist (l10nflist.c:295)
+==117466==    by 0x48A2B1C: _nl_make_l10nflist (l10nflist.c:285)
+==117466==    by 0x48A2B1C: _nl_make_l10nflist (l10nflist.c:285)
+==117466==    by 0x48999BE: _nl_find_locale (findlocale.c:214)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 52 bytes in 1 blocks are still reachable in loss record 4 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A288D: _nl_make_l10nflist (l10nflist.c:166)
+==117466==    by 0x48A2BC3: _nl_make_l10nflist (l10nflist.c:295)
+==117466==    by 0x48999BE: _nl_find_locale (findlocale.c:214)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 56 bytes in 1 blocks are still reachable in loss record 5 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A2A19: _nl_make_l10nflist (l10nflist.c:242)
+==117466==    by 0x48A2BC3: _nl_make_l10nflist (l10nflist.c:295)
+==117466==    by 0x48A2B1C: _nl_make_l10nflist (l10nflist.c:285)
+==117466==    by 0x48A2B1C: _nl_make_l10nflist (l10nflist.c:285)
+==117466==    by 0x48999BE: _nl_find_locale (findlocale.c:214)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 84 bytes in 12 blocks are still reachable in loss record 6 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x4917017: strndup (strndup.c:43)
+==117466==    by 0x4899984: _nl_find_locale (findlocale.c:310)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 93 bytes in 2 blocks are still reachable in loss record 7 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A288D: _nl_make_l10nflist (l10nflist.c:166)
+==117466==    by 0x48A2BC3: _nl_make_l10nflist (l10nflist.c:295)
+==117466==    by 0x48A2B1C: _nl_make_l10nflist (l10nflist.c:285)
+==117466==    by 0x48999BE: _nl_find_locale (findlocale.c:214)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 96 bytes in 12 blocks are still reachable in loss record 8 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x491635E: strdup (strdup.c:42)
+==117466==    by 0x489CAFF: setlocale (setlocale.c:366)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 104 bytes in 1 blocks are still reachable in loss record 9 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A2A19: _nl_make_l10nflist (l10nflist.c:242)
+==117466==    by 0x48A2BC3: _nl_make_l10nflist (l10nflist.c:295)
+==117466==    by 0x48999BE: _nl_find_locale (findlocale.c:214)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 144 bytes in 2 blocks are still reachable in loss record 10 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A2A19: _nl_make_l10nflist (l10nflist.c:242)
+==117466==    by 0x48A2BC3: _nl_make_l10nflist (l10nflist.c:295)
+==117466==    by 0x48A2B1C: _nl_make_l10nflist (l10nflist.c:285)
+==117466==    by 0x48999BE: _nl_find_locale (findlocale.c:214)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 353 bytes in 12 blocks are still reachable in loss record 11 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A288D: _nl_make_l10nflist (l10nflist.c:166)
+==117466==    by 0x48A2B1C: _nl_make_l10nflist (l10nflist.c:285)
+==117466==    by 0x48A2B1C: _nl_make_l10nflist (l10nflist.c:285)
+==117466==    by 0x48999BE: _nl_find_locale (findlocale.c:214)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 485 bytes in 12 blocks are still reachable in loss record 12 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A288D: _nl_make_l10nflist (l10nflist.c:166)
+==117466==    by 0x48999BE: _nl_find_locale (findlocale.c:214)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 672 bytes in 12 blocks are still reachable in loss record 13 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A2A19: _nl_make_l10nflist (l10nflist.c:242)
+==117466==    by 0x48A2B1C: _nl_make_l10nflist (l10nflist.c:285)
+==117466==    by 0x48A2B1C: _nl_make_l10nflist (l10nflist.c:285)
+==117466==    by 0x48999BE: _nl_find_locale (findlocale.c:214)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 792 bytes in 1 blocks are still reachable in loss record 14 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x489A63F: _nl_intern_locale_data (loadlocale.c:156)
+==117466==    by 0x489AF56: _nl_load_locale (loadlocale.c:332)
+==117466==    by 0x489992E: _nl_find_locale (findlocale.c:237)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 838 bytes in 24 blocks are still reachable in loss record 15 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A288D: _nl_make_l10nflist (l10nflist.c:166)
+==117466==    by 0x48A2B1C: _nl_make_l10nflist (l10nflist.c:285)
+==117466==    by 0x48999BE: _nl_find_locale (findlocale.c:214)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 1,024 bytes in 1 blocks are still reachable in loss record 16 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48E71B4: _IO_file_doallocate (filedoalloc.c:101)
+==117466==    by 0x48F7523: _IO_doallocbuf (genops.c:347)
+==117466==    by 0x48F4F8F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:745)
+==117466==    by 0x48F5AAE: _IO_new_file_xsputn (fileops.c:1244)
+==117466==    by 0x48F5AAE: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1197)
+==117466==    by 0x48C2CC8: __printf_buffer_flush_to_file (printf_buffer_to_file.c:59)
+==117466==    by 0x48C2CC8: __printf_buffer_to_file_done (printf_buffer_to_file.c:120)
+==117466==    by 0x48CD742: __vfprintf_internal (vfprintf-internal.c:1545)
+==117466==    by 0x4999A3C: __printf_chk (printf_chk.c:33)
+==117466==    by 0x109976: displayWelcome (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x1091FA: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 1,024 bytes in 1 blocks are still reachable in loss record 17 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48E71B4: _IO_file_doallocate (filedoalloc.c:101)
+==117466==    by 0x48F7523: _IO_doallocbuf (genops.c:347)
+==117466==    by 0x48F4883: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:486)
+==117466==    by 0x48F75D1: _IO_default_uflow (genops.c:362)
+==117466==    by 0x1091FF: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 1,248 bytes in 12 blocks are still reachable in loss record 18 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A2A19: _nl_make_l10nflist (l10nflist.c:242)
+==117466==    by 0x48999BE: _nl_find_locale (findlocale.c:214)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 1,600 bytes in 1 blocks are still reachable in loss record 19 of 23
+==117466==    at 0x484DB80: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A2482: extend_alias_table (localealias.c:397)
+==117466==    by 0x48A2482: read_alias_file (localealias.c:309)
+==117466==    by 0x48A2679: _nl_expand_alias (localealias.c:194)
+==117466==    by 0x4899647: _nl_find_locale (findlocale.c:158)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 1,728 bytes in 24 blocks are still reachable in loss record 20 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A2A19: _nl_make_l10nflist (l10nflist.c:242)
+==117466==    by 0x48A2B1C: _nl_make_l10nflist (l10nflist.c:285)
+==117466==    by 0x48999BE: _nl_find_locale (findlocale.c:214)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 2,048 bytes in 1 blocks are still reachable in loss record 21 of 23
+==117466==    at 0x484DB80: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x48A2372: read_alias_file (localealias.c:329)
+==117466==    by 0x48A2679: _nl_expand_alias (localealias.c:194)
+==117466==    by 0x4899647: _nl_find_locale (findlocale.c:158)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 2,864 bytes in 11 blocks are still reachable in loss record 22 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x489A543: _nl_intern_locale_data (loadlocale.c:156)
+==117466==    by 0x489AF56: _nl_load_locale (loadlocale.c:332)
+==117466==    by 0x489992E: _nl_find_locale (findlocale.c:237)
+==117466==    by 0x489C7F4: setlocale (setlocale.c:337)
+==117466==    by 0x109AC9: printBoard (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x109247: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== 23,000 bytes in 1 blocks are still reachable in loss record 23 of 23
+==117466==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==117466==    by 0x10A4F3: initGame (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466==    by 0x1091F2: main (in /home/yousefessam/Chess-Master-CSED28-/bin/Chess)
+==117466== 
+==117466== LEAK SUMMARY:
+==117466==    definitely lost: 0 bytes in 0 blocks
+==117466==    indirectly lost: 0 bytes in 0 blocks
+==117466==      possibly lost: 0 bytes in 0 blocks
+==117466==    still reachable: 38,359 bytes in 147 blocks
+==117466==         suppressed: 0 bytes in 0 blocks
+==117466== 
+==117466== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

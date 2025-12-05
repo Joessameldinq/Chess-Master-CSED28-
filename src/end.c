@@ -70,6 +70,8 @@ GameStatus computeGameStatus(Game *game)
 {
     if (inCheckMate(game)) return CHECKMATE;
     if (isStalemate(game)) return STALEMATE;
+    if(isDeadPosition(game))return DRAW_INSUFFICIENT_MATERIAL;
+    if(fiftyMovesRule(game)) return DRAW_FIFTY_MOVE;
     return inCheck(game) ? CHECK : PLAYING;
 }
 
@@ -101,7 +103,7 @@ bool isStalemate(Game *game)
                     Position to = { .x = x, .y = y };
                     Move mv = { .initial = from, .final = to };
 
-                    if (!isValidMove(game, mv))
+                    if (!canPieceMoveTo(game, piece,mv))
                         continue;
 
                     // If any legal move exists -> not stalemate

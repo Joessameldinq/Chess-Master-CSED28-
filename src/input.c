@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include <stdio.h>
 
-#define MAX_INPUT_SIZE 4
+#define MAX_INPUT_SIZE 50
 
 bool isAlpahNumeric(char c)
 {
@@ -14,8 +14,11 @@ bool isAlpahNumeric(char c)
 char* readInput(void)
 {
     char *buffer = (char*)malloc(MAX_INPUT_SIZE + 1); // Caller must free it
-    if (!buffer)
+       if (!buffer)  // Check malloc success
+    {
+        fprintf(stderr, "Memory allocation failed\n");
         return NULL;
+    }
     
     char temp;
     int idx = 0;
@@ -30,7 +33,7 @@ char* readInput(void)
 
 bool validateInputFormat(char *input)
 {
-    if(strlen(input) < 4)
+    if(strlen(input) < 4 || input ==NULL)
         return false;
     
     if(tolower(input[0]) < 'a' || tolower(input[0]) > 'h' || 
@@ -46,6 +49,11 @@ bool validateInputFormat(char *input)
 
 Position* parseMove(char *input)
 {
+    if(!input)
+    {
+        printf("Error\n");
+        return NULL;
+    }
     short fromX = '8' - input[1];
     short toX = '8' - input[3];
     short fromY = tolower(input[0]) - 'a';

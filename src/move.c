@@ -7,26 +7,113 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+//Flags
+bool pawnPromotionMade;
+bool castlingMade;
+bool enpassentMade;
+
+
+bool canPieceMoveTo(Game *game, Piece piece, Move move)
+{
+    short int rowDirection = move.final.x - move.initial.x;
+    short int colDirection = move.final.y - move.initial.y;
+
+    if (rowDirection == 0 && colDirection == 0)
+        return false;
+
+    Piece dest = game->board[move.final.x][move.final.y];
+    
+    // Can't capture own piece
+    if (dest.type != EMPTY && dest.color == piece.color)
+        return false;
+
+    switch (piece.type)
+    {
+        case PAWN: {
+            short int dir = piece.color == WHITE ? -1 : +1;
+            
+            // Single step forward
+            if (rowDirection == dir && colDirection == 0 && dest.type == EMPTY)
+                return true;
+            
+            // Double step from starting rank
+            if (rowDirection == 2 * dir && colDirection == 0 && dest.type == EMPTY && !piece.hasMoved)
+            {
+                Piece passed = game->board[move.initial.x + dir][move.initial.y];
+                if (passed.type == EMPTY)
+                    return true;
+            }
+            
+            // Diagonal capture (including en passant square)
+            if (abs(colDirection) == 1 && rowDirection == dir)
+            {
+                // Normal capture
+                if (dest.type != EMPTY && dest.color != piece.color)
+                    return true;
+                
+                // En passant
+                if (dest.type == EMPTY && game->enPassentAvailable &&
+                    game->enPassentTarget.x == move.final.x && 
+                    game->enPassentTarget.y == move.final.y)
+                    return true;
+            }
+            return false;
+        }
+        
+        case KNIGHT:
+            return (abs(rowDirection) == 2 && abs(colDirection) == 1) ||
+                   (abs(rowDirection) == 1 && abs(colDirection) == 2);
+        
+        case BISHOP:
+            return abs(rowDirection) == abs(colDirection) && isPathClear(game, move);
+        
+        case ROOK:
+            return (rowDirection == 0 || colDirection == 0) && isPathClear(game, move);
+        
+        case QUEEN:
+            return ((rowDirection == 0 || colDirection == 0) || 
+                    (abs(rowDirection) == abs(colDirection))) && isPathClear(game, move);
+        
+        case KING:
+            return abs(rowDirection) <= 1 && abs(colDirection) <= 1;
+        
+        default:
+            return false;
+    }
+}
 int findFirstEmptyCapturedSlot(Piece arr[8]) {
     for (int i = 0; i < 8; ++i) if (arr[i].type == EMPTY) return i;
     return -1; // Full
 }
 bool simulateMoveAndShowIfInCheck(Game *game, Move *move)
 {
-    // Save current state
-    Game backup = *game;
-
-    // Try making the move on the board
-    applyMove(game, move);
-
-    Color sideThatMoved = (game->currentPlayer == WHITE) ? BLACK : WHITE;
-    Color savedCurrent = game->currentPlayer;
-    game->currentPlayer = sideThatMoved;
+    // Allocate backup on HEAP
+    Game *backup = (Game *)malloc(sizeof(Game));
+    if (!backup) {
+        fprintf(stderr, "ERROR: Memory allocation failed\n");
+        return true;
+    }
+    
+    // Copy entire game state
+    memcpy(backup, game, sizeof(Game));
+    
+    //  Manually make the move 
+    Position from = move->initial;
+    Position to = move->final;
+    
+    // Simple move (good enough for check detection)
+    game->board[to.x][to.y] = game->board[from.x][from.y];
+    game->board[from.x][from.y] = (Piece){.type = EMPTY, .color = NONE, .hasMoved = false};
+    
+    // Check if king is in check
     bool kingInCheck = inCheck(game);
-    game->currentPlayer = savedCurrent;
-    // Restore the original board state
-    *game = backup;
-
+    
+    // Restore original game state
+    memcpy(game, backup, sizeof(Game));
+    free(backup);
+    
     return kingInCheck;
 }
 /* Check whether every square between initial (exclusive) and final (exclusive)
@@ -241,7 +328,7 @@ bool isSquareAttacked(Game *game, Position pos)
             Move fake = { .initial = {i, j}, .final = pos };
 
             // Check if piece can legally move there (ignores king safety for now)
-            if (!isLegalMove(game, enemyP, fake)) 
+            if (!canPieceMoveTo(game, enemyP, fake)) 
                 continue;
 
             // Simulate the move to check if enemy king would be safe
@@ -304,6 +391,7 @@ bool isValidMove(Game *game, Move move)
 }
 void applyMove(Game *game, Move *move)
 {
+    setFlagsFalse();
     Position from = move->initial;
     Position to   = move->final;
     Piece mover = game->board[from.x][from.y];
@@ -336,6 +424,7 @@ void applyMove(Game *game, Move *move)
             game->board[capRow][capCol] = (Piece){ .type = EMPTY, .color = NONE, .hasMoved = false };
 
             move->moveType = EN_PASSENT;
+            enpassentMade = true;
         }
     }
 
@@ -371,16 +460,19 @@ void applyMove(Game *game, Move *move)
         if (to.y - from.y == 2) {
             // King-side
             Piece rook = game->board[from.x][7];
+            rook.hasMoved = true;
             game->board[from.x][from.y + 1] = rook;
             game->board[from.x][7] = (Piece){ .type = EMPTY, .color = NONE, .hasMoved = false };
             move->moveType = CASTLE_KINGSIDE;
         } else {
             // Queen-side
             Piece rook = game->board[from.x][0];
+            rook.hasMoved = true;
             game->board[from.x][from.y - 1] = rook;
             game->board[from.x][0] = (Piece){ .type = EMPTY, .color = NONE, .hasMoved = false };
             move->moveType = CASTLE_QUEENSIDE;
         }
+        castlingMade =true;
     }
 
     // 6) Pawn promotion
@@ -391,6 +483,7 @@ void applyMove(Game *game, Move *move)
             PieceType promo = (move->promotionPiece != EMPTY) ? move->promotionPiece : QUEEN;
             game->board[to.x][to.y].type = promo;
             move->moveType = PAWN_PROMOTION;
+            pawnPromotionMade = true;
         }
     }
 
@@ -409,6 +502,14 @@ void applyMove(Game *game, Move *move)
     // 9) Toggle current player
     game->currentPlayer = (game->currentPlayer == WHITE) ? BLACK : WHITE;
 
-    // 10) Update status
-    game->status = computeGameStatus(game);
+    // // 10) Update status
+    // game->status = computeGameStatus(game);
+}
+void setFlagsFalse(void)
+{
+    pawnPromotionMade = false;
+    castlingMade = false;
+    enpassentMade =false;
+
+
 }

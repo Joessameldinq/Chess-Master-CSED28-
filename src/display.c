@@ -1,4 +1,7 @@
 #include "../include/display.h"
+#include "../include/move.h"
+#include "../include/end.h"
+#include "../include/game.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
@@ -13,6 +16,69 @@
 #define WHITE_BG "\033[47m"
 #define MAGNETA "\033[35m"
 
+void printCapturedPieces(Game *game)
+{
+    short int capturedWhite = findFirstEmptyCapturedSlot(game->capturedWhitePieces);
+    short int capturedBlack = findFirstEmptyCapturedSlot(game->capturedBlackPieces);
+    char *piece;
+    printf("Captured Black Pieces: ");
+    for(int i = 0 ; i < capturedBlack ; i++)
+    {
+        switch (game->capturedBlackPieces[i].type)
+        {
+            case PAWN:
+                    piece = "♟";
+                    break;
+            case ROOK:
+                    piece = "♜";
+                    break;
+            case KNIGHT:
+                    piece = "♞";
+                    break;
+            case BISHOP:
+                    piece = "♝";
+                    break;
+            case QUEEN:
+                    piece = "♛";
+                    break;
+            case KING:
+                    piece = "♚";
+                    break;
+        
+        }
+        printf(BLACK_PC "%s "RESET,piece);
+    }
+    printf("\n");
+    printf("Captured White Pieces: ");
+    for(int i = 0 ; i < capturedWhite ; i++)
+    {
+        switch (game->capturedWhitePieces[i].type)
+        {
+            case PAWN:
+                    piece = "♙";
+                    break;
+            case ROOK:
+                    piece = "♖";
+                    break;
+            case KNIGHT:
+                    piece = "♘";
+                    break;
+            case BISHOP:
+                    piece = "♗";
+                    break;
+            case QUEEN:
+                    piece = "♕";
+                    break;
+            case KING:
+                    piece = "♔";
+                    break;
+        
+        }
+        printf(WHITE_PC "%s "RESET,piece);
+    }
+    printf("\n");
+
+}
 void printGameState(Game *game) {
     printf(MAGNETA BOLD);
     printf("\n");
@@ -35,23 +101,25 @@ void printGameState(Game *game) {
         printf("ℹ️  En Passant available\n");
     }
     
-    // if(pawnPromotionMade) {
-    //     printf("👑 Pawn promoted to %c\n", pawnPromotedTo);
-    //     pawnPromotionMade = false;
-    // }
+    if(pawnPromotionMade) {
+        printf("👑 Pawn promoted \n");
+        pawnPromotionMade = false;
+    }
     
-    // if(castlingMade) {
-    //     printf("🏰 Castling performed!\n");
-    //     castlingMade = false;
-    // }
+    if(castlingMade) {
+        printf("🏰 Castling performed!\n");
+        castlingMade = false;
+    }
     
-    // if(enpassentMade) {
-    //     printf("⚔️  En Passant capture!\n");
-    //     enpassentMade = false;
-    // }
+    if(enpassentMade) {
+        printf("⚔️  En Passant capture!\n");
+        enpassentMade = false;
+    }
     
     printf("═══════════════════════════════════════════════════════════\n");
     printf(RESET);
+    printCapturedPieces(game);
+    
 }
 void displayHelp(void) {
     printf("\n");
