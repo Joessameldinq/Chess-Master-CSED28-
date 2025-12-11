@@ -270,10 +270,11 @@ void load_saved_game()
         if (strcasecmp(f, "quit") == 0) return;
 
         // Build full path
-        if (strstr(f, ".bin") == NULL) snprintf(fullPath, sizeof(fullPath), "%s.bin", f);
-        else strncpy(fullPath, f, sizeof(fullPath)-1);
+        // if (strstr(f, ".bin") == NULL) snprintf(fullPath, sizeof(fullPath), "%s.bin", f);
+        strncpy(fullPath, f, sizeof(fullPath)-1);
 
         fptr = fopen(fullPath, "rb");
+        printf("%s\n",fullPath);
         if (!fptr)
         {
             printf("File not found! Enter a valid name or 'quit' to exit:\n");

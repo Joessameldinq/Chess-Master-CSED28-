@@ -56,8 +56,7 @@ bool inCheckMate(Game *game)
                     // Only consider legal moves and king safety
                     if (!isValidMove(game, mv))
                         continue;
-                    else
-                        return false;
+                    
 
                     // If king is safe after move  -> not checkmate
                     // else if (!simulateMoveAndShowIfInCheck(game, &mv))

@@ -68,7 +68,7 @@ void printQuotes(FILE *configuration)
     char buffer[256];
     printf(GREEN_BG BOLD);
     printf("===========================================================================\n");
-    printf("🧩 Life Lessons from the Chessboard ♟️\n");
+    printf("🧩 Life Lessons from the Chessboard                                         ♟️\n");
     printf("===========================================================================\n" RESET);
 
     while (fgets(buffer, sizeof(buffer), configuration)) {
