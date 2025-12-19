@@ -1,111 +1,68 @@
-# --------------------
-# Compiler and flags
-# --------------------
+# Compiler and resource compiler
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c99 -O2 -I./include
-LDFLAGS =
+WINDRES = windres
 
-# --------------------
-# Directories
-# --------------------
-SRC_DIR = src
-INC_DIR = include
-OBJ_DIR = obj
-BIN_DIR = bin
+# Directories and files
+SRCDIR = src
+TARGET = Chess.exe
+ICON_RC = icon.rc
+ICON_RES = icon.res
 
-# --------------------
-# Detect OS
-# --------------------
-ifeq ($(OS),Windows_NT)
-    EXE = .exe
-    WINDRES_EXISTS := yes
-else
-    EXE =
-    WINDRES_EXISTS := no
-endif
 
-# --------------------
-# Target executable
-# --------------------
-TARGET = $(BIN_DIR)/Chess$(EXE)
+# SDL includes
+CFLAGS = -Wall -Wextra -DSDL_MAIN_HANDLED -std=c99\
+-Iinclude \
+-Ithirdparty/SDL2-2.24.0/x86_64-w64-mingw32/include/SDL2 \
+-Ithirdparty/SDL2-2.24.0/x86_64-w64-mingw32/include \
+-Ithirdparty/SDL2_image-2.7.1/x86_64-w64-mingw32/include/SDL2 \
+-Ithirdparty/SDL2_image-2.7.1/x86_64-w64-mingw32/include \
+-Ithirdparty/SDL2_mixer-2.8.1/x86_64-w64-mingw32/include/SDL2 \
+-Ithirdparty/SDL2_mixer-2.8.1/x86_64-w64-mingw32/include \
+-Ithirdparty/SDL2_ttf-2.24.0/x86_64-w64-mingw32/include/SDL2 \
+-Ithirdparty/SDL2_ttf-2.24.0/x86_64-w64-mingw32/include 
 
-# --------------------
-# Source and object files
-# --------------------
-SRCS = $(wildcard $(SRC_DIR)/*.c)
-OBJS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS))
 
-# --------------------
-# Default target
-# --------------------
-all: directories $(TARGET)
+# SDL libraries
+LDFLAGS = \
+-Lthirdparty/SDL2-2.24.0/x86_64-w64-mingw32/lib \
+-Lthirdparty/SDL2_image-2.7.1/x86_64-w64-mingw32/lib \
+-Lthirdparty/SDL2_mixer-2.8.1/x86_64-w64-mingw32/lib \
+-Lthirdparty/SDL2_ttf-2.24.0/x86_64-w64-mingw32/lib
 
-# --------------------
-# Create necessary directories
-# --------------------
-directories:
-	@mkdir -p $(OBJ_DIR)
-	@mkdir -p $(BIN_DIR)
+SDLLIBS = -lSDL2 -lSDL2main -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
-# --------------------
-# Compile .c to .o
-# --------------------
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+SOURCES = \
+src/chess.c \
+src/DisplayConsole.c \
+src/EndingConditions.c \
+src/GameInitialization.c \
+src/GameModeGui.c \
+src/GuiHelpers.c \
+src/InputConsole.c \
+src/MainMenuGui.c \
+src/MovingLogic.c \
+src/SavingLoading.c \
+src/StackHelpers.c
 
-# --------------------
-# Windows icon (only on Windows)
-# --------------------
-ifeq ($(WINDRES_EXISTS),yes)
-ICON_OBJ = $(OBJ_DIR)/icon.o
-$(ICON_OBJ): icon.rc icon.ico
-	windres icon.rc -O coff -o $(ICON_OBJ)
-else
-ICON_OBJ =
-endif
+all: $(TARGET)
 
-# --------------------
-# Link executable
-# --------------------
-$(TARGET): $(OBJS) $(ICON_OBJ)
-	$(CC) $(OBJS) $(ICON_OBJ) -o $(TARGET)
-	@echo "Build complete: $(TARGET)"
 
-# --------------------
-# Clean
-# --------------------
+
+$(ICON_RES): $(ICON_RC)
+	$(WINDRES) $(ICON_RC) -O coff -o $(ICON_RES)
+
+$(TARGET): $(ICON_RES)
+	$(CC) $(CFLAGS)  src/*.c $(ICON_RES) -o $(TARGET) $(LDFLAGS) $(SDLLIBS)
+release: $(TARGET)
+
+
+
+# Run  game
+run: $(TARGET)
+	powershell -Command "& './$(TARGET)'"
+
+
 clean:
-	@rm -rf $(OBJ_DIR) $(BIN_DIR)
-	@echo "Clean complete"
+	rm -f Chess.exe icon.res 
 
-# --------------------
-# Run
-# --------------------
-run: all
-ifeq ($(OS),Windows_NT)
-	$(TARGET)
-else
-	./$(TARGET)
-endif
-
-# --------------------
-# Windows explicit cross-build
-# --------------------
-windows: directories $(OBJS)
-	# Compile Windows resources
-	x86_64-w64-mingw32-windres icon.rc -O coff -o $(OBJ_DIR)/icon.o
-	# Compile all C files to Windows object files
-	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/display.c -o $(OBJ_DIR)/display_win.o
-	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/end.c -o $(OBJ_DIR)/end_win.o
-	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/input.c -o $(OBJ_DIR)/input_win.o
-	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/move.c -o $(OBJ_DIR)/move_win.o
-	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/saving_loading.c -o $(OBJ_DIR)/saving_loading_win.o
-	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/stack.c -o $(OBJ_DIR)/stack_win.o
-	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/game.c    -o $(OBJ_DIR)/game_win.o
-	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/main.c    -o $(OBJ_DIR)/main_win.o
-	x86_64-w64-mingw32-gcc $(CFLAGS) -c src/utilities.c    -o $(OBJ_DIR)/utilities_win.o
-	# Link everything into a Windows executable
-	x86_64-w64-mingw32-gcc $(OBJ_DIR)/end_win.o $(OBJ_DIR)/input_win.o $(OBJ_DIR)/utilities_win.o  $(OBJ_DIR)/saving_loading_win.o $(OBJ_DIR)/stack_win.o $(OBJ_DIR)/move_win.o $(OBJ_DIR)/display_win.o $(OBJ_DIR)/game_win.o $(OBJ_DIR)/main_win.o $(OBJ_DIR)/icon.o -o $(BIN_DIR)/Chess.exe
-	@echo "Windows .exe build complete: $(BIN_DIR)/Chess.exe"
-
-.PHONY: all clean run directories windows
+.PHONY: all release  run  clean   
