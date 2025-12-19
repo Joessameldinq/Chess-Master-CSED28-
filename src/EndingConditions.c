@@ -56,6 +56,9 @@ bool inCheckMate(Game *game)
                     Position to = { .x = x, .y = y };
                     Move mv = { .initial = from, .final = to };
 
+                    //For early exit
+                    if(game->board[to.x][to.y].color == game->currentPlayer)continue;
+
                     // Only consider legal moves and king safety
                     if (!isValidMove(game, mv))
                         continue;

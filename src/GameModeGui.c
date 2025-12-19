@@ -599,7 +599,8 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                 app->running = false;
                 return true;
 
-            case SDLK_u:
+            case SDLK_u:case SDLK_z:
+                //Accept both u and z and ctrl u and ctrl z
                 if(undoMove(&app->gamestack, &app->redostack))
                 {
                     if(app->gamestack != NULL)
@@ -614,6 +615,7 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                 return true;
 
             case SDLK_r:
+                //Accept both 
                 if(redoMove(&app->gamestack, &app->redostack))
                 {
                     if(app->gamestack != NULL)
@@ -805,21 +807,20 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
             // printBoard(&newGame);
 
 
-            //Destroy eaten pieces
             
 
             // Show Message Box show current state
             if(move.moveType == PAWN_PROMOTION)
-                {showGameMessage(app->window,"Move Type","👑 Pawn promoted!");
+                {//showGameMessage(app->window,"Move Type","👑 Pawn promoted!");
                 playSoundEffect(gui->sEffect.promotion);}
             else if(move.moveType == CASTLE_KINGSIDE)
-                {showGameMessage(app->window,"Move Type","🏰 Castling King Side performed!");
+                {//showGameMessage(app->window,"Move Type","🏰 Castling King Side performed!");
                 playSoundEffect(gui->sEffect.castling);}
             else if(move.moveType == CASTLE_QUEENSIDE)
-                {showGameMessage(app->window,"Move Type","🏰 Castling Queen Side performed!");
+                {//showGameMessage(app->window,"Move Type","🏰 Castling Queen Side performed!");
                 playSoundEffect(gui->sEffect.castling);}
             else if(move.moveType == EN_PASSENT)
-                {showGameMessage(app->window,"Move Type","⚔️  En Passant capture!");
+                {//showGameMessage(app->window,"Move Type","⚔️  En Passant capture!");
                 playSoundEffect(gui->sEffect.enpassent);}
             else if(move.moveType == NORMAL_MOVE)
                     playSoundEffect(gui->sEffect.normalMove);
@@ -843,18 +844,16 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                     {mate = loadtexture("assets/wmate.png",renderer);
                     SDL_RenderCopy(renderer,mate,NULL,NULL);
                     SDL_RenderPresent(renderer);
-                    SDL_Delay(1500);
-                    //showGameMessage(app->window,"End of game","🏆 CHECKMATE! Black wins!");
+                    showGameMessage(app->window,"End of game","🏆 CHECKMATE! Black wins!");
                     SDL_DestroyTexture(mate);
                     }
                 else
                     {mate = loadtexture("assets/bmate.png",renderer);
                     SDL_RenderCopy(renderer,mate,NULL,NULL);
                     SDL_RenderPresent(renderer);
-                    SDL_Delay(1500);
                     if(!mate)
                         printf("ERROR");
-                    //showGameMessage(app->window,"End of game","🏆 CHECKMATE! White wins!");
+                    showGameMessage(app->window,"End of game","🏆 CHECKMATE! White wins!");
                     SDL_DestroyTexture(mate);
                     }
                 printf("\n🏆 CHECKMATE! %s wins!\n", (newGame.currentPlayer == WHITE) ? "BLACK" : "WHITE");

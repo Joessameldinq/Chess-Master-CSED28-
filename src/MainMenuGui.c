@@ -12,7 +12,7 @@ mainmenugui *initMainMenuGui(SDL_Renderer *renderer)
     mainmenugui *gui = (mainmenugui*)malloc(sizeof(mainmenugui));
 
     ///LOADING TEXTURES USING loadtexuter helper function
-    gui->background = loadtexture("assets/bg13.jpg",renderer);
+    gui->background = loadtexture("assets/finalbg.jpg",renderer);
     gui->loadgame.texture = loadtexture("assets/button_load.bmp",renderer);
     gui->newgame.texture = loadtexture("assets/button_new_game.bmp",renderer);
     gui->quit.texture = loadtexture("assets/button_quit.bmp",renderer);
