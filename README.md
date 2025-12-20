@@ -23,13 +23,13 @@ Sound effects using SDL2_mixer
 
 - Cross-platform support (Windows & Linux)
 
-👥 Team Members
+# 👥 Team Members
 
 - Youssef Essam ElDeen Mahmoud ElSaeed
 
 - Abdelwahhab Khaled Khamis
 
-🛠️ Technologies Used
+# 🛠️ Technologies Used
 
 - Language: C
 
@@ -44,8 +44,6 @@ Sound effects using SDL2_mixer
 >SDL2_mixer
 
 >Build Tool: Makefile
-
-## 📂 Project Structure (Simplified)
 
 ## 📂 Project Structure (Simplified)
 
