@@ -15,9 +15,25 @@ This project was developed as part of the Computer Programming I course.
 
 - Sound effects using SDL2_mixer
 
+- Background music making you enthusiastic
+
 - Legal move validation
 
+- Supporting enpassent , castling , pawnpromotion and stalemate
+
+- The Game supports redo and undo till the first move
+
 - Turn-based gameplay
+
+- Offering five slots to save games and continue them later
+
+- Highlight valid moves squares when piece is dragged
+
+- Highlight king square with red when he is in check position
+
+- Highlight last move squares with yellow
+
+- Show several message boxes during gameplay
 
 - Clean modular C codebase
 
