@@ -121,6 +121,7 @@ int main(int argc, char *argv[])
     mainmenugui    *mainMenuGui   = initMainMenuGui(app.renderer);
     gamegui *gameGui = NULL; // It will be initialized later
     bool musicPlaying = false;
+    
 
     // 
     // Main game loop

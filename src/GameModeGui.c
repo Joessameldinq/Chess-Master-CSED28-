@@ -1246,3 +1246,177 @@ void runGameVsComputer(App *app, gamegui *gui)
         
         }
 }
+void runtestGame(App *app, gamegui *gui)
+{
+    if(!app || !gui) return;
+    
+    char *moves[] = {"E2E4", "E7E5", "F1C4", "B8C6", "D1H5", "G8F6", "H5F7"};  
+    int numMoves = sizeof(moves) / sizeof(moves[0]);
+    int counter = 0;
+    
+    while(app->running && app->currentScreen == SCREEN_GAME && counter < numMoves)
+    {
+        Position init = {.x = '8' - moves[counter][1], .y = moves[counter][0] - 'A'};
+        Position final = {.x = '8' - moves[counter][3], .y = moves[counter][2] - 'A'};
+        Move mv = {.initial = init, .final = final, .capturedPiece = NONE, .moveType = NORMAL_MOVE, .promotionPiece = NONE};
+
+        if(isValidMove(&app->gamestack->curGame, mv))
+        {
+            Piece movingPiece = app->gamestack->curGame.board[mv.initial.x][mv.initial.y];
+            if(movingPiece.type == PAWN)
+            {
+                int promoRow = (movingPiece.color == WHITE) ? 0 : BOARD_SIZE - 1;
+                if(mv.final.x == promoRow) 
+                    mv.promotionPiece = getPromotionDialog(app->window);
+            }
+            
+            applyMove(&app->gamestack->curGame, &mv);
+            updateLastMoveTexture(gui, app->renderer, mv);
+            app->gamestack->curGame.status = computeGameStatus(&app->gamestack->curGame);
+
+            // Console output (optional)
+            printGameState(&app->gamestack->curGame);
+            printBoard(&app->gamestack->curGame);
+
+            // Play appropriate sound effect
+            if(mv.moveType == PAWN_PROMOTION)
+                playSoundEffect(gui->sEffect.promotion);
+            else if(mv.moveType == CASTLE_KINGSIDE)
+                playSoundEffect(gui->sEffect.castling);
+            else if(mv.moveType == CASTLE_QUEENSIDE)
+                playSoundEffect(gui->sEffect.castling);
+            else if(mv.moveType == EN_PASSENT)
+                playSoundEffect(gui->sEffect.enpassent);
+            else if(mv.moveType == NORMAL_MOVE)
+                playSoundEffect(gui->sEffect.normalMove);
+            else if(mv.moveType == CAPTURE)
+                playSoundEffect(gui->sEffect.capture);
+
+            // Handle game status
+            switch (app->gamestack->curGame.status)
+            {
+            case CHECK:
+                playSoundEffect(gui->sEffect.check);
+                if(app->gamestack->curGame.currentPlayer == WHITE)
+                    showGameMessage(app->window, "Warning", "⚠️  CHECK! White King under attack!");
+                else
+                    showGameMessage(app->window, "Warning", "⚠️  CHECK! Black King under attack!");
+                break;
+                
+            case CHECKMATE:
+                playSoundEffect(gui->sEffect.checkmate);
+                SDL_Texture *mate = NULL;
+                if(app->gamestack->curGame.currentPlayer == WHITE)
+                {
+                    mate = loadtexture("assets/wmate.png", app->renderer);
+                    if(mate) {
+                        SDL_RenderCopy(app->renderer, mate, NULL, NULL);
+                        SDL_RenderPresent(app->renderer);
+                        SDL_Delay(1000); // Show the image
+                        SDL_DestroyTexture(mate);
+                    }
+                    showGameMessage(app->window, "End of game", "🏆 CHECKMATE! Black wins!");
+                }
+                else
+                {
+                    mate = loadtexture("assets/bmate.png", app->renderer);
+                    if(mate) {
+                        SDL_RenderCopy(app->renderer, mate, NULL, NULL);
+                        SDL_RenderPresent(app->renderer);
+                        SDL_Delay(1000); // Show the image
+                        SDL_DestroyTexture(mate);
+                    }
+                    showGameMessage(app->window, "End of game", "🏆 CHECKMATE! White wins!");
+                }
+                printf("\n🏆 CHECKMATE! %s wins!\n", (app->gamestack->curGame.currentPlayer == WHITE) ? "BLACK" : "WHITE");
+                app->currentScreen = SCREEN_MENU;
+                return; // Exit test after checkmate
+                
+            case STALEMATE:
+                {
+                    SDL_Texture *stalemate = loadtexture("assets/stale.png", app->renderer);
+                    if(stalemate) {
+                        SDL_RenderCopy(app->renderer, stalemate, NULL, NULL);
+                        SDL_RenderPresent(app->renderer);
+                        SDL_Delay(1000);
+                        SDL_DestroyTexture(stalemate);
+                    }
+                    playSoundEffect(gui->sEffect.stalemate);
+                    showGameMessage(app->window, "End of game", "🤝 STALEMATE! Game is a draw.");
+                    printf("\n🤝 STALEMATE! Game is a draw.\n");
+                    app->currentScreen = SCREEN_MENU;
+                    return;
+                }
+                
+            case DRAW_FIFTY_MOVE:
+                playSoundEffect(gui->sEffect.draw);
+                showGameMessage(app->window, "End of game", "🤝 DRAW by fifty-move rule!");
+                printf("\n🤝 DRAW by fifty-move rule!\n");
+                app->currentScreen = SCREEN_MENU;
+                return;
+                
+            case DRAW_AGREEMENT:
+                playSoundEffect(gui->sEffect.draw);
+                showGameMessage(app->window, "End of game", "🤝 Game ended in a draw.");
+                printf("\n🤝 Game ended in a draw.\n");
+                app->currentScreen = SCREEN_MENU;
+                return;
+            
+            case DRAW_INSUFFICIENT_MATERIAL:
+                playSoundEffect(gui->sEffect.draw);
+                showGameMessage(app->window, "End of game", "🤝 Game ended in a dead position.");
+                printf("\n🤝 Game ended in a dead position\n");
+                app->currentScreen = SCREEN_MENU;
+                return;
+            }
+
+            // Clear redo stack before pushing new move
+            clearStack(&app->redostack);
+            
+            if(push(&app->gamestack, app->gamestack->curGame))
+            {
+                // Sync app->game with the new state
+                app->game = app->gamestack->curGame;
+                updateGameGui(gui, &app->game, app->renderer);
+                
+                // Highlight last moved piece
+                gui->fromMovingRect = (SDL_Rect){
+                    BOARDOFFSET + mv.initial.y * g_squareSize,
+                    BOARDOFFSET + mv.initial.x * g_squareSize,
+                    g_squareSize,
+                    g_squareSize
+                };
+                gui->toMovingRect = (SDL_Rect){
+                    BOARDOFFSET + mv.final.y * g_squareSize,
+                    BOARDOFFSET + mv.final.x * g_squareSize,
+                    g_squareSize,
+                    g_squareSize
+                };
+                
+                printf("Move %d executed successfully: %s\n", counter + 1, moves[counter]);
+                
+                // ✅ RENDER THE BOARD SO USER CAN SEE THE MOVE
+                SDL_Texture *dragTex = NULL;
+                Position draggedPiece = {-1, -1};
+                renderGameScreenGui(app->renderer, gui, &app->game, false, dragTex, (SDL_Rect){0}, draggedPiece);
+            }
+            else 
+            {
+                printf("Error: Failed to push game state\n");
+            }
+        }
+        else 
+        {
+            playSoundEffect(gui->sEffect.illegalMove);
+            printf("Invalid move attempted: %s\n", moves[counter]);
+        }
+        
+        // ✅ INCREMENT COUNTER (CRITICAL!)
+        counter++;
+        
+        // ✅ DELAY SO USER CAN SEE EACH MOVE
+        SDL_Delay(1500); // 1.5 seconds between moves
+    }
+    
+    printf("Test game completed. Played %d moves.\n", counter);
+}

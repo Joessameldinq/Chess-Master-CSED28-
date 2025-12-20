@@ -65,4 +65,5 @@ bool offerDrawDialog(SDL_Window *window);
 void clearHighlight(gamegui *gui);
 void highlightValidMoves(Game *game,Position from,SDL_Renderer *renderer);
 void updateLastMoveTexture(gamegui *gui,SDL_Renderer *renderer, Move move);
+void runtestGame(App *app, gamegui *gui);
 #endif
