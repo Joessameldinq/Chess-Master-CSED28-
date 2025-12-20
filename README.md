@@ -13,7 +13,7 @@ This project was developed as part of the Computer Programming I course.
 
 - Text rendering with SDL2_ttf
 
-Sound effects using SDL2_mixer
+- Sound effects using SDL2_mixer
 
 - Legal move validation
 
