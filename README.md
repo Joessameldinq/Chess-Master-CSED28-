@@ -41,9 +41,9 @@ This project was developed as part of the Computer Programming I course.
 
 # 👥 Team Members
 
-- Youssef Essam ElDeen Mahmoud ElSaeed
+- Youssef Essam ElDeen Mahmoud ElSaeed (Id : 24010854)
 
-- Abdelwahhab Khaled Khamis
+- Abdelwahhab Khaled Khamis (Id : )
 
 # 🛠️ Technologies Used
 
@@ -72,7 +72,13 @@ Chess-Master-CSED28/
 ├── Makefile        # Build configuration
 └── README.md       # Project documentation
 ```
+---
 
+##  📈 Overview
+
+The SDL2 Chess Engine is a high-performance graphical board game application implemented in C. It evolves the complexity of traditional chess logic into a modern, interactive experience by bridging a robust backend engine with a hardware-accelerated frontend. The application strictly adheres to FIDE regulations, accurately handling technical maneuvers such as kingside/queenside castling, en passant captures, and pawn promotion.
+
+---
 ## 🚀 Build & Run Instructions
 
 ### 🔹 Windows
@@ -151,6 +157,9 @@ sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev
 gcc src/.*c -o Chess `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 ./Chess
 ```
+
+
+
 
 
 
