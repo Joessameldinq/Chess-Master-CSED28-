@@ -332,7 +332,7 @@ bool isSquareAttacked(Game *game, Position pos)
             if (enemyP.type == EMPTY || enemyP.color != enemy) 
                 continue;
 
-            //Make facke move from i,j to the passed position to the function
+            //Make fake move from i,j to the passed position to the function
             Move fake = { .initial = {i, j}, .final = pos };
 
             // Check if piece can legally move there (ignores king safety for now)

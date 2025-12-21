@@ -161,7 +161,7 @@ gcc src/.*c -o Chess `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -lS
 
 ##  🧠 Overview of the Design  
 
-### Moving Logic 
+### 🛠 Moving Logic 
 
 #### Piece Moving-Validation Functions 
 
@@ -192,6 +192,47 @@ gcc src/.*c -o Chess `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -lS
 | `bool isSquareAttacked(Game *game, Position pos)`| **Returns true if a position is attacked by the opponent of currentPlayer.It ignores king safety for the moved piece.**|
 
 
+
+
+
+The engine utilizes a tiered validation system to handle the distinction between "geometric capability" and "legal moves" under FIDE rules. This separation is critical to prevent infinite recursion during check detection.It appears for these functions to be redundant but see this difference between them.
+- 1. canPieceMoveTo() vs. isValidMove()
+
+
+|Function|	Type|	Responsibility|
+| --- | --- | ---|
+|'canPieceMoveTo'|**Internal / Geometric**|**Determines if a piece can physically reach a square based on its move pattern and path obstructions. It ignores King safety.**|
+|'isValidMove'|**External / Legal**|**The top-level validator. It checks turn order, board boundaries, and performs move simulation to ensure the King is not left in check.**|
+- 2. Preventing Infinite Recursion
+
+A common pitfall in chess programming is a circular dependency: isValidMove checks for Check, which calls isSquareAttacked, which would normally call isValidMove.
+
+To solve this, our engine breaks the loop:
+
+    isValidMove simulates a move and calls inCheck().
+
+    inCheck() calls isSquareAttacked().
+
+    isSquareAttacked() calls the lightweight canPieceMoveTo(), which does not look for checks, thus terminating the recursive chain.
+
+3. The Move Simulation Pattern
+
+To ensure the King's safety, the engine employs a "Simulate-Verify-Restore" pattern within isValidMove:
+
+    Simulation: The game state is copied (passed by value) to a temporary Game struct.
+
+    Verification: applyMove() is executed on the copy, and inCheck() is queried.
+
+    Result: If the simulation reveals the King is under attack, the move is flagged as illegal and rejected before the actual board state is ever modified.
+
+And after passing all of these validations the last part is applying the move
+
+|Function Prototype| Functionality|
+|---|---|
+|void applyMove(Game *game, Move *move)|**This function doesn't check if the movid valid or not.It just applies the move.So isValidMove should be called and if it returns true we apply the move.**|
+
+- This function change the move structure enumerators (MoveType and capturedPiece) and change the whole game state like board pieces , captured pieces and current player turn. 
+- In this function we don't compute the gamestate as it will lead to infinite recursion. Caller in game loop will invoke computeGameState function.
 
 
 
