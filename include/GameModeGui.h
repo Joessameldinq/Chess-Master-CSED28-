@@ -57,7 +57,6 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
                          bool dragging, SDL_Texture *dragTexture, SDL_Rect dragRect,Position draggedInitialPosition);
 void destroyGameScreenGui(gamegui *gui);
 void runGame(App *app, gamegui *gui);
-void runGameVsComputer(App *app, gamegui *gui);
 int pieceIndex(gamegui *gui, Piece piece, int row, int col);
 void updateGameGui(gamegui *gui, Game *game, SDL_Renderer *renderer);
 int getPromotionDialog(SDL_Window *window);
@@ -65,5 +64,4 @@ bool offerDrawDialog(SDL_Window *window);
 void clearHighlight(gamegui *gui);
 void highlightValidMoves(Game *game,Position from,SDL_Renderer *renderer);
 void updateLastMoveTexture(gamegui *gui,SDL_Renderer *renderer, Move move);
-void runtestGame(App *app, gamegui *gui);
 #endif
