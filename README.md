@@ -232,8 +232,22 @@ And after passing all of these validations the last part is applying the move
 |void applyMove(Game *game, Move *move)|**This function doesn't check if the movid valid or not.It just applies the move.So isValidMove should be called and if it returns true we apply the move.**|
 
 - This function change the move structure enumerators (MoveType and capturedPiece) and change the whole game state like board pieces , captured pieces and current player turn. 
-- In this function we don't compute the gamestate as it will lead to infinite recursion. Caller in game loop will invoke computeGameState function.
+- In this function we don't compute the gamestate as it will lead to infinite recursion. Caller in game loop will invoke computeGameState function. Since computeGameState() must check for legal moves to determine Stalemate/Checkmate, calling it inside the move-application logic would create a recursive loop.
+- The main game loop serves as the orchestrator: it calls isValidMove, then applyMove, and finally computeGameState as three distinct, sequential steps.
 
+After we finally apply the move we set the game flags to false again for next turns (We Call it at the beginning of applyMove but it won't matter calling it at the beginning or at the end).
+|Function|
+| --- |
+|'void setFlagsFalse(Game *game)'|
+
+#### Summary for Moving Logic
+Once a move passes the multi-tiered validation (Geometry → Piece Rules → King Safety), the engine transitions from Validation to Execution.
+
+|Phase|	Responsibility|	Key Function|
+| --- | --- | ---|
+|Execution|	Modifies the board, handles special moves (Castling/En Passant), updates the 50-move clock, and swaps player turns.|	**applyMove()**|
+|Cleanup|Resets temporary flags (like en passant availability) to ensure the next turn starts with a clean state|**setFlagsFalse()**|
+|Evaluation|Analyzes the new board state to check for Checkmate, Stalemate, or Insufficient Material.|**computeGameState()**|
 
 
 
