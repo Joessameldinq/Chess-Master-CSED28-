@@ -279,7 +279,7 @@ Once a move passes the multi-tiered validation (Geometry → Piece Rules → Kin
 |`Position findKingPosition(Game *game, Color color) `|**It finds the king belonging to a given color**|
 |`GameStatus computeGameStatus(Game *game)`|**After applying move this function update the game state**|
 
-🏴‍☠️ The "Dead Position" Limitation
+🏴‍☠️ ⚠️The "Dead Position" Limitation
 
 While the isDeadPosition function accurately handles material-based draws with 99% of sucess, it is important to note its technical constraints:
 
@@ -290,3 +290,39 @@ While the isDeadPosition function accurately handles material-based draws with 9
     Helpmate Complexity: Following FIDE standards, scenarios like King & Knight vs. King & Knight are not flagged as dead positions because a checkmate is technically possible if a player blunders their King into a corner blocked by their own piece.
 
     Most chess sites (like Chess.com or Lichess) use a mix of "Material-based" rules and the "50-move rule" to catch the weird blockaded positions. If a position is truly dead but doesn't match a material rule, the players will eventually hit the 50-move limit anyway.
+
+### ♾️ Saving and Loading Games
+
+ - This engine save and load games in binary format 
+ - The architecutre of this project making the whole game snapshot in a struct allow us to save the binary format of this struct in a file and load it and continue the game at any time.
+ - We don't save the undo stack.
+ - Many helpers is used in SavingLoading.c so we used static functions.By default, every function in C is "global." This means if you define a function in file_a.c, you can call it from file_b.c. A static function, however, is restricted to the file in which it is defined and this is convenient to our case as we won't use this helpers outside the file scope.
+
+#### Utilities
+
+These helper functions are used to read and write integers,booleans and enumerators from/to the file.
+
+ - `static bool writeInt(FILE *fp, int v)` 
+ - `static bool writeBool(FILE *fp, bool v)` 
+ - `static bool writeEnum(FILE *fp, int v)` 
+ - `static bool readInt(FILE *fp, int v)` 
+ - `static bool readBool(FILE *fp, bool v)` 
+ - `static bool readEnum(FILE *fp, int v)` 
+
+### Basic Functions
+
+- `bool saveGame(FILE *fp, const Game *g)` 
+    - it takes a pointer to file and constant pointer to game(to avoid changing the game state) as input.
+    - it writes  magic header and version number in the beginning to allow us validate the file when loading the game.
+    - it writes all game struct contents in the binary file in a specific order that we must apply the same order when loading game.
+    - This function validate each write in the file.
+    - it returns true if the saving game process succeeded.
+- bool `loadGame(FILE *fp, Game *g)`
+- it takes a pointer to file and a pointer to game(to load the contents in it) as input.
+    - it reades  magic header and version number in the beginning to ensure that the file contents are valid.
+    - it reads all game struct contents in the binary file in the same order we applied when saving the game (order matters).
+    - This function validate each read from the file.
+    - it returns true if the loading game process succeeded.
+
+- The main game loop will open the file and take the slot as input(messge box)to save/load game to/from the cfg directory.
+- This game provides five slots for saving and loadig but more and more slots can be made.
