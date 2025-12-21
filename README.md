@@ -1,11 +1,14 @@
-## Chess (SDL2)
+# Chess Engine (SDL2)
 
-# 🎓 Computer Programming I – Final Project
+## 🎓 Computer Programming I – Final Project
 
 A full chess game implemented in C using SDL2, featuring a graphical interface, sound effects, and core chess rules.
 This project was developed as part of the Computer Programming I course.
+## 👓 Supervision
+- Prof.Dr.Marwan Torki
+- Eng. Karim Alaa
 
-# 📌 Features
+## 📌 Features
 
 - Graphical chess board using SDL2
 
@@ -37,15 +40,17 @@ This project was developed as part of the Computer Programming I course.
 
 - Clean modular C codebase
 
+- Adding an Icon for the executable game
+
 - Cross-platform support (Windows & Linux)
 
-# 👥 Team Members
+## 👥 Team Members
 
 - Youssef Essam ElDeen Mahmoud ElSaeed (Id : 24010854)
 
 - Abdelwahhab Khaled Khamis (Id : )
 
-# 🛠️ Technologies Used
+## 🛠️ Technologies Used
 
 - Language: C
 
@@ -66,6 +71,7 @@ This project was developed as part of the Computer Programming I course.
 ```text
 Chess-Master-CSED28/
 ├── src/            # Source files
+├── cfg/            # For binary saved games
 ├── include/        # Header files
 ├── assets/         # Images, fonts, sounds
 ├── thirdparty/     # SDL libraries (Windows only)
@@ -252,4 +258,35 @@ Once a move passes the multi-tiered validation (Geometry → Piece Rules → Kin
 
 
 
+###  🚧🏴 Ending Conditions
 
+### Basic Functions
+
+|**Function Prototype**| **Functionality**|
+| ---                  |    ---           |
+|`bool inCheck(Game *game)`|**Checks if the current player's king is in check(game->currentPlayer) using isSquareAttacked().It must answer ONE question only: Is the king's square currently attacked by any enemy piece? Only geometrically It doesn't matter whether the attacker leave the other king in check or not**|
+|`bool inCheckMate(Game *game)`|**Checks if the current player's king is in checkmate (in check and can't escape from this position). It tries every possible move for the current player and exits early if at least one move is legal and doesn't keep the king in Check**|
+|`bool isStalemate(Game *game)`|**This is one of the possible drawing conditions used in this project. It first check if the king of current player in check if true. it exits early else it tries all possible moves like the previous function (isStalemate) if it finds a legal move it returns false else returns true and game ends by stalemate**|
+|`bool fiftyMovesRule(Game *game)`|**if morethan 100 move is made without moving pawns the game ends by fifty-move-rule (draw) following the FIDE rules**|
+|`bool isDeadPosition(Game *game)`|**Check for suffecient pieces for the player to win if both doesnt have that suffecient pieces we declare a draw.**|
+
+
+### Utilities
+
+|**Function Prototype**| **Functionality**|
+| ---                  |    ---           |
+|`Color getSquareColor(int row,int col)`|**It's helpful tool in the dead position function as we calculate things like the number of bishop pieces on black squares**|
+|`Position findKingPosition(Game *game, Color color) `|**It finds the king belonging to a given color**|
+|`GameStatus computeGameStatus(Game *game)`|**After applying move this function update the game state**|
+
+🏴‍☠️ The "Dead Position" Limitation
+
+While the isDeadPosition function accurately handles material-based draws with 99% of sucess, it is important to note its technical constraints:
+
+    Material Accuracy: The function perfectly identifies draws for King vs. King, King & Bishop vs. King, King & Knight vs. King, and King & Bishops of the same color vs. King & Bishop.
+
+    Geometric Deadlocks: The current implementation does not detect "Blocked Positions" (e.g., pawn chains that completely seal the board). In such cases, the engine relies on the Fifty-Move Rule or Stalemate logic to eventually terminate the game.
+
+    Helpmate Complexity: Following FIDE standards, scenarios like King & Knight vs. King & Knight are not flagged as dead positions because a checkmate is technically possible if a player blunders their King into a corner blocked by their own piece.
+
+    Most chess sites (like Chess.com or Lichess) use a mix of "Material-based" rules and the "50-move rule" to catch the weird blockaded positions. If a position is truly dead but doesn't match a material rule, the players will eventually hit the 50-move limit anyway.
