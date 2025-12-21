@@ -159,6 +159,40 @@ gcc src/.*c -o Chess `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -lS
 ```
 
 
+##  🧠 Overview of the Design  
+
+### Moving Logic 
+
+#### Piece Moving-Validation Functions 
+
+> **Note** most of project variables and functions named are in the camelCase convention
+
+- We used function for each piece to check the validity of piece move
+- In most functions we used difference and absolute difference between rows and columns instead of using direction arrays 
+
+| Function prototype | Functionality |
+| --- | --- | 
+| `bool isValidPawn(Game* game,Piece piece,Move move)`| **Checks single/double steps forward, diagonal capture, and En Passant logic based on the enPassentAvailable flag.**|
+| `bool isValidRook(Game* game,Piece piece,Move move)`| **Validates horizontal and vertical movement**|
+| `bool isValidBishop(Game* game,Piece piece,Move move)`| **Validates diagonal movement by checking if the absolute row difference equals the column difference.**|
+| `bool isValidKnight(Game* game,Piece piece,Move move)`| **Checks for the unique ""L-shape"" (2×1 or 1×2 squares)**|
+| `bool isValidQueen(Game* game,Piece piece,Move move)`| **Combines the logic of both isValidRook and isValidBishop to allow multi-directional sliding.**|
+| `bool isValidKing(Game* game,Piece piece,Move move)`| **Handles standard 1-square movement in any direction and coordinates with isValidCastling**|
+| `bool isValidCastling(Game* game,Piece piece,Move move)`| **A specialized check for King/Rook safety, verifying that neither have moved and squares are not under attack.**|
+
+#### Utilities for Moving-Validation
+| Function prototype | Functionality |
+| --- | --- | 
+| `int findFirstEmptyCapturedSlot(Piece arr[])`| **Finds the number of Captured Pieces of either player**|
+| `bool canPieceMoveTo(Game *game, Piece piece, Move move)`| **Check if piece can move to pos only geometrically we use it in the function isSquareAttacked which is used to determine check**|
+| `bool isPathClear(Game *game, Move move)`| **Check whether every square between initial (exclusive) and final (exclusive) is empty. Works for straight and diagonal directions using unit step.**|
+| `bool simulateMoveAndShowIfInCheck(Game game, Move move)`| **One of them most important function it's considered the last level before applying the move it make a backup of the current game state and Check if the move will keep the king in check or not. if it make the king incheck the move is invalid and we ask the user to input another move(in the GUI part there is a beeb sound effect That works generally for invalid moves)**|
+| `bool isLegalMove(Game *game, Piece piece, Move move)`| **piece-specific movement rules from square to another (does NOT check king safety) and is regarded as large switch replacement.**|
+| `bool isValidMove(Game *game, Move move)`| **The last step before making move.But we shouldn't use it in simulate move as it will lead to infinite recursion as simulatemove is part of isValidMove.So in simulate moves we manually apply move -> check if king isInCheck -> redo the move and game state**|
+| `bool isSquareAttacked(Game *game, Position pos)`| **Returns true if a position is attacked by the opponent of currentPlayer.It ignores king safety for the moved piece.**|
+
+
+
 
 
 
