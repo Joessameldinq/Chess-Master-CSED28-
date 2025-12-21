@@ -5,7 +5,7 @@
 #include "../include/GameDefinitions.h"
 #include "../include/MovingLogic.h"
 #include "../include/EndingConditions.h"
-
+#define FIFTY_MOVE_THRESHOLD 100
 
 // Find the king belonging to a given color
 Position findKingPosition(Game *game, Color color) //Find the position of king of specific color
@@ -123,7 +123,7 @@ bool isStalemate(Game *game)
 }
 bool fiftyMovesRule(Game *game)
 {
-    if(game->halfMoveClock >= 100)
+    if(game->halfMoveClock >= FIFTY_MOVE_THRESHOLD)
     {
         game->status = DRAW_FIFTY_MOVE;
         return true;
@@ -207,20 +207,16 @@ bool isDeadPosition(Game *game)
             return true;
     }
     
-    // 5. (King + Knight) vs (King + Knight)
-    // i found that this case can end with checkmate and not a dead position under the FIDE rules
-    //While extremely rare, checkmate is possible with K+N vs K+N through forced moves. This should not be a dead position according to FIDE rules.
-    // if(knightW == 1 && knightB == 1 && totalBishops == 0)
-    //     return true;
+
     
-    // 6. (King + Knight + Knight) vs King
+    // 5. (King + Knight + Knight) vs King
     if(totalKnights == 2 && totalBishops == 0)
     {
         if((knightB == 2 && knightW == 0) || (knightW == 2 && knightB == 0))
             return true;
     }
     
-    // 7. (King + Bishop(s)) vs (King + Bishop(s)) (all same color)
+    // 6. (King + Bishop(s)) vs (King + Bishop(s)) (all same color)
     if(totalBishops >= 2 && totalKnights == 0)
     {
         if((totalBishops == whiteBishopOnWhiteSquares + blackBishopOnWhiteSquares) || 
@@ -228,22 +224,7 @@ bool isDeadPosition(Game *game)
             return true;
     }
     
-    // 8. (King + Knight(s)) vs (King + Knight(s))
-    // After watching some games i found that this case can lead to a dead position especially when KNN vs KN
-    //With multiple knights, checkmate becomes increasingly possible
-    // if(totalBishops == 0 && totalKnights >= 2 && knightW != 0 && knightB != 0)
-        // return true;
-    
-    // 9. (King + Bishop(s)) (same color) vs (King + Knight(s))
-    //A bishop and knight can work together to deliver checkmate, even against knights.
-    // if((bishopW > 0 && bishopB == 0 && knightB > 0 && knightW == 0) || 
-    //    (bishopB > 0 && bishopW == 0 && knightW > 0 && knightB == 0))
-    // {
-    //     // All bishops must be on same color
-    //     if((totalBishops == whiteBishopOnWhiteSquares + blackBishopOnWhiteSquares) ||
-    //        (totalBishops == whiteBishopOnBlackSquares + blackBishopOnBlackSquares))
-    //         return true;
-    // }
+
     
     return false;
 }
