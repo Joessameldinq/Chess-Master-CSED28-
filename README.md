@@ -115,4 +115,43 @@ cd Chess-Master-CSED28-
 make clean run
 ```
 
+### 🔹 Linux(Ubuntu)
+#### Requirements
+
+ - GCC: The GNU C Compiler.
+ - pkg-config: A critical tool that helps your compiler find the correct paths for the SDL2 headers and libraries.
+
+##### 1. Core Development Tools
+
+###### Install Commands
+
+ ```bash
+sudo apt update
+sudo apt install build-essential pkg-config
+```
+
+##### 2. SDL2 Development Libraries
+
+###### Requirements for this Project
+
+- Base Library: libsdl2-dev
+- libsdl2-image-dev (PNG, JPG support)
+- libsdl2-ttf-dev (TrueType Font support)
+- libsdl2-mixer-dev (Audio/Music support)
+
+###### Install Commands 
+
+```bash
+sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev
+```
+
+##### 3. Compilation and run
+
+```bash
+gcc src/.*c -o Chess `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+./Chess
+```
+
+
+
 
