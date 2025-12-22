@@ -27,7 +27,7 @@ void printCapturedPieces(Game *game)
 {
     short capturedWhite = findFirstEmptyCapturedSlot(game->capturedWhitePieces);
     short capturedBlack = findFirstEmptyCapturedSlot(game->capturedBlackPieces);
-    printf("Captured White Pieces\n");
+    printf("Captured Black Pieces\n");
     for (int i = 0; i < capturedBlack; i++) {
         char *p = " ";
         switch (game->capturedBlackPieces[i].type) {
@@ -41,7 +41,7 @@ void printCapturedPieces(Game *game)
         printf(" %s ",p);
     }
     printf("\n");
-    printf("Captured Black Pieces\n");
+    printf("Captured White Pieces\n");
     for (int i = 0; i < capturedWhite; i++) {
         char *p = " ";
         switch (game->capturedWhitePieces[i].type) {
