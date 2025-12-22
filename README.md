@@ -517,6 +517,28 @@ typedef struct
        - UPDATE GUI
 
 - **Basic Functions** in the main menu part
+    - `initMainMenuGui()` **it returns a pointer to mainmenugui struct (initialized with all needed textures and rectangles)**.
+    - `renderMainMenu()` 
+    - `Menu_HandleEvent()` **Handle loading , playing a new game or quit events** .
+    - `runMainMenuGui()`  **The function called in the app loop.**
+    - `destroyMainMenuGui()` **It destroys all loaded textures with safety check to avoid freeing null pointers or double free**.
+
+- and the same architecture is followed in the game mode gui.
+
+- **NOTE**
+- The clicks are controlled by the SDL_WaitEvent so that the game waits until there an input and then start to handle it as a result the CPU usage is low. And here is a comparison between wait event and poll event.
+- SDL_WaitEvent and SDL_PollEvent are both functions used to retrieve events from the SDL event queue, but they differ in how they handle an empty queue: SDL_WaitEvent blocks (waits) for an event, while SDL_PollEvent returns immediately. 
+- **SDL_PollEvent()**
+
+    Behavior: Checks the event queue. If an event is present, it removes it, fills the SDL_Event structure, and returns 1. If the queue is empty, it returns 0 immediately without waiting.
+    Use Case: This is typically used in the main loop of a real-time application or game. Because it doesn't wait, the rest of the game loop (game logic updates, rendering, etc.) can continue to run every frame, even if there is no user input. The application remains responsive and continues to render.
+    Performance: Calling SDL_PollEvent in a tight loop constantly uses CPU cycles, which can be inefficient if the application has nothing else to do that frame. 
+
+- **SDL_WaitEvent()**
+
+    Behavior: This function blocks the program and will not return until an event has been added to the queue.
+    Use Case: It is ideal for applications that are primarily event-driven and don't need continuous rendering (e.g., a simple menu-based application or a utility program). It allows the operating system to put the CPU into a lower power mode when idle, which is very important for battery life on mobile devices.
+    Performance: It is very CPU efficient because it yields control back to the operating system, but it can make an application seem sluggish if not used properly in a game loop, as the game won't update or render until a new event occurs.
 
 
- - 
+
