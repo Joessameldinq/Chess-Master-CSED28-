@@ -484,6 +484,20 @@ typedef struct
     Mix_Chunk * drawOffer;
 }SoundEffects;
 ```
+
+
+- Main menu struct
+
+```bash
+typedef struct 
+{
+    SDL_Texture *background;
+    Button newgame;
+    Button loadgame;
+    Button quit;
+    
+}mainmenugui;
+```
 ### Common Functions used in GUI
 
  - **Note** All loading and destroying (fread) processes are save using check NULLITY. So, No overflow occur and no un-fread memory locations. 
@@ -492,4 +506,17 @@ typedef struct
 | --- | -- |
 |`SDL_Texture *loadtexture(const char *file, SDL_Renderer *renderer)`| **Create texture from a loaded image. it takes the file name and the renderer as input and output a texture**|
 |`bool isButtonClicked(int mx,int my,Button button)`|**One of the most important helpers as it checks the event of clicking button.It checks wheater the mouse coordinates in the boundaries of button rectangle.**|
+|`void highlightClickedButton(SDL_Renderer *renderer,Button cButton)`|**It highlights the clicked button with blue ocean transparent color**|
+|`void playSoundEffect(Mix_Chunk *sEffect)`|**This function is used many times in the main game loop to play sound effects when a check , checkmate , stalemate or any special move happens.It takes a chunk as input to play it**|.
 
+
+- **Generally This is the template used to display main menu and game mode**
+  - WHILE(RUNNING)
+       - RENDER OBJECTS
+       - HANDLE EVENTS
+       - UPDATE GUI
+
+- **Basic Functions** in the main menu part
+
+
+ - 
