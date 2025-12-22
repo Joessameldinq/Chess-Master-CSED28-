@@ -86,7 +86,7 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
 
 
     // Load textures with error checking
-    gui->background = loadtexture("assets/bg7.jpg", renderer);
+    gui->background = loadtexture("assets/ourfinalbg.jpg", renderer);
     if (!gui->background) {
         fprintf(stderr, "Warning: Failed to load background texture\n");
     }
