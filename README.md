@@ -5,7 +5,7 @@
 A full chess game implemented in C using SDL2, featuring a graphical interface, sound effects, and core chess rules.
 This project was developed as part of the Computer Programming I course.
 
-## ⚔️🏇🏼 +=={:::::::::::::::::> Knight's Tour Puzzle
+## ⚔️🏇🏼 Knight's Tour Puzzle
 
 🎥 Click to watch the Knight's Tour Demo
 <p align="center">
