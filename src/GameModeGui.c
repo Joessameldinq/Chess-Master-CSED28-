@@ -172,7 +172,7 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
 
             char filename[128];
             snprintf(filename, sizeof(filename), 
-                             "assets/%s_%s_1x.png",
+                             "assets/%s_%s.png",
                              (piece.color==WHITE ? "w" : "b"), 
                              getPieceTypeName(piece.type));
             SDL_Texture *txt = loadtexture(filename, renderer);
@@ -216,7 +216,7 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
         {
             char filename[128];
             snprintf(filename, sizeof(filename), 
-                             "assets/w_%s_1x.png", 
+                             "assets/w_%s.png", 
                              getPieceTypeName(initialGame->capturedWhitePieces[i].type));
             
 
@@ -248,7 +248,7 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
         {
             char filename[128];
             snprintf(filename, sizeof(filename), 
-                             "assets/b_%s_1x.png", 
+                             "assets/b_%s.png", 
                              getPieceTypeName(initialGame->capturedBlackPieces[i].type));
             SDL_Texture *txt = loadtexture(filename, renderer);
             if(!txt) {
@@ -964,7 +964,7 @@ void updateGameGui(gamegui *gui, Game *game, SDL_Renderer *renderer)
             if(piece.type == EMPTY) continue;
 
             char filename[128];
-            snprintf(filename, sizeof(filename), "assets/%s_%s_1x.png",
+            snprintf(filename, sizeof(filename), "assets/%s_%s.png",
                      (piece.color==WHITE ? "w" : "b"),
                      getPieceTypeName(piece.type));
             
@@ -991,7 +991,7 @@ void updateGameGui(gamegui *gui, Game *game, SDL_Renderer *renderer)
         if(game->capturedWhitePieces[i].type != EMPTY)
         {
             char filename[128];
-            snprintf(filename, sizeof(filename), "assets/w_%s_1x.png", getPieceTypeName(game->capturedWhitePieces[i].type));
+            snprintf(filename, sizeof(filename), "assets/w_%s.png", getPieceTypeName(game->capturedWhitePieces[i].type));
             SDL_Texture *txt = loadtexture(filename, renderer);
             if(txt)
             {
@@ -1013,7 +1013,7 @@ void updateGameGui(gamegui *gui, Game *game, SDL_Renderer *renderer)
         if(game->capturedBlackPieces[i].type != EMPTY)
         {
             char filename[128];
-            snprintf(filename, sizeof(filename), "assets/b_%s_1x.png", getPieceTypeName(game->capturedBlackPieces[i].type));
+            snprintf(filename, sizeof(filename), "assets/b_%s.png", getPieceTypeName(game->capturedBlackPieces[i].type));
             SDL_Texture *txt = loadtexture(filename, renderer);
             if(txt)
             {
