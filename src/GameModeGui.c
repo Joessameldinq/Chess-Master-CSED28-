@@ -369,7 +369,6 @@ void destroyGameScreenGui(gamegui *gui)
     if (gui->capWhite.texture) SDL_DestroyTexture(gui->capWhite.texture);
     if (gui->capBlack.texture) SDL_DestroyTexture(gui->capBlack.texture);
     if (gui->currentTurn.texture) SDL_DestroyTexture(gui->currentTurn.texture);
-    if (gui->currentGameState.texture) SDL_DestroyTexture(gui->currentGameState.texture);
     if (gui->whiteTurnTex) SDL_DestroyTexture(gui->whiteTurnTex);
     if (gui->blackTurnTex) SDL_DestroyTexture(gui->blackTurnTex);
     if(gui->drawAgreement.texture) SDL_DestroyTexture(gui->drawAgreement.texture);

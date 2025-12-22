@@ -75,21 +75,21 @@ int showExitConfirm(SDL_Window *window)
 int showSaveSlotDialog(SDL_Window *window)
 {
     const SDL_MessageBoxButtonData buttons[] = {
-        { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "Slot 1" },
-        { 0, 2, "Slot 2" },
-        { 0, 3, "Slot 3" },
-        { 0, 4, "Slot 4" },
-        { 0, 5, "Slot 5" },
-         { 0, 6, "Slot 6" },
-        { 0, 7, "Slot 7" },
-        { 0, 8, "Slot 8" }
+        { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "Game 1" },
+        { 0, 2, "Game 2" },
+        { 0, 3, "Game 3" },
+        { 0, 4, "Game 4" },
+        { 0, 5, "Game 5" },
+         { 0, 6, "Game 6" },
+        { 0, 7, "Game 7" },
+        { 0, 8, "Game 8" }
     };
 
     const SDL_MessageBoxData data = {
         SDL_MESSAGEBOX_INFORMATION,
         window,
         "Save Game",
-        "Choose a save slot:",
+        "Choose a Game slot:",
         SDL_arraysize(buttons),
         buttons,
         NULL
@@ -134,12 +134,11 @@ void showGameMessage(SDL_Window *window, const char *title, const char *message)
 //Highlight clicked button
 void highlightClickedButton(SDL_Renderer *renderer,Button cButton)
 {
-    SDL_Color c = (SDL_Color){.r = 10 , .g = 245 , .b = 15 , .a = 255 *0.60};
+    SDL_Color c = (SDL_Color){.r = 50 , .g = 245 , .b = 245 , .a = 255 *0.50};
     SDL_SetRenderDrawBlendMode(renderer,SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer,c.r,c.g,c.b,c.a);
     SDL_RenderFillRect(renderer,&cButton.rect);
     SDL_RenderPresent(renderer);
-    SDL_Delay(100);//to show the effect
 
 }
 void playSoundEffect(Mix_Chunk *sEffect)

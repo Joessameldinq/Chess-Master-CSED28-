@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
                                         SDL_WINDOWPOS_CENTERED,
                                         WINDOW_WIDTH,
                                         WINDOW_HEIGHT,
-                                        SDL_WINDOW_RESIZABLE);
+                                        SDL_WINDOW_SHOWN);
     if (!app.window) {
         fprintf(stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         Mix_CloseAudio();

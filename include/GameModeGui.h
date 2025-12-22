@@ -34,7 +34,6 @@ typedef struct
     Button capturedPieces[2][16];
     Button boardPieces[8][8];
     Button lastMove;
-    Button currentGameState;      // check/checkmate/enpassant etc.
     SDL_Texture *fileLabelTextures[8];  // A.png through H.png
     SDL_Texture *rankLabelTextures[8];  // 1.png through 8.png
     SDL_Texture *background;
