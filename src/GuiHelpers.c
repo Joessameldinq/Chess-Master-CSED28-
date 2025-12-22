@@ -79,7 +79,10 @@ int showSaveSlotDialog(SDL_Window *window)
         { 0, 2, "Slot 2" },
         { 0, 3, "Slot 3" },
         { 0, 4, "Slot 4" },
-        { 0, 5, "Slot 5" }
+        { 0, 5, "Slot 5" },
+         { 0, 6, "Slot 6" },
+        { 0, 7, "Slot 7" },
+        { 0, 8, "Slot 8" }
     };
 
     const SDL_MessageBoxData data = {
@@ -94,7 +97,7 @@ int showSaveSlotDialog(SDL_Window *window)
 
     int buttonid = 0;
     SDL_ShowMessageBox(&data, &buttonid);
-    return buttonid; // 1-5 or 0 if closed
+    return buttonid; // 1-8 or 0 if closed
 }
 
 void showMessageDialog(SDL_Window *window, const char *title, const char *message)

@@ -642,7 +642,7 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
         char fileName[50] = {0};
         int slot = showSaveSlotDialog(app->window);
         
-        if (slot < 1 || slot > 5) {
+        if (slot < 1 || slot > 8) {
             printf("Save cancelled (invalid slot: %d)\n", slot);
             return true;
         }
