@@ -742,6 +742,19 @@ typedef struct
     Use Case: It is ideal for applications that are primarily event-driven and don't need continuous rendering (e.g., a simple menu-based application or a utility program). It allows the operating system to put the CPU into a lower power mode when idle, which is very important for battery life on mobile devices.
     Performance: It is very CPU efficient because it yields control back to the operating system, but it can make an application seem sluggish if not used properly in a game loop, as the game won't update or render until a new event occurs.
 
+### 🦾 Sample Runs
+- White wins by check mate
+- Testing enpassent
+- Testing undo/redo
+- Testing save/load
+< p align = "center">
+  <video src = "https://github.com/user-attachments/assets/7662d0ca-db3a-4cce-9fea-fb9fada6ac07" width = "800" controls>
+  </video>
+</p?
+  
+
+
+
 
 ### ®️ Refrences
 
