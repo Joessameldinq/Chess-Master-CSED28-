@@ -120,12 +120,12 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
         fprintf(stderr,"Warning: Failed to load the draw agreement button texture\n");
     }
     
-    gui->capBlack.texture = loadtexture("assets/capblack.png", renderer);
+    gui->capBlack.texture = loadtexture("assets/capblack(2).png", renderer);
     if (!gui->capBlack.texture) {
         fprintf(stderr, "Warning: Failed to load black capture button texture\n");
     }
     
-    gui->capWhite.texture = loadtexture("assets/capwhite.png", renderer);
+    gui->capWhite.texture = loadtexture("assets/capwhite(2).png", renderer);
     if (!gui->capWhite.texture) {
         fprintf(stderr, "Warning: Failed to load white capture button texture\n");
     }

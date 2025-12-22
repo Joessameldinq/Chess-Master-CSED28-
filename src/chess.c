@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     if (!bgMusic) {
         fprintf(stderr, "Failed to load mp3: %s\n", Mix_GetError());
     }
-    Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
+    Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
 
     // 
     // SDL_image initialization

@@ -45,11 +45,6 @@ typedef struct {
     Game game;          
     Node *gamestack;    
     Node *redostack;
-
-
-
-
-
     // Dynamic dimensions for window resize support
     int windowWidth;
     int windowHeight;

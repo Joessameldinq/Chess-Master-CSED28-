@@ -40,7 +40,7 @@ This project was developed as part of the Computer Programming I course.
 
 - Turn-based gameplay
 
-- Offering five slots to save games and continue them later
+- Offering eight slots to save games and continue them later
 
 - Highlight valid moves squares when piece is dragged
 
@@ -337,7 +337,7 @@ These helper functions are used to read and write integers,booleans and enumerat
     - it returns true if the loading game process succeeded.
 
 - The main game loop will open the file and take the slot as input(messge box)to save/load game to/from the cfg directory.
-- This game provides five slots for saving and loadig but more and more slots can be made.
+- This game provides eight slots for saving and loadig but more and more slots can be made.
 
 
 ### ⚙️ Undo and redo 
@@ -364,3 +364,132 @@ These helper functions are used to read and write integers,booleans and enumerat
 | --- | --- |
 | `bool undoMove(Node **gameStack, Node **redoStack)`| **Check first if there is at least two states to undo. It pop a game state from the game stack to the redo stack**|
 | `bool redoMove(Node **gameStack, Node **redoStack)`| **Check first if the redo stack isn't empty. It pop a game state from the redo stack and push it to the game stack**|
+
+
+## 🎉 Graphical User Interface
+
+- We have two parts in the gui : main menu and the game mode
+- In main menu player can play a new game , load a saved game or quit the game
+- If any button is clicked , the button is highlighted with ocean blue color
+- Clicking on the load button show a message box for the user to choose a saved game out of eight games
+
+
+### Game mode
+- There are five buttons down the board
+    - **Undo Button**
+    - **Redo Button**
+    - **Save Button**
+    - **Back Button**
+    - **Draw Agreement Button** 
+- Captured pieces are shown right the board in two columns for each player
+- The game mode support showing current turn , last move and half move clock.
+- It also supports sound effects for moving pieces, capturing , enpassent , castling , pawn promotion , mate , check and stalemate
+- A screen is shown after game end show the final result (white wins , black wins or stalemate).
+- Threatened king (king in check) is highlighted in red.
+- If king in check , a message box appears in the screen.
+- Last move squares (from and to squares) are highlighted in yellow.
+- If piece is dragged , valid moves are highlighted in green
+- If a player tries to make invalid move , a sound effect is played and dragged piece return to it's previous square
+
+### Basic Structures in GUI
+
+- **Button Struct** and its members are a **texture** and a **rectangle**.
+```bash
+typedef struct 
+{
+    SDL_Texture *texture;
+    SDL_Rect rect;
+}Button;
+```
+
+- **App Struct** and it holds all data related to the whole app. Its members are a pointer to **window** , **renderer** , a flag indicating game-running **running** , the **gamestate** , a synced **game** , a **gamestack** , a **redostack** and dynamic dimensions for window.
+```bash
+typedef struct {
+    SDL_Window *window;
+    SDL_Renderer *renderer;
+    bool running;
+    GameState currentScreen;
+    Game game;          
+    Node *gamestack;    
+    Node *redostack;
+    // Dynamic dimensions for window resize support
+    int windowWidth;
+    int windowHeight;
+    int boardOffset;
+    int squareSize;
+    int buttonWidth;
+    int buttonHeight;
+    int buttonSpacing;
+} App;
+```
+
+- a gamestate enumerate
+```bash
+typedef enum {
+    SCREEN_MENU,
+    SCREEN_GAME,
+    SCREEN_QUIT
+} GameState;
+```
+
+- The game mode ui struct
+   - it holds all **buttons** , **board pieces** , **captured pieces** , **texutres for turn indicator and last move** , **soundeffects** and **dynamic dimensions for window** etc.
+
+```bash
+typedef struct 
+{
+    SoundEffects sEffect;
+    Button save;
+    Button undo;
+    Button redo;
+    Button back;
+    Button drawAgreement;
+    Button capWhite;
+    Button capBlack;
+    Button currentTurn;           
+    SDL_Texture *whiteTurnTex;    
+    SDL_Texture *blackTurnTex;    
+    Button capturedPieces[2][16];
+    Button boardPieces[8][8];
+    Button lastMove;
+    SDL_Texture *fileLabelTextures[8];  // A.png through H.png
+    SDL_Texture *rankLabelTextures[8];  // 1.png through 8.png
+    SDL_Texture *background;
+    SDL_Rect fromMovingRect;
+    SDL_Rect toMovingRect;
+    SDL_Rect kingThreaten;
+    TTF_Font *moveFont;  // Font for displaying move notation (loaded once at init)
+    // Dynamic dimensions for resize support
+    int squareSize;
+    int boardOffset;
+    int windowWidth;
+    int windowHeight;
+} gamegui;
+```
+
+- The sound effects enum
+```bash
+typedef struct
+{
+    Mix_Chunk * normalMove;
+    Mix_Chunk * promotion;
+    Mix_Chunk * castling;
+    Mix_Chunk * enpassent;
+    Mix_Chunk * capture;
+    Mix_Chunk *illegalMove;
+    Mix_Chunk * checkmate;
+    Mix_Chunk * check;
+    Mix_Chunk * stalemate;
+    Mix_Chunk * draw;
+    Mix_Chunk * drawOffer;
+}SoundEffects;
+```
+### Common Functions used in GUI
+
+ - **Note** All loading and destroying (fread) processes are save using check NULLITY. So, No overflow occur and no un-fread memory locations. 
+#### Created Helpers
+|**Function**   |     **Usage** |
+| --- | -- |
+|`SDL_Texture *loadtexture(const char *file, SDL_Renderer *renderer)`| **Create texture from a loaded image. it takes the file name and the renderer as input and output a texture**|
+|`bool isButtonClicked(int mx,int my,Button button)`|**One of the most important helpers as it checks the event of clicking button.It checks wheater the mouse coordinates in the boundaries of button rectangle.**|
+
