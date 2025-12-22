@@ -177,7 +177,128 @@ gcc ./src/*.c -o Chess `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -
 ```
 
 
-##  🧠 Overview of the Design  
+##  🧠 Overview of the Design 
+
+### Basic Data Structures Used
+
+- A linked list for stack. It's used in undo/redo process.
+
+```bash
+typedef struct Node
+{
+    Game curGame;
+    struct Node* nextGame;
+}Node;
+```
+
+- Enums for **PieceType** , **PieceColor** ,**GameStauts** and **MoveType**. They make the Code reproducable and maintainable.
+```bash
+typedef enum
+{
+    EMPTY = 0,
+    PAWN = 1,
+    KNIGHT = 2,
+    BISHOP = 3,
+    ROOK = 4,
+    QUEEN = 5,
+    KING = 6
+} PieceType;
+
+//Piece colors
+typedef enum
+{
+    NONE = 0,
+    WHITE = 1,
+    BLACK = 2
+} Color;
+
+//Game state
+typedef enum
+{
+    PLAYING,
+    CHECK,
+    CHECKMATE,
+    STALEMATE,
+    DRAW_FIFTY_MOVE,
+    DRAW_INSUFFICIENT_MATERIAL,
+    DRAW_AGREEMENT
+} GameStatus;
+
+//Movement type
+typedef enum
+{
+    NORMAL_MOVE,
+    CAPTURE,
+    CASTLE_KINGSIDE,
+    CASTLE_QUEENSIDE,
+    EN_PASSENT,
+    PAWN_PROMOTION,
+    CAPTURE_AND_PAWN_PROMOTION
+} MoveType;
+```
+
+- Helpers in move process
+   - Position instead of passing to functions fromRow,fromColumn,toRow,toColumn we pass the positions of to/from squares.
+```bash
+typedef struct 
+{
+    int x; 
+    int y; 
+} Position;
+```
+
+  - Move Struct that holds all needed data for the move 
+```bash
+typedef struct 
+{
+    Position initial;            
+    Position final;              
+    Piece capturedPiece;       
+    MoveType moveType;         
+    PieceType promotionPiece;  
+} Move;
+```
+
+- Piece struct
+
+```bash
+typedef struct 
+{
+    PieceType type;     
+    Color color;         
+    bool hasMoved;       
+} Piece;
+```
+- Flags for special moves
+
+```bash
+typedef struct
+{
+    bool pawnPromotionMade;  
+    bool castlingMade;       
+    bool enpassentMade;     
+} GameFlags;
+```
+- Basic Game struct 
+
+```bash
+typedef struct 
+{
+    Piece board[BOARD_SIZE][BOARD_SIZE];    
+    Piece capturedWhitePieces[16];         
+    Piece capturedBlackPieces[16];         
+    int halfMoveClock;                    
+    GameStatus status;                    
+    Color currentPlayer;                  
+    Position enPassentTarget;               
+    GameFlags currentFlag;
+    bool enPassentAvailable;                 
+} Game;
+```
+
+
+
+
 
 ### 🛠 Moving Logic 
 
