@@ -773,8 +773,8 @@ typedef struct
 - Preprocessor directives
     - **https://www.geeksforgeeks.org/cpp/cpp-preprocessor-directives-set-2/**
 - All SDL stuff 
-    - **SDL_Wiki **https://wiki.libsdl.org/SDL2/FrontPage** 
-    - **Lazy foo **https://lazyfoo.net/tutorials/SDL/**
+    - **SDL_Wiki https://wiki.libsdl.org/SDL2/FrontPage** 
+    - **Lazy foo https://lazyfoo.net/tutorials/SDL/**
     - **http://gamedevgeek.com/tutorials/getting-started-with-sdl/**
     - **https://www.studyplan.dev/sdl2/sdl-setup-windows#setting-up-sdl2-in-windows-visual-studio** (Fixed my bug when *.dlls weren't in the .exe directory)
 
