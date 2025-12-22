@@ -435,7 +435,8 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
 
     // Draw background
     if(gui->background) SDL_RenderCopy(renderer, gui->background, NULL, NULL);
-
+    //Update halfmove clock
+    renderHalfMoveClock(game->halfMoveClock,gui->moveFont,renderer);
 
     
 
@@ -534,10 +535,8 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
     }
 
     //Last move
-    SDL_Texture *bglastmove = loadtexture("assets/move.png",renderer);
     if(gui->lastMove.texture)
-        {SDL_RenderCopy(renderer,bglastmove,NULL,&gui->lastMove.rect);
-        SDL_RenderCopy(renderer,gui->lastMove.texture,NULL,&gui->lastMove.rect);}
+        SDL_RenderCopy(renderer,gui->lastMove.texture,NULL,&gui->lastMove.rect);
 
 
 
@@ -571,7 +570,6 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
     
 
     SDL_RenderPresent(renderer);
-    SDL_DestroyTexture(bglastmove);
 }
 
 
@@ -1052,6 +1050,8 @@ void updateGameGui(gamegui *gui, Game *game, SDL_Renderer *renderer)
         gui->kingThreaten = (SDL_Rect){.x = kingThreatened.y*g_squareSize + BOARDOFFSET , .y =kingThreatened.x *g_squareSize + BOARDOFFSET ,g_squareSize,g_squareSize};
     }
 
+    
+
 }
 
 // Dialog Helpers
@@ -1163,7 +1163,7 @@ void updateLastMoveTexture(gamegui *gui, SDL_Renderer *renderer, Move move)
     char text[32];
     TTF_Font *font = gui->moveFont;  // Use pre-loaded font instead of loading it every time
 
-    SDL_Color textColor = {255, 255, 255, 255};
+    SDL_Color textColor = {255, 100, 100, 255};
 
     /* Base move text */
     snprintf(text, sizeof(text),
@@ -1208,13 +1208,35 @@ void updateLastMoveTexture(gamegui *gui, SDL_Renderer *renderer, Move move)
     gui->lastMove.texture = SDL_CreateTextureFromSurface(renderer, sur);
 
     /* KEEP x & y, FIX width & height */
-    gui->lastMove.rect.x = gui->boardOffset + 8.4*  g_squareSize;
-    gui->lastMove.rect.y = gui->boardOffset + 4 * g_squareSize;
+    gui->lastMove.rect.x = WINDOW_WIDTH * 0.02 + 4 * g_squareSize / 2 - BUTTON_WIDTH/4;
+    gui->lastMove.rect.y = WINDOW_HEIGHT * 0.80;
     gui->lastMove.rect.w = sur->w;   //  text natural width
     gui->lastMove.rect.h = sur->h;   //  text natural height
 
     SDL_FreeSurface(sur);
     // Font is managed by gui structure and destroyed in destroyGameScreenGui()
 }
-//  RUN GAME LOOP 
+void renderHalfMoveClock(int halfMoveClock,TTF_Font *font,SDL_Renderer *renderer){
+
+    char text[50];
+    SDL_Color textColor = {255, 100, 100, 255};
+    sprintf(text, "⏰ Half Move Clock : %d",halfMoveClock);
+    /* Render text */
+    SDL_Surface *sur = TTF_RenderUTF8_Blended(font, text, textColor);
+    if (!sur) {
+        fprintf(stderr, "TTF render error: %s\n", TTF_GetError());
+        return;  // i don't close  the font here - it's managed by the gui structure
+    }
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer,sur);
+    if(!texture){
+        fprintf(stderr, "Texture loading error: %s\n", SDL_GetError());
+        return;  //
+    }
+    SDL_Rect rec = {WINDOW_WIDTH * 0.02 + 15 * g_squareSize / 2 - BUTTON_WIDTH/4,WINDOW_HEIGHT * 0.80,sur->w,sur->h};
+    SDL_FreeSurface(sur);
+
+    SDL_RenderCopy(renderer,texture,NULL,&rec);
+    SDL_DestroyTexture(texture);
+
+}
 

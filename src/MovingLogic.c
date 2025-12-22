@@ -526,7 +526,7 @@ void applyMove(Game *game, Move *move)
         }
     }
 
-    // 7) Half-move clock for 50 move rule
+    // 7) Half-move clock for 50 move rule is reset only on pawn move or capture
     if (mover.type == PAWN || move->moveType == CAPTURE || move->moveType == EN_PASSENT) {
         game->halfMoveClock = 0;
     } else {

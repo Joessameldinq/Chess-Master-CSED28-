@@ -64,4 +64,5 @@ bool offerDrawDialog(SDL_Window *window);
 void clearHighlight(gamegui *gui);
 void highlightValidMoves(Game *game,Position from,SDL_Renderer *renderer);
 void updateLastMoveTexture(gamegui *gui,SDL_Renderer *renderer, Move move);
+void renderHalfMoveClock(int halfMoveClock,TTF_Font *font,SDL_Renderer *renderer);
 #endif
