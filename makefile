@@ -3,7 +3,6 @@ CC = gcc
 WINDRES = windres
 
 # Directories and files
-SRCDIR = src
 TARGET = Chess.exe
 ICON_RC = icon.rc
 ICON_RES = icon.res
@@ -31,18 +30,7 @@ LDFLAGS = \
 
 SDLLIBS = -lSDL2 -lSDL2main -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
-SOURCES = \
-src/chess.c \
-src/DisplayConsole.c \
-src/EndingConditions.c \
-src/GameInitialization.c \
-src/GameModeGui.c \
-src/GuiHelpers.c \
-src/InputConsole.c \
-src/MainMenuGui.c \
-src/MovingLogic.c \
-src/SavingLoading.c \
-src/StackHelpers.c
+
 
 
 all: $(TARGET)
@@ -53,14 +41,14 @@ $(ICON_RES): $(ICON_RC)
 	$(WINDRES) $(ICON_RC) -O coff -o $(ICON_RES)
 
 $(TARGET): $(ICON_RES)
-	$(CC) $(CFLAGS)  src/*.c $(ICON_RES) -o $(TARGET) $(LDFLAGS) $(SDLLIBS)
+	$(CC) $(CFLAGS)  ./src/*.c $(ICON_RES) -o $(TARGET) $(LDFLAGS) $(SDLLIBS)
 release: $(TARGET)
 
 
 
 # Run  game
 run: $(TARGET)
-	powershell -Command "& './$(TARGET)'"
+	./$(TARGET)
 
 
 clean:
