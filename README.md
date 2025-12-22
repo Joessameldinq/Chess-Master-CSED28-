@@ -338,3 +338,29 @@ These helper functions are used to read and write integers,booleans and enumerat
 
 - The main game loop will open the file and take the slot as input(messge box)to save/load game to/from the cfg directory.
 - This game provides five slots for saving and loadig but more and more slots can be made.
+
+
+### ⚙️ Undo and redo 
+
+- In this part we use stacks to keep tracking game snapshots.
+- If we need to undo a game a game turn is popped from game stack to redo stack
+- If we need to redo a game a game turn is popped from redo stack to game stack
+
+#### Stack Helpers
+
+- `bool push(Node **stack,Game game)` 
+    - To add a game to the top of a stack
+- `Game pop(Node **stack)`
+    - To remove a game from the top of a stack
+- `Node* initializeStack()`
+    - To create a new empty stack
+- `bool isEmptyStack(Node *stack)`
+- `void clearStack(Node **stack)`
+
+
+### Basic Function in this process
+
+|Function Prototype| Functionality|
+| --- | --- |
+| `bool undoMove(Node **gameStack, Node **redoStack)`| **Check first if there is at least two states to undo. It pop a game state from the game stack to the redo stack**|
+| `bool redoMove(Node **gameStack, Node **redoStack)`| **Check first if the redo stack isn't empty. It pop a game state from the redo stack and push it to the game stack**|
