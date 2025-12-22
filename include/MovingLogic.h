@@ -8,12 +8,6 @@
 /*
 ==================
 */
-typedef struct{
-    Piece moved,dest;
-    Position from,to,enpassentTarget;
-    bool enPassentWasAvailable;
-    int halfMoveClock;
-} MoveBackup;
 
 void setFlagsFalse(Game *game);
 bool isPathClear(Game *game,Move move);

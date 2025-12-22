@@ -37,6 +37,7 @@ void printCapturedPieces(Game *game)
             case BISHOP: p = " B "; break;
             case QUEEN:  p = " Q "; break;
             case KING:   p = " K "; break;
+            case EMPTY: continue;
         }
         printf(" %s ",p);
     }
@@ -51,6 +52,7 @@ void printCapturedPieces(Game *game)
             case BISHOP: p = " b "; break;
             case QUEEN:  p = " q "; break;
             case KING:   p = " k "; break;
+            case EMPTY: continue;
         }
         printf(" %s ",p);
     }
@@ -106,6 +108,7 @@ void printBoard(Game *game)
                     case BISHOP: p = " b "; break;
                     case QUEEN: p = " q "; break;
                     case KING: p = " k "; break;
+                    case EMPTY: continue;
                 }
             } else if (game->board[i][j].color == BLACK) {
                 switch (game->board[i][j].type) {
@@ -115,6 +118,7 @@ void printBoard(Game *game)
                     case BISHOP: p = " B "; break;
                     case QUEEN: p = " Q "; break;
                     case KING: p = " K "; break;
+                    case EMPTY: continue;
                 }
             }
             printf("%s",p);

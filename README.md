@@ -62,6 +62,87 @@ This project was developed as part of the Computer Programming I course.
 
 - Abdelwahhab Khaled Khamis (Id : )
 
+## 🎯User Manual
+### ♟️ Chess Master: User Manual
+
+Welcome to the SDL2 Chess Engine. This application provides a full-featured chess experience with a graphical interface, sound effects, and strict adherence to FIDE rules.
+### 🎮 Getting Started
+1. Launching the Game
+
+    Main Menu: Upon launching, you will see the Main Menu. You have three primary options:
+
+        New Game: Starts a fresh match between White and Black.
+
+        Load Game: Opens a menu to resume a previously saved match.
+
+        Quit: Safely exits the application.
+
+2. Basic Controls
+
+    Selecting a Piece: Click and hold the Left Mouse Button on the piece you wish to move.
+
+    Moving: Drag the piece to your target square.
+
+    Visual Aids: * When you drag a piece, valid destination squares will be highlighted in green.
+
+        The last move made is highlighted in yellow for both the starting and ending squares.
+
+        If your King is in check, the square beneath it will turn red.
+
+## 🛠️ In-Game Features
+
+Once a match starts, several control buttons are available at the bottom of the screen:
+Button	Action
+Undo	Reverts the board to the previous turn. You can undo all the way back to the start.
+Redo	Reapplies a move that was just undone.
+Save	Opens 8 save slots. Choose one to record your current game state.
+Back	Returns you to the Main Menu (ensure you save first!).
+Draw	Sends a draw offer to the opponent.
+## 🔊 Sound Effects
+
+The game provides audio feedback for various actions. You will hear distinct sounds for:
+
+    Standard moves and captures.
+
+    Special moves (Castling, En Passant, Pawn Promotion).
+
+    Game alerts (Check, Checkmate, or Stalemate).
+
+    Invalid Moves: If you try to move a piece illegally, a "beep" will play, and the piece will return to its original spot.
+
+## 📜 Special Chess Rules Supported
+
+- The engine automatically handles complex chess maneuvers:
+
+    - **Castling**: If neither your King nor Rook has moved and the path is clear/safe, you can move the King two squares toward the Rook to castle.
+
+    - **En Passant**: A special pawn capture that can only occur immediately after an opponent moves a pawn two squares forward.
+
+    - **Pawn Promotion**: When a pawn reaches the 8th rank, a menu will allow you to choose a Queen, Rook, Bishop, or Knight.
+
+    - **Draw Rules**: The engine detects Stalemate, Insufficient Material (Dead Position), and the 50-Move Rule.
+
+## 💾 Saving and Loading
+
+- **To Save** : Click the Save button. A message box will prompt you to select a slot (1–8). This saves the exact board state, turn order, and move history to the /cfg folder.
+
+- **To Load**: From the Main Menu, click Load Game. Select the slot you used previously. The game will restore the board exactly as you left it.
+
+        Note: The Undo/Redo history is not saved between sessions.
+
+## 🛠️ Troubleshooting & Tips
+
+- Window Responsiveness: The game uses SDL_WaitEvent to save CPU power. If the window seems "frozen," it is simply waiting for your next mouse click or move.
+
+- Invalid Moves: If a piece won't stay on a square, ensure you aren't leaving your King in check. The engine prevents any move that results in your King being captured.
+
+- Make sure that all assets are in the assets directory
+
+- Make sure that all *.dlls are in the directory of executable file (Dynamic Libraries) if they don't exist a message like this will be shown 
+```bash
+The code execution cannot proceed because SDL2.dll was not found
+```
+
 ## 🛠️ Technologies Used
 
 - Language: C
@@ -661,5 +742,51 @@ typedef struct
     Use Case: It is ideal for applications that are primarily event-driven and don't need continuous rendering (e.g., a simple menu-based application or a utility program). It allows the operating system to put the CPU into a lower power mode when idle, which is very important for battery life on mobile devices.
     Performance: It is very CPU efficient because it yields control back to the operating system, but it can make an application seem sluggish if not used properly in a game loop, as the game won't update or render until a new event occurs.
 
+
+### ®️ Refrences
+
+- The hirerchy of the project and splitting the project and *.c & *.h files was inspired by 
+**K.N.King , C Programming, A Modern Approach, Second Edition Chapter 10:** **Program Organization** 
+
+- Makefile
+    - **https://makefiletutorial.com/**
+    - **-DSDL_MAIN_HANDLED flag** **https://stackoverflow.com/questions/60948791/sdl2-cmake-undefined-reference-to-winmain16-on-win10-mingw**
+
+- clearScreen() in console part 
+    - **https://www.geeksforgeeks.org/c/clear-console-c-language/**
+
+- Using Static functions in saving and loading processes
+    - Storage Class of a function section in **K.N.King Chapter 18: Declarations**
+
+- Saving and loading using binary format
+    - **K.N.King Chapter 22: Input/Output 22.6 Block I/O**
+
+- Stack data structure
+    - **K.N.King Chapter 12: Pointers and Arrays from p262** 
+    - **https://www.geeksforgeeks.org/dsa/stack-data-structure/**
+
+- `<ctype.h>` functions like tolower()
+    - **https://cplusplus.com/reference/cctype/**
+
+- Compiling Resource file *.rc (for the icon of executable file)
+    - **https://stackoverflow.com/questions/708238/how-do-i-add-an-icon-to-a-mingw-gcc-compiled-executable**
+- Preprocessor directives
+    - **https://www.geeksforgeeks.org/cpp/cpp-preprocessor-directives-set-2/**
+- All SDL stuff 
+    - **SDL_Wiki **https://wiki.libsdl.org/SDL2/FrontPage** 
+    - **Lazy foo **https://lazyfoo.net/tutorials/SDL/**
+    - **http://gamedevgeek.com/tutorials/getting-started-with-sdl/**
+    - **https://www.studyplan.dev/sdl2/sdl-setup-windows#setting-up-sdl2-in-windows-visual-studio** (Fixed my bug when *.dlls weren't in the .exe directory)
+
+    
+
+
+
+
+
+
+  
+
+ 
 
 
