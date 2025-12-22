@@ -6,8 +6,14 @@ A full chess game implemented in C using SDL2, featuring a graphical interface, 
 This project was developed as part of the Computer Programming I course.
 
 ## ⚔️🏇🏼 +=={:::::::::::::::::> Knight's Tour Puzzle
+
 🎥 Click to watch the Knight's Tour Demo
-https://github.com/user-attachments/assets/b799ac29-8eef-4d5f-8e2c-a249c1810120
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/b799ac29-8eef-4d5f-8e2c-a249c1810120" width="800" controls>
+  </video>
+</p>
+
+
 
 ## 👓 Supervision
 
