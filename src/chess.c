@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     Mix_AllocateChannels(16);  
 
     // Load background music
-    Mix_Music *bgMusic = Mix_LoadMUS("assets/djawidi_GOT.mp3");
+    Mix_Music *bgMusic = Mix_LoadMUS("assets/eff/theme.mp3");
     if (!bgMusic) {
         fprintf(stderr, "Failed to load mp3: %s\n", Mix_GetError());
     }
