@@ -760,6 +760,17 @@ typedef struct
   </video>
 </p>
 
+- White Wins by chekmate
+
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/6969af64-fd05-4009-8c78-ab90650caca3" width="800" controls>
+  </video>
+</p>
+
+
+
+
+
 
 
 
