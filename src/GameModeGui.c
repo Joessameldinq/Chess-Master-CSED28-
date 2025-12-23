@@ -58,11 +58,14 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
     }
 
     // Load background music
-    bgMusic= Mix_LoadMUS("assets/eff/theme.mp3");
+    bgMusic = Mix_LoadMUS("assets/eff/theme.mp3");
     if (!bgMusic) {
         fprintf(stderr, "Failed to load mp3: %s\n", Mix_GetError());
+    } else {
+        Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
+        Mix_PlayMusic(bgMusic, -1); 
+        musicPlaying = true;
     }
-    Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
 
 
     //
@@ -655,25 +658,24 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
         
         mx = event->button.x;
         my = event->button.y;
-    if(isButtonClicked(mx,my,gui->runMusic))
-    {
-        
-        musicPlaying = (musicPlaying == true) ? false:true;
-        highlightClickedButton(renderer,gui->runMusic);
-        if (musicPlaying) {
-            if (Mix_PausedMusic()) {
-                Mix_ResumeMusic();   // resume if paused
-            } else {
-                Mix_PlayMusic(bgMusic, -1); // start playing if not already
+    if (isButtonClicked(mx, my, gui->runMusic)) {
+    musicPlaying = !musicPlaying; //Toogle
+    highlightClickedButton(renderer, gui->runMusic);
+
+    if (musicPlaying) {
+        // If music was paused, resume. If it was never started, play.
+        if (Mix_PausedMusic()) {
+                Mix_ResumeMusic();
+        } else {
+                Mix_PlayMusic(bgMusic, -1);
             }
             SDL_DestroyTexture(gui->runMusic.texture);
             gui->runMusic.texture = loadtexture("assets/musicrun.png", renderer);
         } else {
-            Mix_PauseMusic(); // pause playback
+            Mix_PauseMusic();
             SDL_DestroyTexture(gui->runMusic.texture);
             gui->runMusic.texture = loadtexture("assets/musichalted.png", renderer);
         }
-
     }
     else if(isButtonClicked(mx,my,gui->save))
     {
