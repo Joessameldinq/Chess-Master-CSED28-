@@ -37,12 +37,12 @@ int main(int argc, char *argv[])
     }
     Mix_AllocateChannels(16);  
 
-    // Load background music
-    Mix_Music *bgMusic = Mix_LoadMUS("assets/eff/theme.mp3");
-    if (!bgMusic) {
-        fprintf(stderr, "Failed to load mp3: %s\n", Mix_GetError());
-    }
-    Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
+    // // Load background music
+    // Mix_Music *bgMusic = Mix_LoadMUS("assets/eff/theme.mp3");
+    // if (!bgMusic) {
+    //     fprintf(stderr, "Failed to load mp3: %s\n", Mix_GetError());
+    // }
+    // Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
 
     // 
     // SDL_image initialization
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 
     mainmenugui    *mainMenuGui   = initMainMenuGui(app.renderer);
     gamegui *gameGui = NULL; // It will be initialized later
-    bool musicPlaying = false;
+    // bool musicPlaying = false;
     
 
     // 
@@ -146,10 +146,10 @@ int main(int argc, char *argv[])
                 //================================================
 
                 // Stop music when returning to menu
-                if (musicPlaying) {
-                    Mix_HaltMusic();
-                    musicPlaying = false;
-                }
+                // if (musicPlaying) {
+                //     Mix_HaltMusic();
+                //     musicPlaying = false;
+                // }
 
                 runMainMenuGui(&app, mainMenuGui);
                 break;
@@ -164,10 +164,10 @@ int main(int argc, char *argv[])
                 //===========================
                 
                 // Start music only once
-                if (!musicPlaying && bgMusic) {
-                    Mix_PlayMusic(bgMusic, -1);
-                    musicPlaying = true;
-                }
+                // if (!musicPlaying && bgMusic) {
+                //     Mix_PlayMusic(bgMusic, -1);
+                //     musicPlaying = true;
+                // }
                 runGame(&app, gameGui);
                 break;
         }
@@ -195,7 +195,7 @@ int main(int argc, char *argv[])
     clearStack(&app.gamestack);
     clearStack(&app.redostack);
 
-    if (bgMusic) Mix_FreeMusic(bgMusic);
+    // if (bgMusic) Mix_FreeMusic(bgMusic);
     Mix_CloseAudio();
     SDL_DestroyRenderer(app.renderer);
     SDL_DestroyWindow(app.window);

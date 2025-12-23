@@ -21,7 +21,8 @@ int g_squareSize = 0;
 int g_boardOffset = 0;
 
 
-
+Mix_Music *bgMusic;
+bool musicPlaying = false;
 //  helper function to get the file name of the piece type  to load textures
 const char* getPieceTypeName(PieceType type)
 {
@@ -41,6 +42,7 @@ const char* getPieceTypeName(PieceType type)
 //  INIT GUI  --> grid , pieces , capturedpieces and buttons and has the feature of check valid textures
 gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
 {
+    
     //
     if (!renderer) {
         fprintf(stderr, "Error: NULL renderer passed to initGameScreenGui\n");
@@ -55,7 +57,12 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
         return NULL;
     }
 
-
+    // Load background music
+    bgMusic= Mix_LoadMUS("assets/eff/theme.mp3");
+    if (!bgMusic) {
+        fprintf(stderr, "Failed to load mp3: %s\n", Mix_GetError());
+    }
+    Mix_VolumeMusic(MIX_MAX_VOLUME / 4);
 
 
     //
@@ -129,6 +136,12 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
     if (!gui->capWhite.texture) {
         fprintf(stderr, "Warning: Failed to load white capture button texture\n");
     }
+    //Set initial music texture is running
+    gui->runMusic.texture = loadtexture("assets/musicrun.png",renderer);
+    if(!gui->runMusic.texture){
+         fprintf(stderr, "Warning: Failed to load music  texture\n");
+
+    }
 
     // Initialize button rectangles - organized layout with responsive sizing
     int bw = BUTTON_WIDTH/2;
@@ -144,6 +157,7 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
     gui->drawAgreement.rect = (SDL_Rect){margin + (bw + button_spacing) * 4,button_start_y - bh * 1.2 , bw ,bh};
     gui->capWhite.rect = (SDL_Rect){WINDOW_WIDTH - BUTTON_WIDTH - WINDOW_WIDTH * 0.20 , WINDOW_HEIGHT * 0.05, bw, bh};
     gui->capBlack.rect = (SDL_Rect){WINDOW_WIDTH - BUTTON_WIDTH - WINDOW_WIDTH * 0.00, WINDOW_HEIGHT * 0.05, bw, bh};
+    gui->runMusic.rect = (SDL_Rect){margin + (bw + button_spacing) * 5.5,button_start_y - bh * 1.2,bw,bh};
     
     gui->currentTurn.rect = (SDL_Rect){margin + 8 * g_squareSize / 2 - bw / 2, WINDOW_HEIGHT * 0.80, bw,bh};
 
@@ -160,6 +174,8 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
     // Set initial turn indicator based on current player
     gui->currentTurn.texture = (initialGame->currentPlayer == WHITE) ? 
                                 gui->whiteTurnTex : gui->blackTurnTex;
+
+    
 
     // Init board pieces
     int whiteCnt = 0, blackCnt = 0;
@@ -373,6 +389,7 @@ void destroyGameScreenGui(gamegui *gui)
     if (gui->blackTurnTex) SDL_DestroyTexture(gui->blackTurnTex);
     if(gui->drawAgreement.texture) SDL_DestroyTexture(gui->drawAgreement.texture);
     if (gui->lastMove.texture) SDL_DestroyTexture(gui->lastMove.texture);
+    if(gui->runMusic.texture)SDL_DestroyTexture(gui->runMusic.texture);
 
     for(int r=0; r<BOARD_SIZE; r++)
     {
@@ -411,6 +428,9 @@ void destroyGameScreenGui(gamegui *gui)
     if (gui->sEffect.stalemate) Mix_FreeChunk(gui->sEffect.stalemate);
     if (gui->sEffect.draw) Mix_FreeChunk(gui->sEffect.draw);
     if (gui->sEffect.drawOffer) Mix_FreeChunk(gui->sEffect.drawOffer);
+
+    //Destroy Background music
+    if (bgMusic) Mix_FreeMusic(bgMusic);
 
     // Destroy font
     if (gui->moveFont) TTF_CloseFont(gui->moveFont);
@@ -540,6 +560,7 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
 
 
     // Draw buttons
+    SDL_RenderCopy(renderer,gui->runMusic.texture,NULL,&gui->runMusic.rect);
     SDL_RenderCopy(renderer, gui->back.texture, NULL, &gui->back.rect);
     SDL_RenderCopy(renderer, gui->undo.texture, NULL, &gui->undo.rect);
     SDL_RenderCopy(renderer, gui->redo.texture, NULL, &gui->redo.rect);
@@ -634,8 +655,27 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
         
         mx = event->button.x;
         my = event->button.y;
+    if(isButtonClicked(mx,my,gui->runMusic))
+    {
+        
+        musicPlaying = (musicPlaying == true) ? false:true;
+        highlightClickedButton(renderer,gui->runMusic);
+        if (musicPlaying) {
+            if (Mix_PausedMusic()) {
+                Mix_ResumeMusic();   // resume if paused
+            } else {
+                Mix_PlayMusic(bgMusic, -1); // start playing if not already
+            }
+            SDL_DestroyTexture(gui->runMusic.texture);
+            gui->runMusic.texture = loadtexture("assets/musicrun.png", renderer);
+        } else {
+            Mix_PauseMusic(); // pause playback
+            SDL_DestroyTexture(gui->runMusic.texture);
+            gui->runMusic.texture = loadtexture("assets/musichalted.png", renderer);
+        }
 
-    if(isButtonClicked(mx,my,gui->save))
+    }
+    else if(isButtonClicked(mx,my,gui->save))
     {
         highlightClickedButton(app->renderer,gui->save);
         char fileName[50] = {0};
@@ -919,7 +959,10 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
 void runGame(App *app, gamegui *gui)
 {
     if(!app || !gui) return;
-
+    if (!musicPlaying && bgMusic) {
+        Mix_PlayMusic(bgMusic, -1);
+        musicPlaying = true;
+    }
     SDL_Event e;
     bool dragging = false;
     SDL_Rect dragRect = {0};
@@ -938,6 +981,8 @@ void runGame(App *app, gamegui *gui)
         // Exit loop if screen changed
         if(app->currentScreen != SCREEN_GAME) break;
         }
+        
+        
         
     }
 }
@@ -1035,6 +1080,7 @@ void updateGameGui(gamegui *gui, Game *game, SDL_Renderer *renderer)
             }
         }
     }
+    
 
     //  Update turn indicator 
     gui->currentTurn.texture = (game->currentPlayer == WHITE) ? gui->whiteTurnTex : gui->blackTurnTex;

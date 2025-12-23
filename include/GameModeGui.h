@@ -28,7 +28,8 @@ typedef struct
     Button drawAgreement;
     Button capWhite;
     Button capBlack;
-    Button currentTurn;           
+    Button currentTurn;
+    Button runMusic;           
     SDL_Texture *whiteTurnTex;    
     SDL_Texture *blackTurnTex;    
     Button capturedPieces[2][16];
