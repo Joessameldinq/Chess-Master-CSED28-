@@ -743,15 +743,25 @@ typedef struct
     Performance: It is very CPU efficient because it yields control back to the operating system, but it can make an application seem sluggish if not used properly in a game loop, as the game won't update or render until a new event occurs.
 
 ### 🦾 Sample Runs
-- White wins by check mate
-- Testing enpassent
-- Testing undo/redo
-- Testing save/load
+**Note** Some of this runs are automated not handled by user input (the code is int the automated-test branch)
+
+- Sample 1
+    - Testing Undo/Redo
+    - Testing Save/Load
+    - Testing Check & Checkmate
 < p align = "center">
   <video src = "https://github.com/user-attachments/assets/7662d0ca-db3a-4cce-9fea-fb9fada6ac07" width = "800" controls>
   </video>
 </p>
-  
+
+- Testing Check
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/0f135747-2e15-4846-836c-aa0e592b431a" width="800" controls>
+  </video>
+</p>
+
+
+
 
 
 
