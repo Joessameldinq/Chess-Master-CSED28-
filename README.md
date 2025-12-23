@@ -767,6 +767,29 @@ typedef struct
   </video>
 </p>
 
+- Castling
+  
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/6693440f-a536-4579-95bf-00d93d7488ed" width="800" controls>
+  </video>
+</p>
+
+
+- Pawn Promotion
+  
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/586643d4-dd66-4d3d-86c2-9edc533bce3b" width="800" controls>
+  </video>
+</p>
+
+- Enpassent
+
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/7d44bf94-a630-4c25-863f-55866fd52588" width="800" controls>
+  </video>
+</p>
+
+
 
 
 
