@@ -119,7 +119,7 @@ void Menu_HandleEvent(mainmenugui *mainMenuGui, SDL_Event *event, App *app)
             char fileName[60] = {0};
             int slot = showSaveSlotDialog(app->window);
             
-            if (slot < 1 || slot > 5) {
+            if (slot < 1 || slot > 8) {
                 printf("Load cancelled (invalid slot: %d)\n", slot);
                 return;
             }
