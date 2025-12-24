@@ -62,7 +62,7 @@ void printCapturedPieces(Game *game)
 //  Game Status 
 void printGameState(Game *game)
 {
-    printf("Game current hash is %lu\n",game->currentHash);
+    printf("Game current hash is %llu\n",game->currentHash);
     printf("Current Turn: %s\n",game->currentPlayer == WHITE ? "WHITE" : "BLACK");
 
     printf( "Half move clock: %d\n", game->halfMoveClock);

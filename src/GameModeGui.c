@@ -893,7 +893,7 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                     showGameMessage(app->window,"End of game","🏆 CHECKMATE! White wins!");
                     SDL_DestroyTexture(mate);
                     }
-                printf("\n🏆 CHECKMATE! %s wins!\n", (newGame.currentPlayer == WHITE) ? "BLACK" : "WHITE");
+                printf("\n CHECKMATE! %s wins!\n", (newGame.currentPlayer == WHITE) ? "BLACK" : "WHITE");
                 app->currentScreen = SCREEN_MENU;
                 break;
             case STALEMATE:
@@ -903,7 +903,7 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                 SDL_RenderPresent(renderer);
                 playSoundEffect(gui->sEffect.stalemate);
                 showGameMessage(app->window,"End of game","🤝 STALEMATE! Game is a draw.");
-                printf("\n🤝 STALEMATE! Game is a draw.\n");
+                 printf("\n STALEMATE! Game is a draw.\n");
                 app->currentScreen = SCREEN_MENU;
                 SDL_DestroyTexture(stalemate);
                 break;
@@ -914,7 +914,7 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                 SDL_RenderPresent(renderer);
                 playSoundEffect(gui->sEffect.draw);
                 showGameMessage(app->window,"End of game","🤝 DRAW by fifty-move rule!");
-                printf("\n🤝 DRAW by fifty-move rule!\n");
+                 printf("\n DRAW by fifty-move rule!\n");
                 app->currentScreen = SCREEN_MENU;
                 SDL_DestroyTexture(fiftymove);
                 break;
@@ -925,7 +925,7 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                 SDL_RenderPresent(renderer);
                 playSoundEffect(gui->sEffect.draw);
                 showGameMessage(app->window,"End of game","🤝 Game ended in a draw."); //TODO this logic
-                printf("\n🤝 Game ended in a draw.\n");
+                 printf("\n Game ended in a draw.\n");
                 app->currentScreen = SCREEN_MENU;
                 SDL_DestroyTexture(drawagreement);
                 break;
@@ -937,7 +937,7 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                 SDL_RenderPresent(renderer);
                 playSoundEffect(gui->sEffect.draw);
                 showGameMessage(app->window,"End of game","🤝 Game ended in an Insufficent material position.");
-                printf("\n 🤝 Game ended in an Insufficent material position.\n");
+                printf("\n   Game ended in an Insufficent material position.\n");
                 app->currentScreen = SCREEN_MENU;
                 SDL_DestroyTexture(insuff);
                 break;
@@ -949,7 +949,7 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                 SDL_RenderPresent(renderer);
                 playSoundEffect(gui->sEffect.draw);
                 showGameMessage(app->window,"End of game","🤝 Game ended in a threefold reptition position.");
-                printf("\n 🤝 Game ended in a threefold reptition position.\n");
+                printf("\n   Game ended in a threefold reptition position.\n");
                 app->currentScreen = SCREEN_MENU;
                 SDL_DestroyTexture(repti);
                 break;
@@ -1289,10 +1289,10 @@ void updateLastMoveTexture(gamegui *gui, SDL_Renderer *renderer, Move move)
     // Font is managed by gui structure and destroyed in destroyGameScreenGui()
 }
 void renderHalfMoveClock(int halfMoveClock,TTF_Font *font,SDL_Renderer *renderer){
-
+    
     char text[50];
     SDL_Color textColor = {255, 100, 100, 255};
-    sprintf(text, "⏰ Half Move Clock : %d",halfMoveClock);
+    sprintf(text, "Half Move Clock : %d",halfMoveClock);
     /* Render text */
     SDL_Surface *sur = TTF_RenderUTF8_Blended(font, text, textColor);
     if (!sur) {
