@@ -7,6 +7,9 @@
 #include "../include/EndingConditions.h"
 #define FIFTY_MOVE_THRESHOLD 100
 
+
+
+
 // Find the king belonging to a given color
 Position findKingPosition(Game *game, Color color) //Find the position of king of specific color
 {
@@ -77,6 +80,7 @@ GameStatus computeGameStatus(Game *game)
     if (isStalemate(game)) return STALEMATE;
     if(isDeadPosition(game))return DRAW_INSUFFICIENT_MATERIAL;
     if(fiftyMovesRule(game)) return DRAW_FIFTY_MOVE;
+    if(isThreeFoldReptition(game))return DRAW_THREEFOLD_REPTITION;
     return inCheck(game) ? CHECK : PLAYING;
 }
 
@@ -227,4 +231,15 @@ bool isDeadPosition(Game *game)
 
     
     return false;
+}
+bool isThreeFoldReptition(Game *game){
+    int counter = 0;
+    for(int i = 0 ; i  <game->hashCount ; i++){
+        if(game->hashHistory[i] == game->currentHash){
+            counter++;
+        }
+        if(counter>=3)
+            return true;
+    }
+    return (counter>=3);
 }

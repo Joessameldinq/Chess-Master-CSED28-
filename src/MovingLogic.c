@@ -536,6 +536,14 @@ void applyMove(Game *game, Move *move)
 
     // 8) Toggle current player
     game->currentPlayer = (game->currentPlayer == WHITE) ? BLACK : WHITE;
+
+
+    //Change the hash counter
+    game->currentHash = computePositionHash(*game);
+    game->hashHistory[game->hashCount] = game->currentHash;
+    game->hashCount++;
+    //printf("Game current hash = %lu\n",game->currentHash);
+
 }
 void setFlagsFalse(Game *game)
 {

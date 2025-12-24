@@ -23,6 +23,9 @@ static bool writeBool(FILE *fp, bool v) {
 static bool writeEnum(FILE *fp, int v) { // enums stored as 4 bytes
     return fwrite(&v, sizeof(int), 1, fp) == 1;
 }
+static bool writeU64(FILE *fp,uint64_t v){
+    return fwrite(&v, sizeof(uint64_t), 1, fp) == 1;
+}
 
 static bool readInt(FILE *fp, int *v) {
     return fread(v, sizeof(int), 1, fp) == 1;
@@ -34,6 +37,9 @@ static bool readBool(FILE *fp, bool *v) {
 
 static bool readEnum(FILE *fp, int *v) {
     return fread(v, sizeof(int), 1, fp) == 1;
+}
+static bool readU64(FILE *fp,uint64_t *v){
+    return fread(v, sizeof(uint64_t), 1, fp) == 1;
 }
 
 
@@ -112,6 +118,21 @@ bool saveGame(FILE *fp, const Game *g)
     // en passant availability
     if (!writeBool(fp, g->enPassentAvailable)) return false;
 
+    //Save hashing
+
+    //Save the current hash
+    if(!writeU64(fp,g->currentHash)) return false;
+
+    //Save the hash count
+    if(!writeInt(fp,g->hashCount))return false;
+
+    //Save the hashing history
+    for(int hash = 0 ; hash < g->hashCount ; hash++){
+        if(!writeU64(fp,g->hashHistory[hash]))return false;
+    }
+
+    
+
     return true;
 }
 bool loadGame(FILE *fp, Game *g)
@@ -169,6 +190,19 @@ bool loadGame(FILE *fp, Game *g)
 
     // en passant availability
     if (!readBool(fp, &g->enPassentAvailable)) return false;
+
+    //Load hashing
+
+    //Load the current hash
+    if(!readU64(fp,&g->currentHash)) return false;
+
+    //Load the hash count
+    if(!readInt(fp,&g->hashCount))return false;
+
+    //Load the hashing history
+    for(int hash = 0 ; hash < g->hashCount ; hash++){
+        if(!readU64(fp,&g->hashHistory[hash]))return false;
+    }
 
     return true;
 }
