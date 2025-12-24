@@ -898,7 +898,7 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                 break;
             case STALEMATE:
                 SDL_Texture *stalemate = NULL;
-                stalemate = loadtexture("assets/stale.png",renderer);
+                stalemate = loadtexture("assets/smate.png",renderer);
                 SDL_RenderCopy(renderer,stalemate,NULL,NULL);
                 SDL_RenderPresent(renderer);
                 playSoundEffect(gui->sEffect.stalemate);
@@ -908,30 +908,50 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                 SDL_DestroyTexture(stalemate);
                 break;
             case DRAW_FIFTY_MOVE:
+                SDL_Texture *fiftymove = NULL;
+                fiftymove = loadtexture("assets/50.png",renderer);
+                SDL_RenderCopy(renderer,fiftymove,NULL,NULL);
+                SDL_RenderPresent(renderer);
                 playSoundEffect(gui->sEffect.draw);
                 showGameMessage(app->window,"End of game","🤝 DRAW by fifty-move rule!");
                 printf("\n🤝 DRAW by fifty-move rule!\n");
                 app->currentScreen = SCREEN_MENU;
+                SDL_DestroyTexture(fiftymove);
                 break;
             case DRAW_AGREEMENT:
+                SDL_Texture *drawagreement = NULL;
+                drawagreement = loadtexture("assets/agree.png",renderer);
+                SDL_RenderCopy(renderer,drawagreement,NULL,NULL);
+                SDL_RenderPresent(renderer);
                 playSoundEffect(gui->sEffect.draw);
                 showGameMessage(app->window,"End of game","🤝 Game ended in a draw."); //TODO this logic
                 printf("\n🤝 Game ended in a draw.\n");
                 app->currentScreen = SCREEN_MENU;
+                SDL_DestroyTexture(drawagreement);
                 break;
             
             case DRAW_INSUFFICIENT_MATERIAL:
+                SDL_Texture *insuff = NULL;
+                insuff = loadtexture("assets/insuff.png",renderer);
+                SDL_RenderCopy(renderer,insuff,NULL,NULL);
+                SDL_RenderPresent(renderer);
                 playSoundEffect(gui->sEffect.draw);
                 showGameMessage(app->window,"End of game","🤝 Game ended in an Insufficent material position.");
                 printf("\n 🤝 Game ended in an Insufficent material position.\n");
                 app->currentScreen = SCREEN_MENU;
+                SDL_DestroyTexture(insuff);
                 break;
             
              case DRAW_THREEFOLD_REPTITION:
+                SDL_Texture *repti = NULL;
+                repti = loadtexture("assets/rep.png",renderer);
+                SDL_RenderCopy(renderer,repti,NULL,NULL);
+                SDL_RenderPresent(renderer);
                 playSoundEffect(gui->sEffect.draw);
                 showGameMessage(app->window,"End of game","🤝 Game ended in a threefold reptition position.");
                 printf("\n 🤝 Game ended in a threefold reptition position.\n");
                 app->currentScreen = SCREEN_MENU;
+                SDL_DestroyTexture(repti);
                 break;
             }
 
