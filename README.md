@@ -365,9 +365,24 @@ typedef struct
     Color currentPlayer;                  
     Position enPassentTarget;               
     GameFlags currentFlag;
-    bool enPassentAvailable;                 
+    bool enPassentAvailable; 
+    uint64_t currentHash;
+    uint64_t hashHistory[1024];
+    int hashCount;                
 } Game;
 ```
+
+- Helper for hashing game snapshots for threefold reptition
+
+```bash
+typedef struct {
+    uint64_t pieces[64][12];      // [square][piece_type + color_offset]
+    uint64_t castling[4];         // BKingSide , BQueenSide , WKingSide , WQueenSide
+    uint64_t enpassant[8];       // for each column for enpassant available
+    uint64_t sideToMove;        // toggle for black's turn
+} ZobristTables; //Only helper struct and won't be saved
+```
+
 
 
 
