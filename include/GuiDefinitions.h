@@ -34,7 +34,6 @@ typedef struct
 typedef enum {
     SCREEN_MENU,
     SCREEN_GAME,
-    SCREEN_QUIT
 } GameState;
 
 typedef struct {

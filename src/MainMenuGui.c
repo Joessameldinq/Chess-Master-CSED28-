@@ -85,14 +85,12 @@ void Menu_HandleEvent(mainmenugui *mainMenuGui, SDL_Event *event, App *app)
 
     if(event->type == SDL_QUIT) {
         app->running = false;
-        app->currentScreen = SCREEN_QUIT;
         return;
     }
     
     if(event->type == SDL_KEYDOWN)
     {
         if(event->key.keysym.sym == SDLK_ESCAPE) {
-            app->currentScreen = SCREEN_QUIT;
             app->running = false;
             return;
         }
@@ -164,7 +162,6 @@ void Menu_HandleEvent(mainmenugui *mainMenuGui, SDL_Event *event, App *app)
             // printf("Quit clicked\n");
             highlightClickedButton(app->renderer,mainMenuGui->quit);
             app->running = false;
-            app->currentScreen = SCREEN_QUIT;
         }
     }
 }

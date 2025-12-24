@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
         }
 
         // Quit confirm
-        if (!app.running || app.currentScreen == SCREEN_QUIT) {
+        if (!app.running ) {
             if (showExitConfirm(app.window) == 2)
                 {app.running = true;
                 app.currentScreen = prev;}

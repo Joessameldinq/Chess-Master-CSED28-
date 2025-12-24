@@ -606,7 +606,6 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
 
     if(event->type == SDL_QUIT)
     {
-        app->currentScreen = SCREEN_QUIT;
         app->running = false;
         return true;
     }
@@ -616,7 +615,6 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
         switch(event->key.keysym.sym)
         {
             case SDLK_ESCAPE:
-                app->currentScreen = SCREEN_QUIT;
                 app->running = false;
                 return true;
 
@@ -924,8 +922,15 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
             
             case DRAW_INSUFFICIENT_MATERIAL:
                 playSoundEffect(gui->sEffect.draw);
-                showGameMessage(app->window,"End of game","🤝 Game ended in a dead position.");
-                printf("\n 🤝 Game ended in a dead position\n");
+                showGameMessage(app->window,"End of game","🤝 Game ended in an Insufficent material position.");
+                printf("\n 🤝 Game ended in an Insufficent material position.\n");
+                app->currentScreen = SCREEN_MENU;
+                break;
+            
+             case DRAW_THREEFOLD_REPTITION:
+                playSoundEffect(gui->sEffect.draw);
+                showGameMessage(app->window,"End of game","🤝 Game ended in a threefold reptition position.");
+                printf("\n 🤝 Game ended in a threefold reptition position.\n");
                 app->currentScreen = SCREEN_MENU;
                 break;
             }

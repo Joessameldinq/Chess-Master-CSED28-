@@ -5,16 +5,6 @@
 A full chess game implemented in C using SDL2, featuring a graphical interface, sound effects, and core chess rules.
 This project was developed as part of the Computer Programming I course.
 
-## ⚔️🏇🏼 Knight's Tour Puzzle
-
-🎥 Click to watch the Knight's Tour Demo
-<p align="center">
-  <video src="https://github.com/user-attachments/assets/b799ac29-8eef-4d5f-8e2c-a249c1810120" width="800" controls>
-  </video>
-</p>
-
-
-
 ## 👓 Supervision
 
 - Prof.Dr.Marwan Torki
@@ -53,6 +43,8 @@ This project was developed as part of the Computer Programming I course.
 - Clean modular C codebase
 
 - Adding an Icon for the executable game
+
+- Game supports draw by threefold reptition using zobrist hashing and transpotion tables
 
 - Cross-platform support (Windows & Linux)
 
@@ -483,6 +475,7 @@ Once a move passes the multi-tiered validation (Geometry → Piece Rules → Kin
 |`bool isStalemate(Game *game)`|**This is one of the possible drawing conditions used in this project. It first check if the king of current player in check if true. it exits early else it tries all possible moves like the previous function (isStalemate) if it finds a legal move it returns false else returns true and game ends by stalemate**|
 |`bool fiftyMovesRule(Game *game)`|**if morethan 100 move is made without moving pawns the game ends by fifty-move-rule (draw) following the FIDE rules**|
 |`bool isDeadPosition(Game *game)`|**Check for suffecient pieces for the player to win if both doesnt have that suffecient pieces we declare a draw.**|
+|`bool isThreeFoldReptition(Game *game)`|**Check if a specific position is repeated three times and declare draw if this happens.**|
 
 
 ### Utilities
@@ -492,6 +485,10 @@ Once a move passes the multi-tiered validation (Geometry → Piece Rules → Kin
 |`Color getSquareColor(int row,int col)`|**It's helpful tool in the dead position function as we calculate things like the number of bishop pieces on black squares**|
 |`Position findKingPosition(Game *game, Color color) `|**It finds the king belonging to a given color**|
 |`GameStatus computeGameStatus(Game *game)`|**After applying move this function update the game state**|
+|`void initZobristTables(void)`|**In the beginning of the game it initialize a global zobrist table with random numbers. and changing game states will modify these values**|
+|`int getPieceIndex(Piece p)`|**As the zobirst table pieces is 2D of 64 * 12 pieces. this function will get a unique piece index based on the type and color**|
+|`uint64_t computePositionHash(Game game)`|**The most important function as it update the game current hash based on the current game state**|
+
 
 🏴‍☠️ ⚠️The "Dead Position" Limitation
 
@@ -834,7 +831,11 @@ typedef struct
     - **Lazy foo https://lazyfoo.net/tutorials/SDL/**
     - **http://gamedevgeek.com/tutorials/getting-started-with-sdl/**
     - **https://www.studyplan.dev/sdl2/sdl-setup-windows#setting-up-sdl2-in-windows-visual-studio** (Fixed my bug when *.dlls weren't in the .exe directory)
-
+- **Zobrist Hashing**
+    - **https://www.chessprogramming.org/Zobrist_Hashing**
+    - **https://en.wikipedia.org/wiki/Zobrist_hashing**
+    - **https://dev.to/larswaechter/zobrist-hashing-72n**
+    - Generating random numbers was inspired by this blog **https://stackoverflow.com/questions/33010010/how-to-generate-random-64-bit-unsigned-integer-in-c**
     
 
 
