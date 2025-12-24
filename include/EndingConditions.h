@@ -11,4 +11,5 @@ Color getSquareColor(int row,int col);
 GameStatus computeGameStatus(Game *game);
 bool fiftyMovesRule(Game *game);
 bool isStalemate(Game *game);
+bool isThreeFoldReptition(Game *game);
 #endif
