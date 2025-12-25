@@ -139,6 +139,7 @@ void highlightClickedButton(SDL_Renderer *renderer,Button cButton)
     SDL_SetRenderDrawColor(renderer,c.r,c.g,c.b,c.a);
     SDL_RenderFillRect(renderer,&cButton.rect);
     SDL_RenderPresent(renderer);
+    SDL_Delay(150); //To show the effect
 
 }
 void playSoundEffect(Mix_Chunk *sEffect)

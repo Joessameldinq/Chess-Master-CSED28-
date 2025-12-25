@@ -725,12 +725,14 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
         }
     }
     else if(isButtonClicked(mx, my, gui->arrowForward)) {
+    highlightClickedButton(renderer,gui->arrowForward);
     colorCounter++;
     int index = (colorCounter % 12 + 12) % 12; // ensures 0–11
     currentLight = lightSquare[index];
     currentDark  = darkSquare[index];
     }
     else if(isButtonClicked(mx, my, gui->arrowBack)) {
+        highlightClickedButton(renderer,gui->arrowBack);
         colorCounter--;
         int index = (colorCounter % 12 + 12) % 12; // ensures 0–11
         currentLight = lightSquare[index];
