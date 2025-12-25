@@ -20,6 +20,38 @@
 int g_squareSize = 0;
 int g_boardOffset = 0;
 
+SDL_Color lightSquare[] = {
+    {238, 238, 210, 255}, // Classic Green (Light)
+    {232, 235, 239, 255}, // Tournament Blue (Light)
+    {240, 217, 181, 255}, // Wood Walnut (Light)
+    {255, 255, 255, 255}, // High Contrast (Light)
+    {204, 212, 223, 255}, // Deep Sea (Light)
+    {234, 233, 210, 255}, // Forest (Light)
+    {227, 193, 111, 255}, // Sandcastle (Light)
+    {198, 198, 198, 255}, // Slate (Light)
+    {231, 213, 185, 255}, // Maple (Light)
+    {222, 227, 230, 255}, // Midnight (Light)
+    {235, 236, 208, 255}, // Marble (Light)
+    {240, 217, 181, 255}  // Burnt Orange (Light)
+};
+
+SDL_Color darkSquare[] = {
+    {118, 150, 86, 255},  // Classic Green (Dark)
+    {125, 135, 150, 255}, // Tournament Blue (Dark)
+    {181, 136, 99, 255},  // Wood Walnut (Dark)
+    {80, 80, 80, 255},    // High Contrast (Dark)
+    {75, 115, 153, 255},  // Deep Sea (Dark)
+    {75, 117, 81, 255},   // Forest (Dark)
+    {184, 139, 74, 255},  // Sandcastle (Dark)
+    {100, 111, 128, 255}, // Slate (Dark)
+    {151, 103, 63, 255},  // Maple (Dark)
+    {58, 87, 122, 255},   // Midnight (Dark)
+    {115, 149, 82, 255},  // Marble (Dark)
+    {165, 105, 63, 255}   // Burnt Orange (Dark)
+};
+static SDL_Color currentLight;
+static SDL_Color currentDark;
+static int colorCounter;
 
 Mix_Music *bgMusic;
 bool musicPlaying = false;
@@ -42,7 +74,10 @@ const char* getPieceTypeName(PieceType type)
 //  INIT GUI  --> grid , pieces , capturedpieces and buttons and has the feature of check valid textures
 gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
 {
-    
+    //Initalize square colors
+    colorCounter = 0;
+    currentLight = lightSquare[colorCounter%4];
+    currentDark = darkSquare[colorCounter%4];
     //
     if (!renderer) {
         fprintf(stderr, "Error: NULL renderer passed to initGameScreenGui\n");
@@ -146,6 +181,17 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
 
     }
 
+    gui->arrowForward.texture = loadtexture("assets/arrowforward.png",renderer);
+    if(!gui->arrowForward.texture){
+         fprintf(stderr, "Warning: Failed to load arrowforward  texture\n");
+
+    }
+
+    gui->arrowBack.texture = loadtexture("assets/arrowback.png",renderer);
+    if(!gui->arrowForward.texture){
+         fprintf(stderr, "Warning: Failed to load arrowback  texture\n");
+
+    }
     // Initialize button rectangles - organized layout with responsive sizing
     int bw = BUTTON_WIDTH/2;
     int bh = BUTTON_HEIGHT/2;
@@ -161,6 +207,8 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
     gui->capWhite.rect = (SDL_Rect){WINDOW_WIDTH - BUTTON_WIDTH - WINDOW_WIDTH * 0.20 , WINDOW_HEIGHT * 0.05, bw, bh};
     gui->capBlack.rect = (SDL_Rect){WINDOW_WIDTH - BUTTON_WIDTH - WINDOW_WIDTH * 0.00, WINDOW_HEIGHT * 0.05, bw, bh};
     gui->runMusic.rect = (SDL_Rect){margin + (bw + button_spacing) * 5.5,button_start_y - bh * 1.2,bw,bh};
+    gui->arrowForward.rect = (SDL_Rect){g_boardOffset + g_squareSize *9.50, 0 , 45,45};
+    gui->arrowBack.rect = (SDL_Rect){g_boardOffset + g_squareSize *8.50, 0, 45,45};
     
     gui->currentTurn.rect = (SDL_Rect){margin + 8 * g_squareSize / 2 - bw / 2, WINDOW_HEIGHT * 0.80, bw,bh};
 
@@ -463,8 +511,8 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
     
 
     // Draw chessboard with light and dark squares
-    SDL_Color light={235, 236, 208, 255};
-    SDL_Color dark={119, 149, 86, 255};
+    SDL_Color light=currentLight;
+    SDL_Color dark = currentDark;
 
     for(int row=0; row<BOARD_SIZE; row++)
     {
@@ -571,7 +619,8 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
     SDL_RenderCopy(renderer,gui->drawAgreement.texture,NULL,&gui->drawAgreement.rect);
     SDL_RenderCopy(renderer, gui->capWhite.texture, NULL, &gui->capWhite.rect);
     SDL_RenderCopy(renderer, gui->capBlack.texture, NULL, &gui->capBlack.rect);
-
+    SDL_RenderCopy(renderer,gui->arrowBack.texture,NULL,&gui->arrowBack.rect);
+    SDL_RenderCopy(renderer,gui->arrowForward.texture,NULL,&gui->arrowForward.rect);
     // Draw turn indicator
     if(gui->currentTurn.texture)
         SDL_RenderCopy(renderer, gui->currentTurn.texture, NULL, &gui->currentTurn.rect);
@@ -675,6 +724,19 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
             gui->runMusic.texture = loadtexture("assets/musichalted.png", renderer);
         }
     }
+    else if(isButtonClicked(mx, my, gui->arrowForward)) {
+    colorCounter++;
+    int index = (colorCounter % 12 + 12) % 12; // ensures 0–11
+    currentLight = lightSquare[index];
+    currentDark  = darkSquare[index];
+    }
+    else if(isButtonClicked(mx, my, gui->arrowBack)) {
+        colorCounter--;
+        int index = (colorCounter % 12 + 12) % 12; // ensures 0–11
+        currentLight = lightSquare[index];
+        currentDark  = darkSquare[index];
+    }
+
     else if(isButtonClicked(mx,my,gui->save))
     {
         highlightClickedButton(app->renderer,gui->save);
@@ -1121,6 +1183,8 @@ void updateGameGui(gamegui *gui, Game *game, SDL_Renderer *renderer)
         Position kingThreatened = findKingPosition(game,game->currentPlayer);
         gui->kingThreaten = (SDL_Rect){.x = kingThreatened.y*g_squareSize + BOARDOFFSET , .y =kingThreatened.x *g_squareSize + BOARDOFFSET ,g_squareSize,g_squareSize};
     }
+
+    
 
     
 

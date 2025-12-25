@@ -29,7 +29,9 @@ typedef struct
     Button capWhite;
     Button capBlack;
     Button currentTurn;
-    Button runMusic;           
+    Button runMusic;   
+    Button arrowForward;
+    Button arrowBack;        
     SDL_Texture *whiteTurnTex;    
     SDL_Texture *blackTurnTex;    
     Button capturedPieces[2][16];
