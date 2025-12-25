@@ -474,7 +474,7 @@ Once a move passes the multi-tiered validation (Geometry → Piece Rules → Kin
 | --- | --- | ---|
 |Execution|	Modifies the board, handles special moves (Castling/En Passant), updates the 50-move clock, and swaps player turns.|	**applyMove()**|
 |Cleanup|Resets temporary flags (like en passant availability) to ensure the next turn starts with a clean state|**setFlagsFalse()**|
-|Evaluation|Analyzes the new board state to check for Checkmate, Stalemate, or Insufficient Material.|**computeGameState()**|
+|Evaluation|Analyzes the new board state to check for Checkmate, Stalemate, Insufficient Material or Threefold Rpetition.|**computeGameState()**|
 
 
 
@@ -598,7 +598,7 @@ These helper functions are used to read and write integers,booleans and enumerat
 - Captured pieces are shown right the board in two columns for each player
 - The game mode support showing current turn , last move and half move clock.
 - It also supports sound effects for moving pieces, capturing , enpassent , castling , pawn promotion , mate , check and stalemate
-- A screen is shown after game end show the final result (white wins , black wins or stalemate).
+- A screen is shown after game end show the final result (white wins , black wins , stalemate, insufficient material or reptition).
 - Threatened king (king in check) is highlighted in red.
 - If king in check , a message box appears in the screen.
 - Last move squares (from and to squares) are highlighted in yellow.
