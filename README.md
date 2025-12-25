@@ -40,6 +40,8 @@ This project was developed as part of the Computer Programming I course.
 
 - Show several message boxes during gameplay
 
+- You can choose a theme for board out of 12 theme
+
 - Clean modular C codebase
 
 - Adding an Icon for the executable game
