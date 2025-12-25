@@ -92,6 +92,7 @@ Redo	Reapplies a move that was just undone.
 Save	Opens 8 save slots. Choose one to record your current game state.
 Back	Returns you to the Main Menu (ensure you save first!).
 Draw	Sends a draw offer to the opponent.
+ArrowForward&ArrowBack Changes the board theme
 ## 🔊 Sound Effects
 
 The game provides audio feedback for various actions. You will hear distinct sounds for:
@@ -103,6 +104,8 @@ The game provides audio feedback for various actions. You will hear distinct sou
     Game alerts (Check, Checkmate, or Stalemate).
 
     Invalid Moves: If you try to move a piece illegally, a "beep" will play, and the piece will return to its original spot.
+
+    You can pause the background music
 
 ## 📜 Special Chess Rules Supported
 
