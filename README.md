@@ -52,7 +52,7 @@ This project was developed as part of the Computer Programming I course.
 
 - Youssef Essam ElDeen Mahmoud ElSaeed (Id : 24010854)
 
-- Abdelwahhab Khaled Khamis (Id : )
+- Abdelwahhab Khaled Mohamed Khamis (Id : 24010416)
 
 ## 🎯User Manual
 ### ♟️ Chess Master: User Manual
