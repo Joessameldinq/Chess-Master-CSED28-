@@ -72,7 +72,7 @@ int showExitConfirm(SDL_Window *window)
     SDL_ShowMessageBox(&data, &id);
     return id; // 1 = yes, 2 = no
 }
-int showSaveSlotDialog(SDL_Window *window)
+int showSaveSlotDialog(SDL_Window *window,char *text)
 {
     const SDL_MessageBoxButtonData buttons[] = {
         { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "Game 1" },
@@ -88,7 +88,7 @@ int showSaveSlotDialog(SDL_Window *window)
     const SDL_MessageBoxData data = {
         SDL_MESSAGEBOX_INFORMATION,
         window,
-        "Save Game",
+        text,
         "Choose a Game slot:",
         SDL_arraysize(buttons),
         buttons,

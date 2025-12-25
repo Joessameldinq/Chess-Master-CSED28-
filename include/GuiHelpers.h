@@ -7,7 +7,7 @@
 int showExitConfirm(SDL_Window *window);
 SDL_Texture *loadtexture(const char *file, SDL_Renderer *renderer);
 bool isButtonClicked(int mx,int my,Button button);
-int showSaveSlotDialog(SDL_Window *window);
+int showSaveSlotDialog(SDL_Window *window,char *text);
 void showGameMessage(SDL_Window *window, const char *title, const char *message);
 void highlightClickedButton(SDL_Renderer *renderer,Button cButton);
 void playSoundEffect(Mix_Chunk *sEffect);
