@@ -214,7 +214,11 @@ cd Chess-Master-CSED28-
 - Copy all *.dll files from the SDL bin directories into the folder containing Chess.exe
 
 ```bash
-make clean run
+make clean
+## To Run Gui Game
+make run-Gui
+## To Run Console Game
+make run-Console
 ```
 
 ### 🔹 Linux(Ubuntu)
@@ -248,10 +252,15 @@ sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-ttf-dev libsdl2-mixer-dev
 ```
 
 ##### 3. Compilation and run
-
+- For Gui game
 ```bash
-gcc ./src/*.c -o Chess `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -lSDL2_ttf
-./Chess
+gcc ./src/gui/*.c ./src/common/*.c -o ChessGui `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+./ChessGui
+```
+-For Console game
+```bash
+gcc ./src/console/*.c ./src/common/*.c -o ChessConsole `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+./ChessConsole
 ```
 
 
