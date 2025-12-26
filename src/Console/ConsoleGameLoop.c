@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "../include/GameDefinitions.h"
 #include "../include/DisplayConsole.h"
 #include "../include/InputConsole.h"
@@ -6,6 +7,16 @@
 #include "../include/EndingConditions.h"
 #include "../include/SavingLoading.h"
 #include "../include/StackHelpers.h"
+=======
+#include "../../include/GameDefinitions.h"
+#include "../../include/DisplayConsole.h"
+#include "../../include/InputConsole.h"
+#include "../../include/GameInitialization.h"
+#include "../../include/MovingLogic.h"
+#include "../../include/EndingConditions.h"
+#include "../../include/SavingLoading.h"
+#include "../../include/StackHelpers.h"
+>>>>>>> 4ddf6db50645d6b15fdc7d0801e12a3b6bcba57b
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -524,5 +535,8 @@ void handleGameEnd(Game *game)
     if (saveInput) free(saveInput);
     
     pause();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4ddf6db50645d6b15fdc7d0801e12a3b6bcba57b
 }

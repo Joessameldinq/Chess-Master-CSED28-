@@ -66,4 +66,8 @@ clean:
 	@ rm -f ChessGUI.exe ChessConsole.exe icon.res 
 	@ echo "Clean files"
 
+<<<<<<< HEAD
 .PHONY: all   run-GUI run-Console  clean   
+=======
+.PHONY: all   run-GUI run-Console  clean
+>>>>>>> 4ddf6db50645d6b15fdc7d0801e12a3b6bcba57b
