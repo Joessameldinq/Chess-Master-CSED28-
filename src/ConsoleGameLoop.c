@@ -524,6 +524,9 @@ void handleGameEnd(Game *game)
     if (saveInput) free(saveInput);
     
     pause();
+<<<<<<< HEAD
 
     return 0;
+=======
+>>>>>>> Abdelwahab-branch
 }
