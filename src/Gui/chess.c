@@ -1,11 +1,11 @@
 
 
-#include "../include/GuiDefinitions.h"
-#include "../include/MainMenuGui.h"
-#include "../include/GameModeGui.h"
-#include "../include/GuiHelpers.h"
-#include "../include/GameInitialization.h"
-#include "../include/StackHelpers.h"
+#include "../../include/GuiDefinitions.h"
+#include "../../include/MainMenuGui.h"
+#include "../../include/GameModeGui.h"
+#include "../../include/GuiHelpers.h"
+#include "../../include/GameInitialization.h"
+#include "../../include/StackHelpers.h"
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>

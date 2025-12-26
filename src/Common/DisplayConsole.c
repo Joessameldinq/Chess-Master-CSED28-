@@ -1,7 +1,7 @@
-#include "../include/DisplayConsole.h"
-#include "../include/MovingLogic.h"
-#include "../include/EndingConditions.h"
-#include "../include/GameInitialization.h"
+#include "../../include/DisplayConsole.h"
+#include "../../include/MovingLogic.h"
+#include "../../include/EndingConditions.h"
+#include "../../include/GameInitialization.h"
 
 #include <stdio.h>
 #include <stdlib.h>

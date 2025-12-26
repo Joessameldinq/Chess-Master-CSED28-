@@ -1,15 +1,15 @@
 
 
-#include "../include/GameModeGui.h"
-#include "../include/GuiDefinitions.h"
-#include "../include/GuiHelpers.h"
-#include "../include/GameDefinitions.h"
-#include "../include/GameInitialization.h"
-#include "../include/SavingLoading.h"
-#include "../include/EndingConditions.h"
-#include "../include/StackHelpers.h"
-#include "../include/InputConsole.h"
-#include "../include/DisplayConsole.h"
+#include <../include/GameModeGui.h>
+#include <../include/GuiDefinitions.h>
+#include <../include/GuiHelpers.h>
+#include <../include/GameDefinitions.h>
+#include <../include/GameInitialization.h>
+#include <../include/SavingLoading.h>
+#include <../include/EndingConditions.h>
+#include <../include/StackHelpers.h>
+#include <../include/InputConsole.h>
+#include <../include/DisplayConsole.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -31,7 +31,7 @@ SDL_Color lightSquare[] = {
     {198, 198, 198, 255}, // Slate (Light)
     {231, 213, 185, 255}, // Maple (Light)
     {222, 227, 230, 255}, // Midnight (Light)
-    {235, 236, 208, 255}, // Marble (Light)
+    {255, 220, 190, 255}, // Marble (Light)
     {240, 217, 181, 255}  // Burnt Orange (Light)
 };
 
@@ -46,7 +46,7 @@ SDL_Color darkSquare[] = {
     {100, 111, 128, 255}, // Slate (Dark)
     {151, 103, 63, 255},  // Maple (Dark)
     {58, 87, 122, 255},   // Midnight (Dark)
-    {115, 149, 82, 255},  // Marble (Dark)
+    {130, 130, 60, 255},  // Marble (Dark)
     {165, 105, 63, 255}   // Burnt Orange (Dark)
 };
 static SDL_Color currentLight;
@@ -510,7 +510,7 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
 
     
 
-    // Draw chessboard with light and dark squares
+    // Draw chessboard with light and dark squares based on the counter
     SDL_Color light=currentLight;
     SDL_Color dark = currentDark;
 
@@ -519,7 +519,7 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
         for(int col=0; col<BOARD_SIZE; col++)
         {
             SDL_Rect r={col*g_squareSize + BOARDOFFSET, row*g_squareSize + BOARDOFFSET, g_squareSize, g_squareSize};
-            if((row+col)%2==0)
+            if((row+col)%2==0)//even are light and odd are black
                 SDL_SetRenderDrawColor(renderer, light.r, light.g, light.b, light.a);
             else
                 SDL_SetRenderDrawColor(renderer, dark.r, dark.g, dark.b, dark.a);
@@ -543,7 +543,7 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
     SDL_Color highlightMovingPositions = (SDL_Color){255,255,0,255 * 0.38}; // value of a = transperancy percenatge * 255
     if(gui->fromMovingRect.x != -1 && gui->toMovingRect.x !=-1 && !dragging)
     {
-        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND); //Blend mode for transperancy
         SDL_SetRenderDrawColor(renderer,highlightMovingPositions.r,highlightMovingPositions.g,highlightMovingPositions.b,highlightMovingPositions.a);
         SDL_RenderFillRect(renderer,&gui->fromMovingRect);
         SDL_RenderFillRect(renderer,&gui->toMovingRect);
@@ -645,7 +645,7 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
 }
 
 
-//  HANDLE EVENTS // The most important part
+//  HANDLE EVENTS // The most important part it almost do every thing in the game loop
 bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                             bool *dragging, SDL_Rect *dragRect, Position *draggedPiece, SDL_Renderer *renderer)
 {
@@ -701,12 +701,13 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
 
     if(event->type == SDL_MOUSEBUTTONDOWN && event->button.button == SDL_BUTTON_LEFT && !(*dragging))
     {
-        //Drag a piece or click on controloers
+        //Drag a piece or click on controloers buttons like undo redo switch background themes draw agreement switch off bg music etc
         
+        //Taking the cooridnates of the current mouse position
         mx = event->button.x;
         my = event->button.y;
     if (isButtonClicked(mx, my, gui->runMusic)) {
-    musicPlaying = !musicPlaying; //Toogle
+    musicPlaying = !musicPlaying; //Toogle run---->not run      not run---->run
     highlightClickedButton(renderer, gui->runMusic);
 
     if (musicPlaying) {
@@ -716,8 +717,8 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
         } else {
                 Mix_PlayMusic(bgMusic, -1);
             }
-            SDL_DestroyTexture(gui->runMusic.texture);
-            gui->runMusic.texture = loadtexture("assets/musicrun.png", renderer);
+        SDL_DestroyTexture(gui->runMusic.texture);
+        gui->runMusic.texture = loadtexture("assets/musicrun.png", renderer);
         } else {
             Mix_PauseMusic();
             SDL_DestroyTexture(gui->runMusic.texture);
@@ -725,11 +726,11 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
         }
     }
     else if(isButtonClicked(mx, my, gui->arrowForward)) {
-    highlightClickedButton(renderer,gui->arrowForward);
-    colorCounter++;
-    int index = (colorCounter % 12 + 12) % 12; // ensures 0–11
-    currentLight = lightSquare[index];
-    currentDark  = darkSquare[index];
+        highlightClickedButton(renderer,gui->arrowForward);
+        colorCounter++;
+        int index = (colorCounter % 12 + 12) % 12; // ensures 0–11
+        currentLight = lightSquare[index];
+        currentDark  = darkSquare[index];
     }
     else if(isButtonClicked(mx, my, gui->arrowBack)) {
         highlightClickedButton(renderer,gui->arrowBack);
@@ -839,7 +840,7 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
             return true;
         }
 
-        // Check board
+        // Check board and get current row and col NOTE THAT in SDL x is the column and y is the row
         int row =( my-BOARDOFFSET) / g_squareSize;
         int col = (mx-BOARDOFFSET) / g_squareSize;
         //Check Boundaries 

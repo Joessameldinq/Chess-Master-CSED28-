@@ -1,7 +1,7 @@
 
 
 
-#include "../include/GuiHelpers.h"
+#include "../../include/GuiHelpers.h"
 #include <stdbool.h>
 
 // Global cache for dynamic dimensions (updated from GameModeGui)

@@ -1,6 +1,6 @@
 
-#include "../include/GameInitialization.h"
-#include "../include/InputConsole.h"
+#include "../../include/GameInitialization.h"
+#include "../../include/InputConsole.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

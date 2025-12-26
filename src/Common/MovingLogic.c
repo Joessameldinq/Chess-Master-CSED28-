@@ -8,11 +8,11 @@
 
 
 
-#include "../include/GameDefinitions.h"
-#include "../include/GameInitialization.h"
-#include "../include/DisplayConsole.h"
-#include "../include/EndingConditions.h"
-#include "../include/MovingLogic.h"
+#include "../../include/GameDefinitions.h"
+#include "../../include/GameInitialization.h"
+#include "../../include/DisplayConsole.h"
+#include "../../include/EndingConditions.h"
+#include "../../include/MovingLogic.h"
 #include <stdbool.h>
 #include <math.h>
 #include <stdio.h>
