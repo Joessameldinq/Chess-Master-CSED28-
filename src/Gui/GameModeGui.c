@@ -932,6 +932,8 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
 
             switch (newGame.status)
             {
+            case PLAYING:
+            break;
             case CHECK:
                 playSoundEffect(gui->sEffect.check);
                 if(newGame.currentPlayer == WHITE)

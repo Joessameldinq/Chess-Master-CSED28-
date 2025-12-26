@@ -3,7 +3,8 @@ CC = gcc
 WINDRES = windres
 
 # Directories and files
-TARGET = Chess.exe
+GUI_TARGET = ChessGUI.exe
+CONSOLE_TARGET = ChessConsole.exe
 ICON_RC = icon.rc
 ICON_RES = icon.res
 
@@ -33,25 +34,36 @@ SDLLIBS = -lSDL2 -lSDL2main -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
 
 
-all: $(TARGET)
+all: $(GUI_TARGET) $(CONSOLE_TARGET)
 
 
 
 $(ICON_RES): $(ICON_RC)
-	$(WINDRES) $(ICON_RC) -O coff -o $(ICON_RES)
+	@ $(WINDRES) $(ICON_RC) -O coff -o $(ICON_RES)
+	@ echo "Icon built sucessfully"
 
-$(TARGET): $(ICON_RES)
-	$(CC) $(CFLAGS)  src/*.c $(ICON_RES) -o $(TARGET) $(LDFLAGS) $(SDLLIBS)
-release: $(TARGET)
 
+$(GUI_TARGET): $(ICON_RES)
+	@ $(CC) $(CFLAGS)  src/common/*.c src/gui/*.c $(ICON_RES) -o $(GUI_TARGET) $(LDFLAGS) $(SDLLIBS)
+	@ echo "Gui exe built sucessfully"
+$(CONSOLE_TARGET): $(ICON_RES)
+	@ $(CC) $(CFLAGS)  src/common/*.c src/console/*.c $(ICON_RES) -o $(CONSOLE_TARGET) 
+	@ echo "Console exe built sucessfully"
 
 
 # Run  game
-run: $(TARGET)
-	./$(TARGET)
+run-GUI: $(GUI_TARGET)
+	@ echo "Gui running"
+	@ ./$(GUI_TARGET)
+	@ echo "Game closed Thank You for playing"
+run-Console: $(CONSOLE_TARGET)
+	@ echo "Console running"
+	@ ./$(CONSOLE_TARGET)
+	@ echo "Game closed Thank You for playing"
 
 
 clean:
-	rm -f Chess.exe icon.res 
+	@ rm -f ChessGUI.exe ChessConsole.exe icon.res 
+	@ echo "Clean files"
 
-.PHONY: all release  run  clean   
+.PHONY: all   run-GUI run-Console  clean   

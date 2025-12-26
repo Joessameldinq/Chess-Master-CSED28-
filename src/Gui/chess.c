@@ -202,5 +202,12 @@ int main(int argc, char *argv[])
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();
+
+
+
+
+    // To handle unsued parameters warning
+    (void)argc;
+    (void)argv;
     return 0;
 }

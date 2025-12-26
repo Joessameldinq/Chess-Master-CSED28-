@@ -1,0 +1,5 @@
+@ Make sure that (Dynamic-Link-Library)  *.dll files are in this directory
+----- SDL2.dll
+----- SDL2_image.dll
+----- SDL2_ttf.dll
+----- SDL2_mixer.dll
