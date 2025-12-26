@@ -39,21 +39,31 @@ all: $(GUI_TARGET) $(CONSOLE_TARGET)
 
 
 $(ICON_RES): $(ICON_RC)
-	$(WINDRES) $(ICON_RC) -O coff -o $(ICON_RES)
+	@ $(WINDRES) $(ICON_RC) -O coff -o $(ICON_RES)
+	@ echo "Icon built sucessfully"
+
 
 $(GUI_TARGET): $(ICON_RES)
-	$(CC) $(CFLAGS)  src/common/*.c src/gui/*.c $(ICON_RES) -o $(GUI_TARGET) $(LDFLAGS) $(SDLLIBS)
+	@ $(CC) $(CFLAGS)  src/common/*.c src/gui/*.c $(ICON_RES) -o $(GUI_TARGET) $(LDFLAGS) $(SDLLIBS)
+	@ echo "Gui exe built sucessfully"
 $(CONSOLE_TARGET): $(ICON_RES)
-	$(CC) $(CFLAGS)  src/common/*.c src/console/*.c $(ICON_RES) -o $(CONSOLE_TARGET) 
+	@ $(CC) $(CFLAGS)  src/common/*.c src/console/*.c $(ICON_RES) -o $(CONSOLE_TARGET) 
+	@ echo "Console exe built sucessfully"
 
 
 # Run  game
 run-GUI: $(GUI_TARGET)
-	./$(GUI_TARGET)
+	@ echo "Gui running"
+	@ ./$(GUI_TARGET)
+	@ echo "Game closed Thank You for playing"
 run-Console: $(CONSOLE_TARGET)
-	./$(CONSOLE_TARGET)
+	@ echo "Console running"
+	@ ./$(CONSOLE_TARGET)
+	@ echo "Game closed Thank You for playing"
+
 
 clean:
-	rm -f ChessGUI.exe ChessConsole.exe icon.res 
+	@ rm -f ChessGUI.exe ChessConsole.exe icon.res 
+	@ echo "Clean files"
 
-.PHONY: all   run-GUI run-Console  clean   
+.PHONY: all   run-GUI run-Console  clean
