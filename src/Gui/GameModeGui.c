@@ -1,15 +1,16 @@
 
 
-#include <../include/GameModeGui.h>
-#include <../include/GuiDefinitions.h>
-#include <../include/GuiHelpers.h>
-#include <../include/GameDefinitions.h>
-#include <../include/GameInitialization.h>
-#include <../include/SavingLoading.h>
-#include <../include/EndingConditions.h>
-#include <../include/StackHelpers.h>
-#include <../include/InputConsole.h>
-#include <../include/DisplayConsole.h>
+
+#include "../../include/GameModeGui.h"
+#include "../../include/GuiDefinitions.h"
+#include "../../include/GuiHelpers.h"
+#include "../../include/GameDefinitions.h"
+#include "../../include/GameInitialization.h"
+#include "../../include/SavingLoading.h"
+#include "../../include/EndingConditions.h"
+#include "../../include/StackHelpers.h"
+#include "../../include/InputConsole.h"
+#include "../../include/DisplayConsole.h"
 
 #include <stdlib.h>
 #include <string.h>
