@@ -1,15 +1,15 @@
 
 
-#include <../include/GameModeGui.h>
-#include <../include/GuiDefinitions.h>
-#include <../include/GuiHelpers.h>
-#include <../include/GameDefinitions.h>
-#include <../include/GameInitialization.h>
-#include <../include/SavingLoading.h>
-#include <../include/EndingConditions.h>
-#include <../include/StackHelpers.h>
-#include <../include/InputConsole.h>
-#include <../include/DisplayConsole.h>
+#include "../../include/GameModeGui.h"
+#include "../../include/GuiDefinitions.h"
+#include "../../include/GuiHelpers.h"
+#include "../../include/GameDefinitions.h"
+#include "../../include/GameInitialization.h"
+#include "../../include/SavingLoading.h"
+#include "../../include/EndingConditions.h"
+#include "../../include/StackHelpers.h"
+#include "../../include/InputConsole.h"
+#include "../../include/DisplayConsole.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -936,10 +936,10 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
             break;
             case CHECK:
                 playSoundEffect(gui->sEffect.check);
-                if(newGame.currentPlayer == WHITE)
-                    showGameMessage(app->window,"Warning","⚠️  CHECK! White King under attack!");
-                else
-                    showGameMessage(app->window,"Warning","⚠️  CHECK! Black King under attack!");
+                //if(newGame.currentPlayer == WHITE)
+                    //howGameMessage(app->window,"Warning","⚠️  CHECK! White King under attack!");
+                //else
+                    //showGameMessage(app->window,"Warning","⚠️  CHECK! Black King under attack!");
                 break;
             case CHECKMATE:
                 playSoundEffect(gui->sEffect.checkmate);
