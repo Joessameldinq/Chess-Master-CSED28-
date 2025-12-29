@@ -44,10 +44,10 @@ $(ICON_RES): $(ICON_RC)
 
 
 $(GUI_TARGET): $(ICON_RES)
-	@ $(CC) $(CFLAGS)  src/common/*.c src/gui/*.c $(ICON_RES) -o $(GUI_TARGET) $(LDFLAGS) $(SDLLIBS)
+	@ $(CC) $(CFLAGS)  src/Common/*.c src/Console/*.c $(ICON_RES) -o $(GUI_TARGET) $(LDFLAGS) $(SDLLIBS)
 	@ echo "Gui exe built sucessfully"
 $(CONSOLE_TARGET): $(ICON_RES)
-	@ $(CC) $(CFLAGS)  src/common/*.c src/console/*.c $(ICON_RES) -o $(CONSOLE_TARGET) 
+	@ $(CC) $(CFLAGS)  src/Common/*.c src/Console/*.c $(ICON_RES) -o $(CONSOLE_TARGET) 
 	@ echo "Console exe built sucessfully"
 
 
