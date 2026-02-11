@@ -41,6 +41,10 @@ SDL_Texture *loadtexture(const char *file, SDL_Renderer *renderer)
         SDL_Log("Unable to create texture from %s! SDL Error: %s\n", file, SDL_GetError());
         return NULL;
     }
+    
+    //  Enable alpha blending for transparency
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    
     return texture;
 }
 bool isButtonClicked(int mx,int my,Button b)

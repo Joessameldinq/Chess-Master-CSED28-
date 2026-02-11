@@ -1,9 +1,9 @@
 
 
 
-#include "../include/InputConsole.h"
+#include "../../include/InputConsole.h"
 #include <ctype.h>
-#include "../include/GameDefinitions.h"
+#include "../../include/GameDefinitions.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>

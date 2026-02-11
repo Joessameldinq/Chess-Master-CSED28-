@@ -17,6 +17,50 @@
 #include <SDL2/SDL_mixer.h>
 
 
+// The array of available paths
+const char *fullPaths[] = {
+    "assets/pieces/glass",
+    "assets/pieces/gothic",
+    "assets/pieces/graffiti",
+    "assets/pieces/icy_sea",
+    "assets/pieces/3d_chesskid",
+    "assets/pieces/3d_plastic",
+    "assets/pieces/3d_staunton",
+    "assets/pieces/3d_wood",
+    "assets/pieces/8_bit",
+    "assets/pieces/alpha",
+    "assets/pieces/bases",
+    "assets/pieces/book",
+    "assets/pieces/bubblegum",
+    "assets/pieces/cases",
+    "assets/pieces/classic",
+    "assets/pieces/club",
+    "assets/pieces/condal",
+    "assets/pieces/dash",
+    "assets/pieces/game_room",
+    "assets/pieces/light",
+    "assets/pieces/lolz",
+    "assets/pieces/marble",
+    "assets/pieces/maya",
+    "assets/pieces/metal",
+    "assets/pieces/modern",
+    "assets/pieces/nature",
+    "assets/pieces/neo",
+    "assets/pieces/neo_wood",
+    "assets/pieces/neon",
+    "assets/pieces/newspaper",
+    "assets/pieces/ocean",
+    "assets/pieces/sky",
+    "assets/pieces/space",
+    "assets/pieces/tigers",
+    "assets/pieces/tournament",
+    "assets/pieces/vintage",
+    "assets/pieces/wood"
+};
+
+const int numPieces = sizeof(fullPaths) / sizeof(fullPaths[0]);
+
+int currentPiecesIndex= 0;
 int g_squareSize = 0;
 int g_boardOffset = 0;
 
@@ -32,7 +76,34 @@ SDL_Color lightSquare[] = {
     {231, 213, 185, 255}, // Maple (Light)
     {222, 227, 230, 255}, // Midnight (Light)
     {255, 220, 190, 255}, // Marble (Light)
-    {240, 217, 181, 255}  // Burnt Orange (Light)
+    {240, 217, 181, 255}, // Burnt Orange (Light)
+    {235, 209, 166, 255}, // Bubblegum (Light)
+    {218, 223, 225, 255}, // Ice (Light)
+    {245, 245, 220, 255}, // Beige (Light)
+    {220, 220, 220, 255}, // Gray (Light)
+    {255, 250, 240, 255}, // Ivory (Light)
+    {240, 230, 215, 255}, // Tan (Light)
+    {235, 235, 235, 255}, // White (Light)
+    {210, 180, 140, 255}, // Tan Brown (Light)
+    {245, 222, 179, 255}, // Wheat (Light)
+    {230, 230, 250, 255}, // Lavender (Light)
+    {240, 248, 255, 255}, // Alice Blue (Light)
+    {248, 248, 255, 255}, // Ghost White (Light)
+    {255, 240, 245, 255}, // Lavender Blush (Light)
+    {250, 235, 215, 255}, // Antique White (Light)
+    {253, 245, 230, 255}, // Old Lace (Light)
+    {255, 250, 250, 255}, // Snow (Light)
+    {245, 255, 250, 255}, // Mint Cream (Light)
+    {240, 255, 240, 255}, // Honeydew (Light)
+    {255, 255, 240, 255}, // Ivory Light (Light)
+    {255, 250, 205, 255}, // Lemon Chiffon (Light)
+    {250, 250, 210, 255}, // Light Goldenrod (Light)
+    {255, 239, 213, 255}, // Papaya Whip (Light)
+    {255, 228, 196, 255}, // Bisque (Light)
+    {255, 218, 185, 255}, // Peach Puff (Light)
+    {255, 222, 173, 255}, // Navajo White (Light)
+    {250, 240, 230, 255}, // Linen (Light)
+    {253, 245, 230, 255}  // Old Lace Alt (Light)
 };
 
 SDL_Color darkSquare[] = {
@@ -47,11 +118,41 @@ SDL_Color darkSquare[] = {
     {151, 103, 63, 255},  // Maple (Dark)
     {58, 87, 122, 255},   // Midnight (Dark)
     {130, 130, 60, 255},  // Marble (Dark)
-    {165, 105, 63, 255}   // Burnt Orange (Dark)
+    {165, 105, 63, 255},  // Burnt Orange (Dark)
+    {170, 122, 101, 255}, // Bubblegum (Dark)
+    {119, 149, 182, 255}, // Ice (Dark)
+    {139, 115, 85, 255},  // Beige (Dark)
+    {128, 128, 128, 255}, // Gray (Dark)
+    {160, 140, 120, 255}, // Ivory (Dark)
+    {140, 120, 100, 255}, // Tan (Dark)
+    {150, 150, 150, 255}, // White (Dark)
+    {139, 90, 60, 255},   // Tan Brown (Dark)
+    {189, 154, 122, 255}, // Wheat (Dark)
+    {147, 112, 219, 255}, // Lavender (Dark)
+    {135, 154, 180, 255}, // Alice Blue (Dark)
+    {140, 140, 170, 255}, // Ghost White (Dark)
+    {176, 140, 160, 255}, // Lavender Blush (Dark)
+    {160, 130, 100, 255}, // Antique White (Dark)
+    {180, 150, 120, 255}, // Old Lace (Dark)
+    {170, 160, 150, 255}, // Snow (Dark)
+    {130, 170, 140, 255}, // Mint Cream (Dark)
+    {140, 170, 140, 255}, // Honeydew (Dark)
+    {180, 170, 130, 255}, // Ivory Light (Dark)
+    {200, 180, 120, 255}, // Lemon Chiffon (Dark)
+    {170, 160, 100, 255}, // Light Goldenrod (Dark)
+    {190, 150, 110, 255}, // Papaya Whip (Dark)
+    {180, 140, 100, 255}, // Bisque (Dark)
+    {190, 130, 90, 255},  // Peach Puff (Dark)
+    {180, 135, 90, 255},  // Navajo White (Dark)
+    {160, 140, 120, 255}, // Linen (Dark)
+    {175, 145, 115, 255}  // Old Lace Alt (Dark)
 };
-static SDL_Color currentLight;
-static SDL_Color currentDark;
-static int colorCounter;
+
+const int numColors = sizeof(lightSquare) / sizeof(lightSquare[0]);
+int currentColorIndex = 0;
+SDL_Color currentLight;
+SDL_Color currentDark;
+int colorCounter = 0;
 
 Mix_Music *bgMusic;
 bool musicPlaying = false;
@@ -60,24 +161,77 @@ const char* getPieceTypeName(PieceType type)
 {
     switch(type)
     {
-        case PAWN:   return "pawn";
-        case KING:   return "king";
-        case QUEEN:  return "queen";
-        case BISHOP: return "bishop";
-        case ROOK:   return "rook";
-        case KNIGHT: return "knight";
+        case PAWN:   return "p";
+        case KING:   return "k";
+        case QUEEN:  return "q";
+        case BISHOP: return "b";
+        case ROOK:   return "r";
+        case KNIGHT: return "n";
         default:     return "";
     }
 }
+//Updated one
+void get_piece_path(Piece piece, char *outputBuffer) {
+    // We use currentPieces as the base directory
+    snprintf(outputBuffer, 100, 
+             "%s/%s%s.png", 
+             fullPaths[currentPiecesIndex],
+             (piece.color == WHITE ? "w" : "b"),
+             getPieceTypeName(piece.type)
+    );
+}
 
+//Draw a pieces counter for captured pieces
+int countPiecesByType(Piece capturedPieces[16], int counts[6])
+{
+    // Initialize counts
+    for (int i = 0; i < 6; i++) {
+        counts[i] = 0;
+    }
+    
+    int total = 0;
+    for (int i = 0; i < 16; i++) {
+        if (capturedPieces[i].type != EMPTY) {
+            // Map piece type to array index
+            int index = -1;
+            switch (capturedPieces[i].type) {
+                case PAWN:   index = 0; break;
+                case KNIGHT: index = 1; break;
+                case BISHOP: index = 2; break;
+                case ROOK:   index = 3; break;
+                case QUEEN:  index = 4; break;
+                case KING:   index = 5; break;
+                default: break;
+            }
+            
+            if (index >= 0) {
+                counts[index]++;
+                total++;
+            }
+        }
+    }
+    
+    return total;
+}
+int calculateMaterialValue(int counts[6])
+{
+    // Standard chess piece values
+    int values[] = {1, 3, 3, 5, 9, 0}; // Pawn, Knight, Bishop, Rook, Queen, King
+    
+    int total = 0;
+    for (int i = 0; i < 6; i++) {
+        total += counts[i] * values[i];
+    }
+    
+    return total;
+}
 
 //  INIT GUI  --> grid , pieces , capturedpieces and buttons and has the feature of check valid textures
 gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
 {
     //Initalize square colors
-    colorCounter = 0;
-    currentLight = lightSquare[colorCounter%4];
-    currentDark = darkSquare[colorCounter%4];
+    currentLight = lightSquare[colorCounter];
+    currentDark = darkSquare[colorCounter];
     //
     if (!renderer) {
         fprintf(stderr, "Error: NULL renderer passed to initGameScreenGui\n");
@@ -93,7 +247,7 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
     }
 
     // Load background music
-    bgMusic = Mix_LoadMUS("assets/eff/theme.mp3");
+    bgMusic = Mix_LoadMUS("assets/eff/Erik Satie - Gnossienne No.1.mp3");
     if (!bgMusic) {
         fprintf(stderr, "Failed to load mp3: %s\n", Mix_GetError());
     } else {
@@ -165,15 +319,15 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
         fprintf(stderr,"Warning: Failed to load the draw agreement button texture\n");
     }
     
-    gui->capBlack.texture = loadtexture("assets/capblack(2).png", renderer);
-    if (!gui->capBlack.texture) {
-        fprintf(stderr, "Warning: Failed to load black capture button texture\n");
-    }
+    // gui->capBlack.texture = loadtexture("assets/capblack(2).png", renderer);
+    // if (!gui->capBlack.texture) {
+    //     fprintf(stderr, "Warning: Failed to load black capture button texture\n");
+    // }
     
-    gui->capWhite.texture = loadtexture("assets/capwhite(2).png", renderer);
-    if (!gui->capWhite.texture) {
-        fprintf(stderr, "Warning: Failed to load white capture button texture\n");
-    }
+    // gui->capWhite.texture = loadtexture("assets/capwhite(2).png", renderer);
+    // if (!gui->capWhite.texture) {
+    //     fprintf(stderr, "Warning: Failed to load white capture button texture\n");
+    // }
     //Set initial music texture is running
     gui->runMusic.texture = loadtexture("assets/musicrun.png",renderer);
     if(!gui->runMusic.texture){
@@ -204,8 +358,8 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
     gui->save.rect = (SDL_Rect){margin + (bw + button_spacing) * 2, button_start_y - bh * 1.2, bw, bh};
     gui->back.rect = (SDL_Rect){margin + (bw + button_spacing) * 3, button_start_y - bh * 1.2, bw, bh};
     gui->drawAgreement.rect = (SDL_Rect){margin + (bw + button_spacing) * 4,button_start_y - bh * 1.2 , bw ,bh};
-    gui->capWhite.rect = (SDL_Rect){WINDOW_WIDTH - BUTTON_WIDTH - WINDOW_WIDTH * 0.20 , WINDOW_HEIGHT * 0.05, bw, bh};
-    gui->capBlack.rect = (SDL_Rect){WINDOW_WIDTH - BUTTON_WIDTH - WINDOW_WIDTH * 0.00, WINDOW_HEIGHT * 0.05, bw, bh};
+    // gui->capWhite.rect = (SDL_Rect){WINDOW_WIDTH - BUTTON_WIDTH - WINDOW_WIDTH * 0.20 , WINDOW_HEIGHT * 0.05, bw, bh};
+    // gui->capBlack.rect = (SDL_Rect){WINDOW_WIDTH - BUTTON_WIDTH - WINDOW_WIDTH * 0.00, WINDOW_HEIGHT * 0.05, bw, bh};
     gui->runMusic.rect = (SDL_Rect){margin + (bw + button_spacing) * 5.5,button_start_y - bh * 1.2,bw,bh};
     gui->arrowForward.rect = (SDL_Rect){g_boardOffset + g_squareSize *9.50, 0 , 45,45};
     gui->arrowBack.rect = (SDL_Rect){g_boardOffset + g_squareSize *8.50, 0, 45,45};
@@ -237,11 +391,8 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
             Piece piece = initialGame->board[row][col];
             if(piece.type == EMPTY) continue;
 
-            char filename[128];
-            snprintf(filename, sizeof(filename), 
-                             "assets/Pieces/%s_%s.png",
-                             (piece.color==WHITE ? "w" : "b"), 
-                             getPieceTypeName(piece.type));
+            char filename[100];
+            get_piece_path(piece,filename);
             SDL_Texture *txt = loadtexture(filename, renderer);
             if(!txt) {
                 fprintf(stderr, "Warning: Failed to load texture: %s\n", filename);
@@ -281,13 +432,8 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
     {
         if(initialGame->capturedWhitePieces[i].type != EMPTY)
         {
-            char filename[128];
-            snprintf(filename, sizeof(filename), 
-                             "assets/Pieces/w_%s.png", 
-                             getPieceTypeName(initialGame->capturedWhitePieces[i].type));
-            
-
-            
+            char filename[100];
+            get_piece_path(initialGame->capturedWhitePieces[i],filename);
             SDL_Texture *txt = loadtexture(filename, renderer);
             if(!txt) {
                 fprintf(stderr, "Warning: Failed to load captured white piece: %s\n", filename);
@@ -305,7 +451,7 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
             unsigned short row = i / 2;
             unsigned short baseXWhite = WINDOW_WIDTH - BUTTON_WIDTH - WINDOW_WIDTH * 0.20;
             unsigned short baseYWhite = WINDOW_HEIGHT * 0.15;
-            int piece_size = g_squareSize * 0.95;
+            int piece_size = g_squareSize * 0.60;
             int piece_spacing = g_squareSize * 1.00;
             gui->capturedPieces[0][capWhiteCnt].rect = (SDL_Rect){baseXWhite + col * piece_spacing, baseYWhite + row * piece_spacing, piece_size, piece_size};
             capWhiteCnt++;
@@ -313,10 +459,8 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
         
         if(initialGame->capturedBlackPieces[i].type != EMPTY)
         {
-            char filename[128];
-            snprintf(filename, sizeof(filename), 
-                             "assets/Pieces/b_%s.png", 
-                             getPieceTypeName(initialGame->capturedBlackPieces[i].type));
+            char filename[100];
+            get_piece_path(initialGame->capturedBlackPieces[i],filename);
             SDL_Texture *txt = loadtexture(filename, renderer);
             if(!txt) {
                 fprintf(stderr, "Warning: Failed to load captured black piece: %s\n", filename);
@@ -374,6 +518,11 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
         fprintf(stderr, "Warning: Failed to load move font: %s\n", TTF_GetError());
     }
 
+    gui->moveHistoryFont = TTF_OpenFont("assets/fonts/SuperMaples-2vR2w.ttf", 18);
+    if (!gui->moveFont) {
+        fprintf(stderr, "Warning: Failed to load move font: %s\n", TTF_GetError());
+    }
+
     //Initialize Sound Effects
     gui->sEffect.castling = Mix_LoadWAV("assets/eff/castle.mp3");
     if(!gui->sEffect.castling)
@@ -418,7 +567,7 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
     }
 
 
-
+    gui->validMove = loadtexture("assets/dot.png",renderer);
     gui->lastMove.texture = NULL;
     return gui;
 }
@@ -427,14 +576,14 @@ gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame)
 void destroyGameScreenGui(gamegui *gui)
 {
     if(!gui) return;
-
+    if (gui->validMove) SDL_DestroyTexture(gui->validMove);
     if (gui->background) SDL_DestroyTexture(gui->background);
     if (gui->save.texture) SDL_DestroyTexture(gui->save.texture);
     if (gui->undo.texture) SDL_DestroyTexture(gui->undo.texture);
     if (gui->redo.texture) SDL_DestroyTexture(gui->redo.texture);
     if (gui->back.texture) SDL_DestroyTexture(gui->back.texture);
-    if (gui->capWhite.texture) SDL_DestroyTexture(gui->capWhite.texture);
-    if (gui->capBlack.texture) SDL_DestroyTexture(gui->capBlack.texture);
+    // if (gui->capWhite.texture) SDL_DestroyTexture(gui->capWhite.texture);
+    // if (gui->capBlack.texture) SDL_DestroyTexture(gui->capBlack.texture);
     if (gui->currentTurn.texture) SDL_DestroyTexture(gui->currentTurn.texture);
     if (gui->whiteTurnTex) SDL_DestroyTexture(gui->whiteTurnTex);
     if (gui->blackTurnTex) SDL_DestroyTexture(gui->blackTurnTex);
@@ -484,7 +633,8 @@ void destroyGameScreenGui(gamegui *gui)
     if (bgMusic) Mix_FreeMusic(bgMusic);
 
     // Destroy font
-    if (gui->moveFont) TTF_CloseFont(gui->moveFont);
+    if (gui->moveFont) TTF_CloseFont(gui->moveFont);    // Destroy font
+    if (gui->moveHistoryFont) TTF_CloseFont(gui->moveHistoryFont);
     
     free(gui);
     gui = NULL;
@@ -504,9 +654,17 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
     
 
     // Draw background
-    if(gui->background) SDL_RenderCopy(renderer, gui->background, NULL, NULL);
+    // if(gui->background) SDL_RenderCopy(renderer, gui->background, NULL, NULL);
+
+    SDL_Color c = {255,255,255,255};
+    SDL_SetRenderDrawColor(renderer,c.r,c.g,c.b,c.a);
+    SDL_RenderFillRect(renderer, NULL);
+
     //Update halfmove clock
     renderHalfMoveClock(game->halfMoveClock,gui->moveFont,renderer);
+
+    
+
 
     
 
@@ -532,7 +690,7 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
 
     //Highlight the valid moves with green and it take under account that moves making the king inCheck aren't valid
     if(dragging)
-        highlightValidMoves(game,draggedInitialPosition,renderer);
+        highlightValidMoves(game,draggedInitialPosition,renderer,gui->validMove);
 
     //Highlight the king in check
     SDL_Color redThreatened = (SDL_Color){255,10,10,255*0.60};
@@ -540,6 +698,7 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
     SDL_SetRenderDrawColor(renderer,redThreatened.r,redThreatened.g,redThreatened.b,redThreatened.a);
     SDL_RenderFillRect(renderer,&gui->kingThreaten);
     // Highlight from ---> to last move
+
     SDL_Color highlightMovingPositions = (SDL_Color){255,255,0,255 * 0.38}; // value of a = transperancy percenatge * 255
     if(gui->fromMovingRect.x != -1 && gui->toMovingRect.x !=-1 && !dragging)
     {
@@ -595,12 +754,258 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
 
 
     // Draw captured pieces
+    // for(int c=0; c<2; c++)
+    // {
+    //     for(int i=0; i<16; i++)
+    //     {
+    //         SDL_Texture *t = gui->capturedPieces[c][i].texture;
+    //         if(t) SDL_RenderCopy(renderer, t, NULL, &gui->capturedPieces[c][i].rect);
+    //     }
+    // }
+    //Draw move history
+
+int counter = game->hashCount;
+
+// Draw Panel
+int moveHistoryBaseX = WINDOW_WIDTH * 0.80;
+int moveHistoryBaseY = 10;
+int moveHistoryWidth = WINDOW_WIDTH * 0.2;
+int moveHistoryHeight = g_squareSize * 10;
+SDL_Rect panel = {moveHistoryBaseX, moveHistoryBaseY, moveHistoryWidth, moveHistoryHeight};
+
+// Draw background
+SDL_Color bgColor = {30, 30, 30, 255};
+SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+SDL_RenderFillRect(renderer, &panel);
+
+// Draw border
+SDL_Color borderColor = {100, 100, 100, 255};
+SDL_SetRenderDrawColor(renderer, borderColor.r, borderColor.g, borderColor.b, borderColor.a);
+SDL_RenderDrawRect(renderer, &panel);
+
+// Add title
+int titleHeight = 0;
+if (gui->moveHistoryFont) {
+    SDL_Color titleColor = {200, 200, 200, 255};
+    SDL_Surface *titleSurf = TTF_RenderText_Blended(gui->moveHistoryFont, "Moves History:", titleColor);
+    if (titleSurf) {
+        SDL_Texture *titleTex = SDL_CreateTextureFromSurface(renderer, titleSurf);
+        SDL_Rect titleRect = {moveHistoryBaseX + 5, moveHistoryBaseY + 5, titleSurf->w, titleSurf->h};
+        SDL_RenderCopy(renderer, titleTex, NULL, &titleRect);
+        titleHeight = titleSurf->h;
+        if(titleTex)
+            SDL_DestroyTexture(titleTex);
+        SDL_FreeSurface(titleSurf);
+    }
+}
+
+// Calculate scrolling parameters
+int startY = moveHistoryBaseY + titleHeight + 10; // Offset for title
+int lineHeight = 18;  // Height per move
+int availableHeight = moveHistoryHeight - titleHeight - 15; // Space for moves
+int maxVisibleMoves = availableHeight / lineHeight;
+
+// Calculate which moves to show (auto-scroll to bottom)
+int startIndex = 0;
+if (counter - 1 > maxVisibleMoves) {
+    startIndex = (counter - 1) - maxVisibleMoves;
+}
+
+// Draw move history with scrolling
+for(int i = startIndex; i < counter; i++) {
+
+    int displayIndex = i - startIndex;
+    
+    // Highlight last move with different background
+    bool isLastMove = (i == counter - 1); // Last move in history
+    
+    if (isLastMove) {
+        // Draw highlight background for last move
+        SDL_Color highlightBg = {50, 50, 70, 255}; // Darker blue
+        SDL_SetRenderDrawColor(renderer, highlightBg.r, highlightBg.g, highlightBg.b, highlightBg.a);
+        SDL_Rect highlightRect = {
+            moveHistoryBaseX + 2,
+            startY + displayIndex * lineHeight,
+            moveHistoryWidth - 4,
+            lineHeight
+        };
+        SDL_RenderFillRect(renderer, &highlightRect);
+    }
+    
+    SDL_Rect moveRect = {
+        moveHistoryBaseX + 5,
+        startY + displayIndex * lineHeight,
+        moveHistoryWidth - 10,
+        16
+    };
+    
+    // Use different color for last move
+    SDL_Color textColor;
+    if (isLastMove) {
+        textColor = (SDL_Color){255, 255, 100, 255}; // Yellow for last move
+    } else {
+        if(i %2 == 1) //white
+            textColor = (SDL_Color){180, 180, 180, 255}; // Slightly darker gray for white moves
+        else //black
+            textColor = (SDL_Color){240, 240, 240,250};
+    }
+    
+    SDL_Surface *moveSur = TTF_RenderUTF8_Blended(
+        gui->moveHistoryFont, 
+        game->moveHistory[i], 
+        textColor
+    );
+    
+    if (moveSur) {
+        moveRect.w = moveSur->w;
+        moveRect.h = moveSur->h;
+        SDL_Texture *moveTexture = SDL_CreateTextureFromSurface(renderer, moveSur);
+        SDL_FreeSurface(moveSur);
+        SDL_RenderCopy(renderer, moveTexture, NULL, &moveRect);
+        if(moveTexture)
+            SDL_DestroyTexture(moveTexture);
+    }
+}
+
+// Optional: Draw scroll indicator if there are more moves above
+if (startIndex > 0) {
+    SDL_Color scrollColor = {150, 150, 150, 255};
+    SDL_SetRenderDrawColor(renderer, scrollColor.r, scrollColor.g, scrollColor.b, scrollColor.a);
+    // Draw up arrow or indicator
+    int arrowY = startY - 5;
+    for (int i = 0; i < 3; i++) {
+        SDL_RenderDrawLine(renderer, 
+            moveHistoryBaseX + moveHistoryWidth/2 - i, arrowY + i,
+            moveHistoryBaseX + moveHistoryWidth/2 + i, arrowY + i);
+    }
+}
+    // Draw captured pieces with MATERIAL COUNT DISPLAY
     for(int c=0; c<2; c++)
     {
-        for(int i=0; i<16; i++)
-        {
-            SDL_Texture *t = gui->capturedPieces[c][i].texture;
-            if(t) SDL_RenderCopy(renderer, t, NULL, &gui->capturedPieces[c][i].rect);
+        // Count pieces by type
+        int counts[6] = {0}; // [PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING]
+        Piece *capturedArray = (c == 0) ? game->capturedWhitePieces : game->capturedBlackPieces;
+        int totalCaptured = countPiecesByType(capturedArray, counts);
+        
+        if (totalCaptured > 0) {
+            // Calculate panel position
+            int baseX = (c == 0) ? 
+                (WINDOW_WIDTH - BUTTON_WIDTH - WINDOW_WIDTH * 0.15 - 100) :
+                (WINDOW_WIDTH - BUTTON_WIDTH - WINDOW_WIDTH * 0.00 - 100);
+            int baseY = WINDOW_HEIGHT * 0.15 - 20;
+            int panelWidth = g_squareSize * 2;
+            int panelHeight = g_squareSize * 5;
+            
+            SDL_Rect panel = {baseX, baseY, panelWidth, panelHeight};
+            
+            // // Draw background panel
+            // SDL_Color bgColor = {40, 40, 40, 255};
+            // SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+            // SDL_RenderFillRect(renderer, &panel);
+            
+            // Draw border
+            SDL_Color borderColor = {100, 100, 100, 255};
+            SDL_SetRenderDrawColor(renderer, borderColor.r, borderColor.g, borderColor.b, borderColor.a);
+            SDL_RenderDrawRect(renderer, &panel);
+            
+            // Draw title
+            if (gui->moveFont) {
+                char title[32];
+                snprintf(title, sizeof(title), "%s Lost:", c == 0 ? "White" : "Black");
+                SDL_Color titleColor = {200, 200, 200, 255};
+                
+                SDL_Surface *titleSurf = TTF_RenderText_Blended(gui->moveFont, title, titleColor);
+                if (titleSurf) {
+                    SDL_Texture *titleTex = SDL_CreateTextureFromSurface(renderer, titleSurf);
+                    SDL_Rect titleRect = {
+                        panel.x + 10,
+                        panel.y + 10,
+                        titleSurf->w,
+                        titleSurf->h
+                    };
+                    SDL_RenderCopy(renderer, titleTex, NULL, &titleRect);
+                    SDL_DestroyTexture(titleTex);
+                    SDL_FreeSurface(titleSurf);
+                }
+            }
+            
+            // Draw piece counts
+            int yOffset = panel.y + 45;
+            int iconSize = g_squareSize * 0.50;
+            int lineSpacing = g_squareSize * 0.70;
+            
+            // Piece type names for creating filenames
+            const char* pieceNames[] = {"p", "n", "b", "r", "q", "k"};            
+            for (int pieceType = 0; pieceType < 6; pieceType++) {
+                if (counts[pieceType] > 0) {
+                    // Load piece texture
+                    char filename[100];
+                    snprintf(filename, sizeof(filename), 
+                            "%s/%s%s.png", 
+                            fullPaths[currentPiecesIndex],
+                            (c == 0 ? "w" : "b"),
+                            pieceNames[pieceType]);
+                    
+                    SDL_Texture *pieceIcon = loadtexture(filename, renderer);
+                    if (pieceIcon) {
+                        // Draw piece icon
+                        SDL_Rect iconRect = {panel.x + 15, yOffset, iconSize, iconSize};
+                        SDL_RenderCopy(renderer, pieceIcon, NULL, &iconRect);
+                        SDL_DestroyTexture(pieceIcon);
+                    }
+                    
+                    // Draw count text
+                    if (gui->moveFont) {
+                        char countText[16];
+                        snprintf(countText, sizeof(countText), "x%d", counts[pieceType]);
+                        SDL_Color countColor = {0, 0, 0, 255};
+                        
+                        SDL_Surface *countSurf = TTF_RenderText_Blended(gui->moveFont, countText, countColor);
+                        if (countSurf) {
+                            SDL_Texture *countTex = SDL_CreateTextureFromSurface(renderer, countSurf);
+                            SDL_Rect countRect = {
+                                panel.x + 20 + iconSize,
+                                yOffset + (iconSize - countSurf->h) / 2,
+                                countSurf->w,
+                                countSurf->h
+                            };
+                            SDL_RenderCopy(renderer, countTex, NULL, &countRect);
+                            SDL_DestroyTexture(countTex);
+                            SDL_FreeSurface(countSurf);
+                        }
+                    }
+                    
+                    yOffset += lineSpacing;
+                }
+            }
+            
+            // Draw separator line
+            yOffset += 10;
+            SDL_SetRenderDrawColor(renderer, 80, 80, 80, 255);
+            SDL_RenderDrawLine(renderer, panel.x + 10, yOffset, panel.x + panel.w - 10, yOffset);
+            yOffset += 15;
+            
+            // Draw material value
+            if (gui->moveFont) {
+                int materialValue = calculateMaterialValue(counts);
+                char materialText[32];
+                snprintf(materialText, sizeof(materialText), "%d pts", materialValue);
+                SDL_Color materialColor = {0, 0, 0, 255};
+                
+                SDL_Surface *materialSurf = TTF_RenderText_Blended(gui->moveFont, materialText, materialColor);
+                if (materialSurf) {
+                    SDL_Texture *materialTex = SDL_CreateTextureFromSurface(renderer, materialSurf);
+                    SDL_Rect materialRect = {
+                        panel.x + 10,
+                        yOffset,
+                        materialSurf->w,
+                        materialSurf->h
+                    };
+                    SDL_RenderCopy(renderer, materialTex, NULL, &materialRect);
+                    SDL_DestroyTexture(materialTex);
+                    SDL_FreeSurface(materialSurf);
+                }
+            }
         }
     }
 
@@ -617,8 +1022,8 @@ void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game,
     SDL_RenderCopy(renderer, gui->redo.texture, NULL, &gui->redo.rect);
     SDL_RenderCopy(renderer, gui->save.texture, NULL, &gui->save.rect);
     SDL_RenderCopy(renderer,gui->drawAgreement.texture,NULL,&gui->drawAgreement.rect);
-    SDL_RenderCopy(renderer, gui->capWhite.texture, NULL, &gui->capWhite.rect);
-    SDL_RenderCopy(renderer, gui->capBlack.texture, NULL, &gui->capBlack.rect);
+    // SDL_RenderCopy(renderer, gui->capWhite.texture, NULL, &gui->capWhite.rect);
+    // SDL_RenderCopy(renderer, gui->capBlack.texture, NULL, &gui->capBlack.rect);
     SDL_RenderCopy(renderer,gui->arrowBack.texture,NULL,&gui->arrowBack.rect);
     SDL_RenderCopy(renderer,gui->arrowForward.texture,NULL,&gui->arrowForward.rect);
     // Draw turn indicator
@@ -696,6 +1101,70 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                 }
                 else printf("Nothing to redo\n");
                 return true;
+            case SDLK_s:
+                {
+                    char fileName[50] = {0};
+                    int slot = showSaveSlotDialog(app->window,"Save A GAME");
+                    
+                    if (slot < 1 || slot > 8) {
+                        printf("Save cancelled (invalid slot: %d)\n", slot);
+                        return true;
+                    }
+                    
+                    sprintf(fileName, "cfg/slot_%d.bin", slot);
+                    printf("Attempting to save game to file: %s\n", fileName);
+                    
+                    FILE *fptr = fopen(fileName, "wb");
+                    if (!fptr) {
+                        fprintf(stderr, "Error: Could not open file '%s' for writing\n", fileName);
+                        printf("Save failed: Cannot write to file\n");
+                        showGameMessage(app->window, "Save Failed", "Could not write to save file");
+                        return true;
+                    }
+                    
+                    if (!saveGame(fptr, &app->gamestack->curGame,app->gamestack)) {
+                        fprintf(stderr, "Error: Failed to write Game struct to file\n");
+                        printf("Save failed: Could not write game data\n");
+                        fclose(fptr);
+                        showGameMessage(app->window, "Save Failed", "Could not write game data to file");
+                        return true;
+                    }
+                    
+                    fclose(fptr);
+                    printf("Game successfully saved to slot %d (%s)\n", slot, fileName);
+                    showGameMessage(app->window, "Save Successful", "Game saved successfully");
+                    return true;
+                }
+                case SDLK_RIGHT:
+                {
+                    highlightClickedButton(renderer,gui->arrowForward);
+                    if(colorCounter < numColors-1){
+                        colorCounter++;
+                    }
+                    if(currentPiecesIndex < numPieces -1){
+                        currentPiecesIndex++;
+                    }
+                    currentLight = lightSquare[colorCounter];
+                    currentDark  = darkSquare[colorCounter];
+                    updateGameGui(gui,&app->game,app->renderer);
+                    break;
+
+                }
+                case SDLK_LEFT:
+                {
+                    highlightClickedButton(renderer,gui->arrowBack);
+                    if(colorCounter >0){
+                        colorCounter--;
+                    }
+                    if(currentPiecesIndex >0){
+                        currentPiecesIndex--;
+                    }
+                    currentLight = lightSquare[colorCounter];
+                    currentDark  = darkSquare[colorCounter];
+                    updateGameGui(gui,&app->game,app->renderer);
+                    break;
+
+                }
         }
     }
 
@@ -727,17 +1196,27 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
     }
     else if(isButtonClicked(mx, my, gui->arrowForward)) {
         highlightClickedButton(renderer,gui->arrowForward);
-        colorCounter++;
-        int index = (colorCounter % 12 + 12) % 12; // ensures 0–11
-        currentLight = lightSquare[index];
-        currentDark  = darkSquare[index];
+        if(colorCounter < numColors-1){
+            colorCounter++;
+        }
+        if(currentPiecesIndex < numPieces -1){
+            currentPiecesIndex++;
+        }
+        currentLight = lightSquare[colorCounter];
+        currentDark  = darkSquare[colorCounter];
+        updateGameGui(gui,&app->game,app->renderer);
     }
     else if(isButtonClicked(mx, my, gui->arrowBack)) {
         highlightClickedButton(renderer,gui->arrowBack);
-        colorCounter--;
-        int index = (colorCounter % 12 + 12) % 12; // ensures 0–11
-        currentLight = lightSquare[index];
-        currentDark  = darkSquare[index];
+        if(colorCounter >0){
+            colorCounter--;
+        }
+        if(currentPiecesIndex >0){
+            currentPiecesIndex--;
+        }
+        currentLight = lightSquare[colorCounter];
+        currentDark  = darkSquare[colorCounter];
+        updateGameGui(gui,&app->game,app->renderer);
     }
 
     else if(isButtonClicked(mx,my,gui->save))
@@ -762,7 +1241,7 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
             return true;
         }
         
-        if (!saveGame(fptr, &app->gamestack->curGame)) {
+        if (!saveGame(fptr, &app->gamestack->curGame,app->gamestack)) {
             fprintf(stderr, "Error: Failed to write Game struct to file\n");
             printf("Save failed: Could not write game data\n");
             fclose(fptr);
@@ -903,10 +1382,7 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
             updateLastMoveTexture(gui,app->renderer,move);
             newGame.status = computeGameStatus(&newGame);
 
-            //For console part can be ignored
-            printGameState(&newGame);
-            printBoard(&newGame);
-            // printBoard(&newGame);
+
 
 
             
@@ -1034,14 +1510,12 @@ bool gameScreenHandleEvents(gamegui *gui, SDL_Event *event, App *app,
                 //Highlight last moved piece
                 gui->fromMovingRect = (SDL_Rect){BOARDOFFSET + move.initial.y * g_squareSize,BOARDOFFSET + move.initial.x * g_squareSize,g_squareSize,g_squareSize};
                 gui->toMovingRect = (SDL_Rect){BOARDOFFSET + move.final.y * g_squareSize,BOARDOFFSET + move.final.x * g_squareSize,g_squareSize,g_squareSize};
-                printf("Move executed successfully\n");
             }
             else printf("Error: Failed to push game state\n");
         }
         else 
         {
             playSoundEffect(gui->sEffect.illegalMove);
-            printf("Invalid move attempted\n");
         }
     }
 
@@ -1074,10 +1548,7 @@ void runGame(App *app, gamegui *gui)
         {gameScreenHandleEvents(gui,&e,app,&dragging,&dragRect,&draggedPiece,app->renderer);
         // Exit loop if screen changed
         if(app->currentScreen != SCREEN_GAME) break;
-        }
-        
-        
-        
+        }  
     }
 }
 
@@ -1101,10 +1572,8 @@ void updateGameGui(gamegui *gui, Game *game, SDL_Renderer *renderer)
 
             if(piece.type == EMPTY) continue;
 
-            char filename[128];
-            snprintf(filename, sizeof(filename), "assets/Pieces/%s_%s.png",
-                     (piece.color==WHITE ? "w" : "b"),
-                     getPieceTypeName(piece.type));
+            char filename[100];
+            get_piece_path(piece,filename);
             
 
 
@@ -1128,8 +1597,8 @@ void updateGameGui(gamegui *gui, Game *game, SDL_Renderer *renderer)
         gui->capturedPieces[0][i].texture = NULL;
         if(game->capturedWhitePieces[i].type != EMPTY)
         {
-            char filename[128];
-            snprintf(filename, sizeof(filename), "assets/Pieces/w_%s.png", getPieceTypeName(game->capturedWhitePieces[i].type));
+            char filename[100];
+            get_piece_path(game->capturedWhitePieces[i],filename);
             SDL_Texture *txt = loadtexture(filename, renderer);
             if(txt)
             {
@@ -1138,7 +1607,7 @@ void updateGameGui(gamegui *gui, Game *game, SDL_Renderer *renderer)
                 int baseYWhite = WINDOW_HEIGHT * 0.15;
                 int col = i % 2;
                 int row = i / 2;
-                int piece_size = g_squareSize * 0.95;
+                int piece_size = g_squareSize * 0.60;
                 int piece_spacing = g_squareSize * 1.00;
                 gui->capturedPieces[0][i].rect = (SDL_Rect){baseXWhite + col * piece_spacing, baseYWhite + row * piece_spacing, piece_size, piece_size};
 
@@ -1150,8 +1619,8 @@ void updateGameGui(gamegui *gui, Game *game, SDL_Renderer *renderer)
         gui->capturedPieces[1][i].texture = NULL;
         if(game->capturedBlackPieces[i].type != EMPTY)
         {
-            char filename[128];
-            snprintf(filename, sizeof(filename), "assets/Pieces/b_%s.png", getPieceTypeName(game->capturedBlackPieces[i].type));
+            char filename[100];
+            get_piece_path(game->capturedBlackPieces[i],filename);
             SDL_Texture *txt = loadtexture(filename, renderer);
             if(txt)
             {
@@ -1160,7 +1629,7 @@ void updateGameGui(gamegui *gui, Game *game, SDL_Renderer *renderer)
                 int row = i / 2;
                 int baseX_black = WINDOW_WIDTH - BUTTON_WIDTH - WINDOW_WIDTH * 0.00;
                 int baseY_black = WINDOW_HEIGHT * 0.15;
-                int piece_size = g_squareSize * 0.95;
+                int piece_size = g_squareSize * 0.60;
                 int piece_spacing = g_squareSize * 1.00;
 
                 gui->capturedPieces[1][i].rect = (SDL_Rect){
@@ -1225,7 +1694,7 @@ int getPromotionDialog(SDL_Window *window)
         &colorScheme
     };
 
-    int buttonid = 0;
+    int buttonid = QUEEN;
     SDL_ShowMessageBox(&messageboxdata, &buttonid);
 
     return buttonid;  // 5=Queen, 4=Rook, 3=Bishop, 2=Knight and default is Queen
@@ -1270,7 +1739,7 @@ void clearHighlight(gamegui *gui)
     gui->fromMovingRect.x = -1;
     gui->toMovingRect.x = -1;
 }
-void highlightValidMoves(Game *game,Position from,SDL_Renderer *renderer)
+void highlightValidMoves(Game *game,Position from,SDL_Renderer *renderer,SDL_Texture *point)
 {
     
     for(int i = 0;i<BOARD_SIZE;i++)
@@ -1289,6 +1758,7 @@ void highlightValidMoves(Game *game,Position from,SDL_Renderer *renderer)
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND); // for transperancy
                 SDL_SetRenderDrawColor(renderer,greenH.r,greenH.g,greenH.b,greenH.a);
                 SDL_RenderFillRect(renderer,&validPlace);
+                SDL_RenderCopy(renderer,point,NULL,&validPlace);
             }
         }
     }

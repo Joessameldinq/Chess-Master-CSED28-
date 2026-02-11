@@ -141,7 +141,6 @@ Game* initGame(void) {
     
     Game* game = (Game*)malloc(sizeof(Game));
     memset(game, 0, sizeof(Game));
-    
     game->currentPlayer = WHITE;
     game->status = PLAYING;
     game->enPassentAvailable = false;

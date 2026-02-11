@@ -33,7 +33,8 @@ typedef struct
     Button arrowForward;
     Button arrowBack;        
     SDL_Texture *whiteTurnTex;    
-    SDL_Texture *blackTurnTex;    
+    SDL_Texture *blackTurnTex;
+    SDL_Texture *validMove;    
     Button capturedPieces[2][16];
     Button boardPieces[8][8];
     Button lastMove;
@@ -44,6 +45,7 @@ typedef struct
     SDL_Rect toMovingRect;
     SDL_Rect kingThreaten;
     TTF_Font *moveFont;  // Font for displaying move notation (loaded once at init)
+    TTF_Font *moveHistoryFont;
     // Dynamic dimensions for resize support
     int squareSize;
     int boardOffset;
@@ -52,8 +54,7 @@ typedef struct
 } gamegui;
 
 
-
-
+int countPiecesByType(Piece capturedPieces[16], int counts[6]);
 gamegui *initGameScreenGui(SDL_Renderer *renderer, Game *initialGame);
 void renderGameScreenGui(SDL_Renderer *renderer, gamegui *gui, Game *game, 
                          bool dragging, SDL_Texture *dragTexture, SDL_Rect dragRect,Position draggedInitialPosition);
@@ -64,7 +65,7 @@ void updateGameGui(gamegui *gui, Game *game, SDL_Renderer *renderer);
 int getPromotionDialog(SDL_Window *window);
 bool offerDrawDialog(SDL_Window *window);
 void clearHighlight(gamegui *gui);
-void highlightValidMoves(Game *game,Position from,SDL_Renderer *renderer);
+void highlightValidMoves(Game *game,Position from,SDL_Renderer *renderer,SDL_Texture *point);
 void updateLastMoveTexture(gamegui *gui,SDL_Renderer *renderer, Move move);
 void renderHalfMoveClock(int halfMoveClock,TTF_Font *font,SDL_Renderer *renderer);
 #endif

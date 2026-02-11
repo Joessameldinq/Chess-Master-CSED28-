@@ -7,8 +7,8 @@
 
 bool undoMove(Node **gameStack , Node **redoStack);
 bool redoMove(Node **gameSatck, Node **redoStack);
-bool loadGame(FILE *configuration,Game *game);
-bool saveGame(FILE *configuration,const Game *game);
+bool loadGame(FILE *configuration,Game *game,Node **stack);
+bool saveGame(FILE *configuration,const Game *game,Node *stack);
 
 
 #endif

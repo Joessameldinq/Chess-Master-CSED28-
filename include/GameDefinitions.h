@@ -101,7 +101,8 @@ typedef struct
     bool enPassentAvailable; 
     uint64_t currentHash;
     uint64_t hashHistory[1024];
-    int hashCount;                
+    int hashCount;
+    char *moveHistory[1024];                
 } Game;
 
 #endif

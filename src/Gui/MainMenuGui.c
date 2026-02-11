@@ -1,10 +1,10 @@
 
 
 
-#include "../include/MainMenuGui.h"
-#include "../include/GuiDefinitions.h"
-#include "../include/GuiHelpers.h"
-#include "../include/DisplayConsole.h"
+#include "../../include/MainMenuGui.h"
+#include "../../include/GuiDefinitions.h"
+#include "../../include/GuiHelpers.h"
+#include "../../include/DisplayConsole.h"
 #include <stdlib.h>
 mainmenugui *initMainMenuGui(SDL_Renderer *renderer)
 {
@@ -137,7 +137,7 @@ void Menu_HandleEvent(mainmenugui *mainMenuGui, SDL_Event *event, App *app)
             
             // Load the game data
             Game loadedGame = {0};
-            if (!loadGame(fptr, &loadedGame)) {
+            if (!loadGame(fptr, &loadedGame,&app->gamestack)) {
                     fprintf(stderr, "Error: Failed to read Game struct from file\n");
                     printf("Load failed: Could not read game data\n");
                     fclose(fptr);
@@ -168,7 +168,7 @@ void Menu_HandleEvent(mainmenugui *mainMenuGui, SDL_Event *event, App *app)
 void pushGameToApp(App *app , Game game){
 
     // Clear old stacks and prepare new game
-    clearStack(&app->gamestack);
+    // clearStack(&app->gamestack);
     clearStack(&app->redostack);
 
     

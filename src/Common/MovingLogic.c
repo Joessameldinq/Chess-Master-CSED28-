@@ -413,6 +413,10 @@ void applyMove(Game *game, Move *move)
     Piece mover = game->board[from.x][from.y];
     Piece dest  = game->board[to.x][to.y];
 
+    
+    char *lastMove = (char*)malloc(6);
+    sprintf(lastMove,"%c%d%c%d",from.y + 'a',8-from.x,to.y + 'a' , 8- to.x);
+
     // Save move info
     // We change it later 
     // The passed move to the function has only two data
@@ -541,8 +545,15 @@ void applyMove(Game *game, Move *move)
     //Change the hash counter
     game->currentHash = computePositionHash(*game);
     game->hashHistory[game->hashCount] = game->currentHash;
+    game->moveHistory[game->hashCount] = lastMove;
+    
+    //Update the last move string
+
     game->hashCount++;
-    //printf("Game current hash = %lu\n",game->currentHash);
+
+
+    //Change the last move
+
 
 }
 void setFlagsFalse(Game *game)
