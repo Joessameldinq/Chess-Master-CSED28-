@@ -1,9 +1,6 @@
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 254d9061ee9057c6500a34bf01ac7e2186a3b537
 #include "../../include/GameModeGui.h"
 #include "../../include/GuiDefinitions.h"
 #include "../../include/GuiHelpers.h"
