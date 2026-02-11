@@ -44,7 +44,11 @@ $(ICON_RES): $(ICON_RC)
 
 
 $(GUI_TARGET): $(ICON_RES)
+<<<<<<< HEAD
 	@ $(CC) $(CFLAGS)  src/Common/*.c src/Gui/*.c $(ICON_RES) -o $(GUI_TARGET) $(LDFLAGS) $(SDLLIBS)
+=======
+	@ $(CC) $(CFLAGS)  src/Common/*.c src/Console/*.c $(ICON_RES) -o $(GUI_TARGET) $(LDFLAGS) $(SDLLIBS)
+>>>>>>> 254d9061ee9057c6500a34bf01ac7e2186a3b537
 	@ echo "Gui exe built sucessfully"
 $(CONSOLE_TARGET): $(ICON_RES)
 	@ $(CC) $(CFLAGS)  src/Common/*.c src/Console/*.c $(ICON_RES) -o $(CONSOLE_TARGET) 
